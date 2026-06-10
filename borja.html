@@ -335,6 +335,37 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script></head>
 <body>
 
+<div id="borja-auth-overlay" style="position:fixed;inset:0;background:#14532d;z-index:9999;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:40px 36px;text-align:center;max-width:360px;width:90%;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
+    <div style="font-size:2.5rem;margin-bottom:12px;">⛳</div>
+    <div style="font-size:1.3rem;font-weight:700;color:#14532d;margin-bottom:6px;">Borja 2026</div>
+    <div style="font-size:0.9rem;color:#64748b;margin-bottom:24px;">Ingresá la contraseña para acceder</div>
+    <input id="borja-auth-input" type="password" placeholder="Contraseña" style="width:100%;padding:10px 14px;border:2px solid #d1fae5;border-radius:8px;font-size:1rem;outline:none;margin-bottom:12px;" onkeydown="if(event.key==='Enter')borjaCheckAuth()">
+    <div id="borja-auth-error" style="color:#dc2626;font-size:0.85rem;min-height:20px;margin-bottom:10px;"></div>
+    <button onclick="borjaCheckAuth()" style="width:100%;padding:10px;background:#14532d;color:#fde68a;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;">Entrar</button>
+  </div>
+</div>
+<script>
+  (function(){
+    if(localStorage.getItem('borja_auth')==='ok'){
+      document.getElementById('borja-auth-overlay').style.display='none';
+    }
+    setTimeout(function(){ var i=document.getElementById('borja-auth-input'); if(i)i.focus(); },100);
+  })();
+  function borjaCheckAuth(){
+    var v=document.getElementById('borja-auth-input').value;
+    if(v==='borja1234'){
+      localStorage.setItem('borja_auth','ok');
+      document.getElementById('borja-auth-overlay').style.display='none';
+    } else {
+      var e=document.getElementById('borja-auth-error');
+      e.textContent='Contraseña incorrecta';
+      document.getElementById('borja-auth-input').value='';
+      document.getElementById('borja-auth-input').focus();
+    }
+  }
+</script>
+
 <div id="webview-banner" style="display:none;background:#fef3c7;border-bottom:2px solid #f59e0b;padding:12px 16px;text-align:center;font-size:0.9rem;color:#92400e;">
   ⚠️ <strong>Estás abriendo el archivo desde WhatsApp.</strong><br>
   Para actualizar los datos de la RFEG, abrí el archivo en <strong>Safari</strong>:<br>
