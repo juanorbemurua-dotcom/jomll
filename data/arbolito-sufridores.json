@@ -1,0 +1,239 @@
+{"jugadores": [
+                {
+                        "nombre": "Carolina Blazquez Segura",
+                        "licencia": "VB09313600",
+                        "hcpIni": 18.4,
+                        "hcpAct": 17.5,
+                        "fechaMod": "02-05-2026",
+                        "premiosAño": 2
+                },
+                {
+                        "nombre": "Antonio Orbe Retana",
+                        "licencia": "VB01380913",
+                        "hcpIni": 15,
+                        "hcpAct": 14.8,
+                        "fechaMod": "14-04-2026",
+                        "premiosAño": 1
+                },
+                {
+                        "nombre": "Paula Serrats Orbe",
+                        "licencia": "VB01378786",
+                        "hcpIni": 19.7,
+                        "hcpAct": 19.7,
+                        "fechaMod": "12-10-2019"
+                },
+                {
+                        "nombre": "IñIgo BeñAran Orbe",
+                        "licencia": "VB03368792",
+                        "hcpIni": 0.5,
+                        "hcpAct": 0.3,
+                        "fechaMod": "17-05-2026",
+                        "premiosAño": 2
+                },
+                {
+                        "nombre": "Borja Orbe Valcarcel",
+                        "licencia": "VB09380576",
+                        "hcpIni": 3.4,
+                        "hcpAct": 3.4,
+                        "fechaMod": "20-10-2025",
+                        "premiosAño": 0
+                },
+                {
+                        "nombre": "Bosco Serrats Orbe",
+                        "licencia": "VB01726230",
+                        "hcpIni": 32.3,
+                        "hcpAct": 32.3,
+                        "fechaMod": "30-12-2025"
+                },
+                {
+                        "nombre": "Ignacio Serrats Orbe",
+                        "licencia": "VB01421052",
+                        "hcpIni": 9.6,
+                        "hcpAct": 9.6,
+                        "fechaMod": "30-12-2025",
+                        "premiosAño": 0
+                },
+                {
+                        "nombre": "Pilar Orbe Murua",
+                        "licencia": "VB01070483",
+                        "hcpIni": 16.6,
+                        "hcpAct": 16.6,
+                        "fechaMod": "27-03-2026",
+                        "premiosAño": 2
+                },
+                {
+                        "nombre": "Cristina Orbe Valcarcel",
+                        "licencia": "VB09453836",
+                        "hcpIni": 25.9,
+                        "hcpAct": 25.9,
+                        "fechaMod": "20-08-2025"
+                },
+                {
+                        "nombre": "Tristan Orbe Retana",
+                        "licencia": "VB00393424",
+                        "hcpIni": 18.1,
+                        "hcpAct": 18.1,
+                        "fechaMod": "06-09-2025"
+                },
+                {
+                        "nombre": "Rosario Segura Orbe",
+                        "licencia": "VB01726351",
+                        "hcpIni": 18.5,
+                        "hcpAct": 18.5,
+                        "fechaMod": "20-08-2025"
+                },
+                {
+                        "nombre": "Marta Orbe Blazquez",
+                        "licencia": "VB01724690",
+                        "hcpIni": 10.4,
+                        "hcpAct": 10.4,
+                        "fechaMod": "13-10-2024"
+                },
+                {
+                        "nombre": "Ana BeñAran Orbe",
+                        "licencia": "VB03690391",
+                        "hcpIni": 2.3,
+                        "hcpAct": 2.3,
+                        "fechaMod": "24-05-2026",
+                        "premiosAño": 1
+                },
+                {
+                        "nombre": "Pedro Orbe Murua",
+                        "licencia": "7739439904",
+                        "hcpIni": 16.1,
+                        "hcpAct": 16.1,
+                        "fechaMod": "11-05-2019"
+                },
+                {
+                        "nombre": "Maria Orbe Blazquez",
+                        "licencia": "VB09721078",
+                        "hcpIni": 16.6,
+                        "hcpAct": 16.6,
+                        "fechaMod": "13-08-2022"
+                },
+                {
+                        "nombre": "Teresa  Orbe Sanchez",
+                        "licencia": "VB09727771",
+                        "hcpIni": 12,
+                        "hcpAct": 12,
+                        "fechaMod": "02-04-2026",
+                        "premiosAño": 6
+                },
+                {
+                        "nombre": "Adriana Segura Orbe",
+                        "licencia": "VB01724921",
+                        "hcpIni": 29,
+                        "hcpAct": 29,
+                        "fechaMod": "13-10-2024"
+                },
+                {
+                        "nombre": "Guillermo Orbe Sanchez",
+                        "licencia": "VB09727781",
+                        "hcpIni": 31.5,
+                        "hcpAct": 31.5,
+                        "fechaMod": "05-01-2024"
+                },
+                {
+                        "nombre": "Pedro Orbe Sanchez",
+                        "licencia": "VB09727769",
+                        "hcpIni": 35.2,
+                        "hcpAct": 35.2,
+                        "fechaMod": "30-05-2022"
+                },
+                {
+                        "nombre": "Borja Orbe Murua",
+                        "licencia": "VB09727768",
+                        "hcpIni": 36,
+                        "hcpAct": 36,
+                        "fechaMod": ""
+                },
+                {
+                        "nombre": "Casilda Serrats Orbe",
+                        "licencia": "VB01378787",
+                        "hcpIni": 36,
+                        "hcpAct": 36,
+                        "fechaMod": "12-10-2019"
+                },
+                {
+                        "nombre": "Tadea Serrats Orbe",
+                        "licencia": "VB01721246",
+                        "hcpIni": 36,
+                        "hcpAct": 36,
+                        "fechaMod": "15-07-2018"
+                },
+                {
+                        "nombre": "Eduardo Segura Lasa",
+                        "licencia": "VB01313763",
+                        "hcpIni": 16.7,
+                        "hcpAct": 16.7,
+                        "fechaMod": "10-05-2026"
+                },
+                {
+                        "nombre": "Vicente Orbe Murua",
+                        "licencia": "VB09433060",
+                        "hcpIni": 13.6,
+                        "hcpAct": 13.6,
+                        "fechaMod": "12-04-2026",
+                        "premiosAño": 1
+                },
+                {
+                        "nombre": "Laura BeñAran Orbe",
+                        "licencia": "VB03419848",
+                        "hcpIni": 7.6,
+                        "hcpAct": 7.6,
+                        "fechaMod": "20-08-2025"
+                },
+                {
+                        "nombre": "Pablo Manuel Orbe Murua",
+                        "licencia": "VB01069770",
+                        "hcpIni": 14.3,
+                        "hcpAct": 14.3,
+                        "fechaMod": "28-12-2025"
+                },
+                {
+                        "nombre": "Jaime BeñAran Arocena",
+                        "licencia": "VB09020398",
+                        "hcpIni": 3,
+                        "hcpAct": 3.1,
+                        "fechaMod": "24-05-2026",
+                        "premiosAño": 1
+                },
+                {
+                        "nombre": "Ana Orbe Murua",
+                        "licencia": "VB03146067",
+                        "hcpIni": 8.5,
+                        "hcpAct": 9,
+                        "fechaMod": "30-04-2026",
+                        "premiosAño": 3
+                },
+                {
+                        "nombre": "Casilda Orbe Murua",
+                        "licencia": "VB01183907",
+                        "hcpIni": 11.5,
+                        "hcpAct": 12.3,
+                        "fechaMod": "27-03-2026",
+                        "premiosAño": 2
+                },
+                {
+                        "nombre": "Juan Ignacio Orbe Murua",
+                        "licencia": "VB01069771",
+                        "hcpIni": 6.5,
+                        "hcpAct": 7,
+                        "fechaMod": "02-05-2026",
+                        "premiosAño": 2
+                },
+                {
+                        "nombre": "Ignacio Serrats Urrecha",
+                        "licencia": "VB01182454",
+                        "hcpIni": 12.3,
+                        "hcpAct": 12.3,
+                        "fechaMod": "25-10-2025"
+                },
+                {
+                        "nombre": "Luisa Galiana San Gil",
+                        "licencia": "VB09420223",
+                        "hcpIni": 22.7,
+                        "hcpAct": 22.7,
+                        "fechaMod": "02-01-2016"
+                }
+        ]}
