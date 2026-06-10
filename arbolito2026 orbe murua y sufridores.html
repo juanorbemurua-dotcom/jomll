@@ -350,14 +350,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script></head>
 <body>
 
-<div id="login-overlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#1a4731;display:flex;align-items:center;justify-content:center;z-index:9999;">
+<div id="login-overlay" style="position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background: rgb(26, 71, 49); display: none; align-items: center; justify-content: center; z-index: 9999;">
   <div style="background:white;border-radius:16px;padding:32px 28px;max-width:320px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.3);">
     <div style="font-size:2.5rem;margin-bottom:8px;">⛳</div>
     <h2 style="color:#166534;margin-bottom:4px;font-size:1.3rem;">Arbolito Golf</h2>
     <p style="color:#64748b;font-size:0.85rem;margin-bottom:20px;">Acceso privado</p>
-    <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password"
-      style="width:100%;padding:10px 14px;border:2px solid #d1d5db;border-radius:8px;font-size:1rem;margin-bottom:12px;outline:none;"
-      onfocus="this.style.borderColor='#166534'" onblur="this.style.borderColor='#d1d5db'">
+    <input type="password" id="login-pass" placeholder="Contraseña" autocomplete="current-password" style="width:100%;padding:10px 14px;border:2px solid #d1d5db;border-radius:8px;font-size:1rem;margin-bottom:12px;outline:none;" onfocus="this.style.borderColor='#166534'" onblur="this.style.borderColor='#d1d5db'">
     <button onclick="checkLogin()" style="width:100%;padding:11px;background:#166534;color:#fde68a;border:none;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;">Entrar</button>
     <p id="login-error" style="color:#dc2626;font-size:0.85rem;margin-top:10px;display:none;">Contraseña incorrecta</p>
   </div>
@@ -406,7 +404,7 @@
     <p id="titulo-subtitulo" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">Seguimiento de Handicap · Temporada 2026</p>
 </header>
 
-<p class="fecha-hoy" id="fechaHoy">Fecha actual: domingo, 24 de mayo de 2026</p>
+<p class="fecha-hoy" id="fechaHoy">Fecha actual: miércoles, 10 de junio de 2026</p>
 
 <!-- Formulario -->
 <div class="form-card">
@@ -414,18 +412,18 @@
     <div class="form-grid">
         <div class="form-group">
             <label>Nº Licencia</label>
-            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()">
+            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()" fdprocessedid="5e2zm">
         </div>
         <div class="form-group">
             <label>HCP 01/01/2026</label>
-            <input type="number" id="inp-hcp-ini" placeholder="Ej. 18.4" step="0.1">
+            <input type="number" id="inp-hcp-ini" placeholder="Ej. 18.4" step="0.1" fdprocessedid="i11pk">
         </div>
         <div class="form-group" style="display:none">
             <input type="text" id="inp-nombre">
             <input type="number" id="inp-hcp-act">
         </div>
         <div class="form-group" style="display:flex;gap:8px;align-items:flex-end;">
-            <button class="btn-add" id="btn-add" onclick="añadirJugador()">Añadir</button>
+            <button class="btn-add" id="btn-add" onclick="añadirJugador()" fdprocessedid="hurai">Añadir</button>
             <a id="enlace-rfeg" href="#" target="_blank" class="btn-rfeg" title="Consultar en RFEG">🔍 RFEG</a>
         </div>
     </div>
@@ -437,9 +435,9 @@
     <div class="tabla-header">
         <h2>🏆 Clasificación por Mejora de Handicap</h2>
         <div style="display:flex;gap:8px;">
-            <button class="btn-update" id="btn-update" onclick="actualizarTodos()">↻ Actualizar RFEG</button>
-            <button class="btn-export" onclick="exportarExcel()">⬇ Exportar Excel</button>
-            <button class="btn-export" onclick="guardarJSON()" title="Guardar copia de seguridad">💾 Guardar</button>
+            <button class="btn-update" id="btn-update" onclick="actualizarTodos()" fdprocessedid="n3a3rq">↻ Actualizar RFEG</button>
+            <button class="btn-export" onclick="exportarExcel()" fdprocessedid="5amim">⬇ Exportar Excel</button>
+            <button class="btn-export" onclick="guardarJSON()" title="Guardar copia de seguridad" fdprocessedid="8cdr2e">💾 Guardar</button>
             <label class="btn-export" style="cursor:pointer;margin:0" title="Cargar copia de seguridad">
                 📂 Cargar<input type="file" accept=".json" onchange="cargarJSON(event)" style="display:none">
             </label>
@@ -471,7 +469,8 @@
                 <td><span class="incremento inc-mejor">-40.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">17-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(3)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-3" onclick="actualizarJugador(3)" title="Actualizar handicap" fdprocessedid="t9p548">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(3)" title="Eliminar" fdprocessedid="s39erp">✕</button></td>
             </tr><tr class="top6">
                 <td><span class="medal">🥈</span></td>
                 <td class="nombre">Carolina Blazquez Segura</td>
@@ -482,7 +481,8 @@
                 <td><span class="incremento inc-mejor">-4.9%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">02-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(0)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-0" onclick="actualizarJugador(0)" title="Actualizar handicap" fdprocessedid="7na7l6">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(0)" title="Eliminar" fdprocessedid="uzkfng">✕</button></td>
             </tr><tr class="top6">
                 <td><span class="medal">🥉</span></td>
                 <td class="nombre">Antonio Orbe Retana</td>
@@ -493,7 +493,8 @@
                 <td><span class="incremento inc-mejor">-1.3%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">14-04-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(1)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-1" onclick="actualizarJugador(1)" title="Actualizar handicap" fdprocessedid="nchryg">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(1)" title="Eliminar" fdprocessedid="wpzyl">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">4</span></td>
                 <td class="nombre">Paula Serrats Orbe</td>
@@ -504,7 +505,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">12-10-2019</td>
-                <td><button class="btn-del" onclick="eliminarJugador(2)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-2" onclick="actualizarJugador(2)" title="Actualizar handicap" fdprocessedid="2ooxb">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(2)" title="Eliminar" fdprocessedid="mddy3e">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">5</span></td>
                 <td class="nombre">Borja Orbe Valcarcel</td>
@@ -515,7 +517,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">20-10-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(4)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-4" onclick="actualizarJugador(4)" title="Actualizar handicap" fdprocessedid="tpo0h">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(4)" title="Eliminar" fdprocessedid="cea0cp">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">6</span></td>
                 <td class="nombre">Bosco Serrats Orbe</td>
@@ -526,7 +529,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">30-12-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(5)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-5" onclick="actualizarJugador(5)" title="Actualizar handicap" fdprocessedid="dgvbtl">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(5)" title="Eliminar" fdprocessedid="zdsf58">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">7</span></td>
                 <td class="nombre">Ignacio Serrats Orbe</td>
@@ -537,7 +541,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">30-12-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(6)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-6" onclick="actualizarJugador(6)" title="Actualizar handicap" fdprocessedid="7w8pa4">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(6)" title="Eliminar" fdprocessedid="i0x59p">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">8</span></td>
                 <td class="nombre">Pilar Orbe Murua</td>
@@ -548,7 +553,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">27-03-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(7)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-7" onclick="actualizarJugador(7)" title="Actualizar handicap" fdprocessedid="9sdllo">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(7)" title="Eliminar" fdprocessedid="2yrel8">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">9</span></td>
                 <td class="nombre">Cristina Orbe Valcarcel</td>
@@ -559,7 +565,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">20-08-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(8)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-8" onclick="actualizarJugador(8)" title="Actualizar handicap" fdprocessedid="ox51fs">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(8)" title="Eliminar" fdprocessedid="9zs6v">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">10</span></td>
                 <td class="nombre">Tristan Orbe Retana</td>
@@ -570,7 +577,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">06-09-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(9)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-9" onclick="actualizarJugador(9)" title="Actualizar handicap" fdprocessedid="erc4h">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(9)" title="Eliminar" fdprocessedid="1u1ghs">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">11</span></td>
                 <td class="nombre">Rosario Segura Orbe</td>
@@ -581,7 +589,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">20-08-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(10)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-10" onclick="actualizarJugador(10)" title="Actualizar handicap" fdprocessedid="omy8wz">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(10)" title="Eliminar" fdprocessedid="e4041b">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">12</span></td>
                 <td class="nombre">Marta Orbe Blazquez</td>
@@ -592,7 +601,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">13-10-2024</td>
-                <td><button class="btn-del" onclick="eliminarJugador(11)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-11" onclick="actualizarJugador(11)" title="Actualizar handicap" fdprocessedid="8bcagh">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(11)" title="Eliminar" fdprocessedid="oqmm5m">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">13</span></td>
                 <td class="nombre">Ana BeñAran Orbe</td>
@@ -602,8 +612,9 @@
                 <td><span class="incremento inc-igual">0.0</span></td>
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
-                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">24-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(12)" title="Eliminar">✕</button></td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-12" onclick="actualizarJugador(12)" title="Actualizar handicap" fdprocessedid="utl4o9">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(12)" title="Eliminar" fdprocessedid="kfzr4">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">14</span></td>
                 <td class="nombre">Pedro Orbe Murua</td>
@@ -614,7 +625,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">11-05-2019</td>
-                <td><button class="btn-del" onclick="eliminarJugador(13)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-13" onclick="actualizarJugador(13)" title="Actualizar handicap" fdprocessedid="7gb6cb">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(13)" title="Eliminar" fdprocessedid="tf3c1d">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">15</span></td>
                 <td class="nombre">Maria Orbe Blazquez</td>
@@ -625,7 +637,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">13-08-2022</td>
-                <td><button class="btn-del" onclick="eliminarJugador(14)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-14" onclick="actualizarJugador(14)" title="Actualizar handicap" fdprocessedid="5jkhj">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(14)" title="Eliminar" fdprocessedid="88veia">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">16</span></td>
                 <td class="nombre">Teresa  Orbe Sanchez</td>
@@ -636,7 +649,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">6</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">02-04-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(15)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-15" onclick="actualizarJugador(15)" title="Actualizar handicap" fdprocessedid="j1b95s">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(15)" title="Eliminar" fdprocessedid="onbujc">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">17</span></td>
                 <td class="nombre">Adriana Segura Orbe</td>
@@ -647,7 +661,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">13-10-2024</td>
-                <td><button class="btn-del" onclick="eliminarJugador(16)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-16" onclick="actualizarJugador(16)" title="Actualizar handicap" fdprocessedid="z1sc1lg">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(16)" title="Eliminar" fdprocessedid="yi9hu">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">18</span></td>
                 <td class="nombre">Guillermo Orbe Sanchez</td>
@@ -658,7 +673,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">05-01-2024</td>
-                <td><button class="btn-del" onclick="eliminarJugador(17)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-17" onclick="actualizarJugador(17)" title="Actualizar handicap" fdprocessedid="ydqk3g">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(17)" title="Eliminar" fdprocessedid="59mqty">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">19</span></td>
                 <td class="nombre">Pedro Orbe Sanchez</td>
@@ -669,7 +685,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">30-05-2022</td>
-                <td><button class="btn-del" onclick="eliminarJugador(18)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-18" onclick="actualizarJugador(18)" title="Actualizar handicap" fdprocessedid="zvidc6">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(18)" title="Eliminar" fdprocessedid="pb9py">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">20</span></td>
                 <td class="nombre">Borja Orbe Murua</td>
@@ -680,7 +697,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">—</td>
-                <td><button class="btn-del" onclick="eliminarJugador(19)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-19" onclick="actualizarJugador(19)" title="Actualizar handicap" fdprocessedid="rutwv5">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(19)" title="Eliminar" fdprocessedid="xmkq16">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">21</span></td>
                 <td class="nombre">Casilda Serrats Orbe</td>
@@ -691,7 +709,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">12-10-2019</td>
-                <td><button class="btn-del" onclick="eliminarJugador(20)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-20" onclick="actualizarJugador(20)" title="Actualizar handicap" fdprocessedid="45zlho">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(20)" title="Eliminar" fdprocessedid="gfllul">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">22</span></td>
                 <td class="nombre">Tadea Serrats Orbe</td>
@@ -702,7 +721,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">15-07-2018</td>
-                <td><button class="btn-del" onclick="eliminarJugador(21)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-21" onclick="actualizarJugador(21)" title="Actualizar handicap" fdprocessedid="8vxwoc">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(21)" title="Eliminar" fdprocessedid="7530ln">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">23</span></td>
                 <td class="nombre">Eduardo Segura Lasa</td>
@@ -713,7 +733,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">10-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(22)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-22" onclick="actualizarJugador(22)" title="Actualizar handicap" fdprocessedid="2bo4mt">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(22)" title="Eliminar" fdprocessedid="vq7d5s">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">24</span></td>
                 <td class="nombre">Vicente Orbe Murua</td>
@@ -724,7 +745,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">12-04-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(23)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-23" onclick="actualizarJugador(23)" title="Actualizar handicap" fdprocessedid="n02wbm">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(23)" title="Eliminar" fdprocessedid="h2laae">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">25</span></td>
                 <td class="nombre">Laura BeñAran Orbe</td>
@@ -735,7 +757,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">20-08-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(24)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-24" onclick="actualizarJugador(24)" title="Actualizar handicap" fdprocessedid="s7pl2w">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(24)" title="Eliminar" fdprocessedid="xmtqyj">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">26</span></td>
                 <td class="nombre">Pablo Manuel Orbe Murua</td>
@@ -746,7 +769,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">28-12-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(25)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-25" onclick="actualizarJugador(25)" title="Actualizar handicap" fdprocessedid="bg8qq">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(25)" title="Eliminar" fdprocessedid="4s0qo8">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">27</span></td>
                 <td class="nombre">Ignacio Serrats Urrecha</td>
@@ -757,7 +781,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">25-10-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(30)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-30" onclick="actualizarJugador(30)" title="Actualizar handicap" fdprocessedid="wc95q">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(30)" title="Eliminar" fdprocessedid="mhzl1r">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">28</span></td>
                 <td class="nombre">Luisa Galiana San Gil</td>
@@ -768,7 +793,8 @@
                 <td><span class="incremento inc-igual">0.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">02-01-2016</td>
-                <td><button class="btn-del" onclick="eliminarJugador(31)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-31" onclick="actualizarJugador(31)" title="Actualizar handicap" fdprocessedid="g4th3i">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(31)" title="Eliminar" fdprocessedid="d2pzpi">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">29</span></td>
                 <td class="nombre">Jaime BeñAran Arocena</td>
@@ -778,8 +804,9 @@
                 <td><span class="incremento inc-peor">+0.1</span></td>
                 <td><span class="incremento inc-peor">+3.3%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
-                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">24-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(26)" title="Eliminar">✕</button></td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-26" onclick="actualizarJugador(26)" title="Actualizar handicap" fdprocessedid="fmn20w">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(26)" title="Eliminar" fdprocessedid="qelc54">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">30</span></td>
                 <td class="nombre">Ana Orbe Murua</td>
@@ -790,7 +817,8 @@
                 <td><span class="incremento inc-peor">+5.9%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">3</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">30-04-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(27)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-27" onclick="actualizarJugador(27)" title="Actualizar handicap" fdprocessedid="d1494h">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(27)" title="Eliminar" fdprocessedid="2a7wvm">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">31</span></td>
                 <td class="nombre">Casilda Orbe Murua</td>
@@ -801,7 +829,8 @@
                 <td><span class="incremento inc-peor">+7.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">27-03-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(28)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-28" onclick="actualizarJugador(28)" title="Actualizar handicap" fdprocessedid="vmr4g">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(28)" title="Eliminar" fdprocessedid="vo2h18">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">32</span></td>
                 <td class="nombre">Juan Ignacio Orbe Murua</td>
@@ -812,7 +841,8 @@
                 <td><span class="incremento inc-peor">+7.7%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">02-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(29)" title="Eliminar">✕</button></td>
+                <td><button class="btn-row-update btn-row-update--stale" id="btn-update-29" onclick="actualizarJugador(29)" title="Actualizar handicap" fdprocessedid="c2kbeg">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(29)" title="Eliminar" fdprocessedid="8xq26g">✕</button></td>
             </tr></tbody>
     </table>
 </div>
@@ -822,8 +852,8 @@
   <div style="background:#14532d;color:#fde68a;font-weight:700;font-size:1.05rem;padding:14px 20px;border-radius:10px 10px 0 0;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;">
     <span>⛳ Actividad — Últimas 20 rondas jugadas</span>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-      <select id="selectJugador" onchange="renderTablaActividad()" style="background:#166534;color:#fde68a;border:1px solid rgba(253,230,138,0.5);border-radius:6px;padding:5px 10px;font-weight:600;font-size:0.85rem;cursor:pointer;max-width:240px;"><option value="">— Seleccionar jugador —</option><option value="0">Carolina Blazquez Segura</option><option value="1">Antonio Orbe Retana</option><option value="2">Paula Serrats Orbe</option><option value="3">Iñigo Beñaran Orbe</option><option value="4">Borja Orbe Valcarcel</option><option value="5">Bosco Serrats Orbe</option><option value="6">Ignacio Serrats Orbe</option><option value="7">Pilar Orbe Murua</option><option value="8">Cristina Orbe Valcarcel</option><option value="9">Tristan Orbe Retana</option><option value="10">Rosario Segura Orbe</option><option value="11">Marta Orbe Blazquez</option><option value="12">Ana Beñaran Orbe</option><option value="13">Pedro Orbe Murua</option><option value="14">Maria Orbe Blazquez</option><option value="15">Teresa Orbe Sanchez</option><option value="16">Adriana Segura Orbe</option><option value="17">Guillermo Orbe Sanchez</option><option value="18">Pedro Orbe Sanchez</option><option value="19">Borja Orbe Murua</option><option value="20">Casilda Serrats Orbe</option><option value="21">Tadea Serrats Orbe</option><option value="22">Eduardo Segura Lasa</option><option value="23">Vicente Orbe Murua</option><option value="24">Laura Beñaran Orbe</option><option value="25">Pablo Manuel Orbe Murua</option><option value="26">Jaime Beñaran Arocena</option><option value="27">Ana Orbe Murua</option><option value="28">Casilda Orbe Murua</option><option value="29">Juan Ignacio Orbe Murua</option><option value="30">Ignacio Serrats Urrecha</option><option value="31">Luisa Galiana San Gil</option></select>
-      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;">🔄 Actualizar RFEG</button>
+      <select id="selectJugador" onchange="renderTablaActividad()" style="background:#166534;color:#fde68a;border:1px solid rgba(253,230,138,0.5);border-radius:6px;padding:5px 10px;font-weight:600;font-size:0.85rem;cursor:pointer;max-width:240px;" fdprocessedid="ith3wp"><option value="">— Seleccionar jugador —</option><option value="0">Carolina Blazquez Segura</option><option value="1">Antonio Orbe Retana</option><option value="2">Paula Serrats Orbe</option><option value="3">Iñigo Beñaran Orbe</option><option value="4">Borja Orbe Valcarcel</option><option value="5">Bosco Serrats Orbe</option><option value="6">Ignacio Serrats Orbe</option><option value="7">Pilar Orbe Murua</option><option value="8">Cristina Orbe Valcarcel</option><option value="9">Tristan Orbe Retana</option><option value="10">Rosario Segura Orbe</option><option value="11">Marta Orbe Blazquez</option><option value="12">Ana Beñaran Orbe</option><option value="13">Pedro Orbe Murua</option><option value="14">Maria Orbe Blazquez</option><option value="15">Teresa Orbe Sanchez</option><option value="16">Adriana Segura Orbe</option><option value="17">Guillermo Orbe Sanchez</option><option value="18">Pedro Orbe Sanchez</option><option value="19">Borja Orbe Murua</option><option value="20">Casilda Serrats Orbe</option><option value="21">Tadea Serrats Orbe</option><option value="22">Eduardo Segura Lasa</option><option value="23">Vicente Orbe Murua</option><option value="24">Laura Beñaran Orbe</option><option value="25">Pablo Manuel Orbe Murua</option><option value="26">Jaime Beñaran Arocena</option><option value="27">Ana Orbe Murua</option><option value="28">Casilda Orbe Murua</option><option value="29">Juan Ignacio Orbe Murua</option><option value="30">Ignacio Serrats Urrecha</option><option value="31">Luisa Galiana San Gil</option></select>
+      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;" fdprocessedid="06tf1a">🔄 Actualizar RFEG</button>
 
     </div>
   </div>
@@ -839,177 +869,7 @@
     .dif-norm { color:#111; font-weight:700; }
     .act-info-bar { background:#f0fdf4; border-bottom:2px solid #bbf7d0; padding:10px 16px; display:flex; gap:24px; flex-wrap:wrap; align-items:center; font-size:0.85rem; color:#166534; font-weight:600; }
     .act-info-bar span { font-weight:400; color:#475569; }
-  </style><div class="act-info-bar">
-    <div>Jugador: <span>Iñigo Beñaran Orbe</span></div>
-    <div>Licencia: <span>VB03368792</span></div>
-    <div>HCP actual: <span>0.3</span></div>
-    <div>Actualizado: <span>16/05/2026</span></div>
-  </div><table class="act-table">
-    <thead><tr>
-      <th>Fecha</th><th>Torneo</th><th>Campo de Golf</th><th>HCP</th><th>STB</th><th>Pen.</th><th>Diferencial</th>
-    </tr></thead>
-    <tbody><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">16/05/2026</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="CTO DE ESPAÑA MID-AMATEUR MASCULINO">CTO DE ESPAÑA MID-AMATEUR MASCULINO</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="NEGURI">NEGURI</td>
-      <td class="act-hcp" style="background:#fff5f5">2</td>
-      <td class="act-stb" style="background:#fff5f5">34</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 1.7</span></td>
-    </tr><tr>
-      <td class="act-fecha">15/05/2026</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="CTO DE ESPAÑA MID-AMATEUR MASCULINO">CTO DE ESPAÑA MID-AMATEUR MASCULINO</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="NEGURI">NEGURI</td>
-      <td class="act-hcp">2</td>
-      <td class="act-stb">24</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">9.3</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">29/08/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="WHY NOT VIERNES 29">WHY NOT VIERNES 29</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp" style="background:#fff5f5">2</td>
-      <td class="act-stb" style="background:#fff5f5">42</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ -3.6</span></td>
-    </tr><tr>
-      <td class="act-fecha">28/08/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="LIGA ANDBANK">LIGA ANDBANK</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp">1</td>
-      <td class="act-stb">33</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">3.9</span></td>
-    </tr><tr>
-      <td class="act-fecha">24/08/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="XI TORNEO FUNDACION WHY NOT?">XI TORNEO FUNDACION WHY NOT?</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp">2</td>
-      <td class="act-stb">38</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">3.9</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">12/08/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="XXIX TORNEO ASOCIACION CONTRA EL CANCER">XXIX TORNEO ASOCIACION CONTRA EL CANCER</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp" style="background:#fff5f5">2</td>
-      <td class="act-stb" style="background:#fff5f5">36</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 0.2</span></td>
-    </tr><tr>
-      <td class="act-fecha">10/08/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="CIV CAMPEONATO DE ZARAUZ">CIV CAMPEONATO DE ZARAUZ</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp">2</td>
-      <td class="act-stb">33</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">4.8</span></td>
-    </tr><tr>
-      <td class="act-fecha">10/08/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="CIV CAMPEONATO DE ZARAUZ">CIV CAMPEONATO DE ZARAUZ</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp">1</td>
-      <td class="act-stb">33</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">3.9</span></td>
-    </tr><tr>
-      <td class="act-fecha">08/08/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="CIV CAMPEONATO DE ZARAUZ">CIV CAMPEONATO DE ZARAUZ</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp">1</td>
-      <td class="act-stb">32</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">4.8</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">20/07/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="LIGA ANDBANK">LIGA ANDBANK</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp" style="background:#fff5f5">2</td>
-      <td class="act-stb" style="background:#fff5f5">41</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ -2.6</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">19/07/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="XX PREMIO ESCLEROSIS MULTIPLE">XX PREMIO ESCLEROSIS MULTIPLE</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp" style="background:#fff5f5">3</td>
-      <td class="act-stb" style="background:#fff5f5">40</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ -2.6</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">06/07/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="CAMPEONATO PAÍS VASCO-MID AMATEUR - Jornada 2">CAMPEONATO PAÍS VASCO-MID AMATEUR - Jornada 2</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp" style="background:#fff5f5">2</td>
-      <td class="act-stb" style="background:#fff5f5">30</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ -1.1</span></td>
-    </tr><tr>
-      <td class="act-fecha">05/07/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="CAMPEONATO PAÍS VASCO-MID AMATEUR">CAMPEONATO PAÍS VASCO-MID AMATEUR</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp">1</td>
-      <td class="act-stb">28</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">7.6</span></td>
-    </tr><tr>
-      <td class="act-fecha">03/08/2024</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="CIII CAMPEONATO DE ZARAUZ MEM. D. LUIS A">CIII CAMPEONATO DE ZARAUZ MEM. D. LUIS A</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp">1</td>
-      <td class="act-stb">28</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">8.5</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">02/08/2024</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="CIII CAMPEONATO DE ZARAUZ MEM. D. LUIS A">CIII CAMPEONATO DE ZARAUZ MEM. D. LUIS A</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp" style="background:#fff5f5">1</td>
-      <td class="act-stb" style="background:#fff5f5">34</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 3.0</span></td>
-    </tr><tr>
-      <td class="act-fecha">19/08/2023</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="IX TORNEO FUNDACION WHY NOT?">IX TORNEO FUNDACION WHY NOT?</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp">1</td>
-      <td class="act-stb">30</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">6.7</span></td>
-    </tr><tr>
-      <td class="act-fecha">08/08/2023</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="XXVII TORNEO ASOCIACION CONTRA CANCER">XXVII TORNEO ASOCIACION CONTRA CANCER</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp">1</td>
-      <td class="act-stb">31</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">5.7</span></td>
-    </tr><tr>
-      <td class="act-fecha">06/08/2023</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="CII CTO DE ZARAUZ M. D. LUIS A. ASTURIAS">CII CTO DE ZARAUZ M. D. LUIS A. ASTURIAS</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp">1</td>
-      <td class="act-stb">32</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">4.8</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">06/08/2023</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="CII CTO DE ZARAUZ M. D. LUIS A. ASTURIAS">CII CTO DE ZARAUZ M. D. LUIS A. ASTURIAS</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp" style="background:#fff5f5">1</td>
-      <td class="act-stb" style="background:#fff5f5">34</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 3.0</span></td>
-    </tr><tr>
-      <td class="act-fecha">05/08/2023</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="CII CTO DE ZARAUZ M. D. LUIS A. ASTURIAS">CII CTO DE ZARAUZ M. D. LUIS A. ASTURIAS</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RGC ZARAUZ">RGC ZARAUZ</td>
-      <td class="act-hcp">1</td>
-      <td class="act-stb">32</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">3.0</span></td>
-    </tr></tbody>
-  </table></div>
+  </style><div style="padding:32px;text-align:center;color:#94a3b8;font-style:italic;font-size:0.95rem;">Seleccioná un jugador para ver sus últimas 20 rondas</div></div>
 </div>
 
 <script>
@@ -2149,6 +2009,66 @@ async function cargarPDFManual(event) {
     renderTabla();
 </script>
 
+<script>
+(function() {
+  const WEBHOOK = 'https://gusano.app.n8n.cloud/webhook/arbolito-sync';
+  const ID      = 'arbolito-sufridores';
 
+  // Badge indicador de sync
+  const badge = document.createElement('div');
+  badge.style.cssText = 'position:fixed;bottom:14px;right:14px;background:rgba(20,83,45,0.92);color:#86efac;font-size:0.76rem;font-weight:600;padding:5px 12px;border-radius:20px;z-index:9998;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:color 0.3s;';
+  badge.textContent = '⟳ conectando...';
+  document.body.appendChild(badge);
+
+  function setBadge(txt, color) { badge.textContent = txt; badge.style.color = color || '#86efac'; }
+
+  // Guardar en n8n
+  function pushN8N(datos) {
+    fetch(WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'write', id: ID, jugadores: datos })
+    }).then(() => setBadge('✓ sincronizado', '#4ade80'))
+      .catch(() => setBadge('⚠ sin conexión', '#fca5a5'));
+  }
+
+  // Envolver guardarDatos para que también sincronice con n8n
+  const _guardar = window.guardarDatos;
+  window.guardarDatos = function(datos) { _guardar(datos); pushN8N(datos); };
+
+  // Leer desde n8n y actualizar si hay cambios
+  function pullN8N(silencioso) {
+    fetch(WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'read', id: ID })
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.jugadores || !data.jugadores.length) {
+        // Primera vez: subir los datos locales
+        pushN8N(cargarDatos());
+        setBadge('● en vivo', '#86efac');
+        return;
+      }
+      const actual = JSON.stringify(cargarDatos());
+      const remoto = JSON.stringify(data.jugadores);
+      if (actual !== remoto) {
+        _guardar(data.jugadores);
+        renderTabla();
+        if (typeof sincronizarSelectActividad === 'function') sincronizarSelectActividad();
+        if (silencioso) setBadge('↻ actualizado', '#fde68a');
+        setTimeout(() => setBadge('● en vivo', '#86efac'), 2500);
+      } else {
+        setBadge('● en vivo', '#86efac');
+      }
+    })
+    .catch(() => setBadge('⚠ sin conexión', '#fca5a5'));
+  }
+
+  pullN8N(false);
+  setInterval(() => pullN8N(true), 15000);
+})();
+</script>
 
 </body></html>
