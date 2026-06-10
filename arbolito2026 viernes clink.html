@@ -1749,9 +1749,9 @@ async function cargarPDFManual(event) {
                 <td><span class="incremento ${cls}">${signo}${j.incremento.toFixed(1)}%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">${premiosAño}</td>
                 <td style="font-size:0.82rem;color:${esReciente?'#dc2626':'#64748b'};font-weight:${esReciente?'700':'400'}">${j.fechaMod || '—'}</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, ${j.originalIdx}, `apuesta`)">${escHtml(j.apuesta || `—`)}</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, ${j.originalIdx}, `propietario`)">${escHtml(j.propietario || `—`)}</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, ${j.originalIdx}, `propietario2`)">${escHtml(j.propietario2 || `—`)}</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, ${j.originalIdx}, 'apuesta')">${escHtml(j.apuesta || '—')}</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, ${j.originalIdx}, 'propietario')">${escHtml(j.propietario || '—')}</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, ${j.originalIdx}, 'propietario2')">${escHtml(j.propietario2 || '—')}</td>
                 <td><button class="btn-del" onclick="eliminarJugador(${j.originalIdx})" title="Eliminar">✕</button></td>
             </tr>`;
         }).join('');
