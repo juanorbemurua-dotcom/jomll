@@ -1792,18 +1792,18 @@ async function cargarPDFManual(event) {
         const conIncremento = jugadores.map((j, originalIdx) => ({
             ...j,
             originalIdx,
-            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / j.hcpIni * 100).toFixed(1) : 0
+            incremento: j.hcpIni !== 0 ? +((j.hcpIni - j.hcpAct) / Math.abs(j.hcpIni) * 100).toFixed(1) : 0
         }));
 
         // Orden inverso al % incremento: de menor (más mejora) a mayor
-        conIncremento.sort((a, b) => a.incremento - b.incremento);
+        conIncremento.sort((a, b) => b.incremento - a.incremento);
 
         const medallas = ['🥇','🥈','🥉'];
 
         const filas = conIncremento.map((j, pos) => {
             const signo = j.incremento > 0 ? '+' : '';
-            const cls   = j.incremento < 0 ? 'inc-mejor'
-                        : j.incremento > 0 ? 'inc-peor'
+            const cls   = j.incremento > 0 ? 'inc-mejor'
+                        : j.incremento < 0 ? 'inc-peor'
                         : 'inc-igual';
 
             const posTexto = pos < 3
@@ -1825,7 +1825,7 @@ async function cargarPDFManual(event) {
                 <td class="licencia">${escHtml(j.licencia)}</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, ${j.originalIdx})">${j.hcpIni.toFixed(1)}</td>
                 <td class="hcp">${j.hcpAct.toFixed(1)}</td>
-                <td><span class="incremento ${cls}">${signo}${(j.hcpAct - j.hcpIni).toFixed(1)}</span></td>
+                <td><span class="incremento ${cls}">${signo}${(j.hcpIni - j.hcpAct).toFixed(1)}</span></td>
                 <td><span class="incremento ${cls}">${signo}${j.incremento.toFixed(1)}%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">${premiosAño}</td>
                 <td style="font-size:0.82rem;color:${esReciente?'#dc2626':'#64748b'};font-weight:${esReciente?'700':'400'}">${j.fechaMod || '—'}</td>
@@ -1927,7 +1927,7 @@ async function cargarPDFManual(event) {
 
         const conIncremento = jugadores.map(j => ({
             ...j,
-            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / j.hcpIni * 100).toFixed(1) : 0
+            incremento: j.hcpIni !== 0 ? +((j.hcpIni - j.hcpAct) / Math.abs(j.hcpIni) * 100).toFixed(1) : 0
         })).sort((a, b) => a.incremento - b.incremento);
 
         const datos = conIncremento.map((j, pos) => ({
