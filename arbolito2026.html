@@ -1311,55 +1311,6 @@ function exportarFichasPDF() {
 </div>
 ${fichasHtml}
 <script>window.onload = () => window.print();<\/script>
-
-<script>
-(function() {
-  var DB = 'https://arbolito-golf-default-rtdb.europe-west1.firebasedatabase.app/arbolito-principal';
-  var badge = document.createElement('div');
-  badge.style.cssText = 'position:fixed;bottom:14px;right:14px;background:rgba(20,83,45,0.92);color:#86efac;font-size:0.76rem;font-weight:600;padding:5px 12px;border-radius:20px;z-index:9998;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:color 0.3s;';
-  badge.textContent = '⟳ conectando...';
-  document.body.appendChild(badge);
-  function setBadge(t, c) { badge.textContent = t; badge.style.color = c || '#86efac'; }
-
-  var _guardar = window.guardarDatos;
-  var _writeTimer = null;
-
-  function pushFirebase(datos) {
-    fetch(DB + '.json', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ jugadores: datos })
-    }).then(function(r) { r.ok ? setBadge('✓ sincronizado', '#4ade80') : setBadge('⚠ error al guardar', '#fca5a5'); })
-      .catch(function() { setBadge('⚠ sin conexión', '#fca5a5'); });
-  }
-
-  window.guardarDatos = function(datos) {
-    _guardar(datos);
-    if (_writeTimer) clearTimeout(_writeTimer);
-    _writeTimer = setTimeout(function() { pushFirebase(datos); }, 1000);
-  };
-
-  function pullFirebase(silencioso) {
-    fetch(DB + '.json')
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (!data || !data.jugadores || !data.jugadores.length) { setBadge('● en vivo', '#86efac'); return; }
-        var actual = JSON.stringify(cargarDatos());
-        var remoto = JSON.stringify(data.jugadores);
-        if (actual !== remoto) {
-          _guardar(data.jugadores);
-          renderTabla();
-          if (typeof sincronizarSelectActividad === 'function') sincronizarSelectActividad();
-          if (silencioso) { setBadge('↻ actualizado', '#fde68a'); setTimeout(function() { setBadge('● en vivo', '#86efac'); }, 2500); }
-        } else { setBadge('● en vivo', '#86efac'); }
-      })
-      .catch(function() { setBadge('⚠ sin conexión', '#fca5a5'); });
-  }
-
-  pullFirebase(false);
-  setInterval(function() { pullFirebase(true); }, 15000);
-})();
-</script>
 </body></html>`);
   win.document.close();
 
