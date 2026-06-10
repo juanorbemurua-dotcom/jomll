@@ -1998,6 +1998,7 @@ async function cargarPDFManual(event) {
   };
 
   function pullFirebase(silencioso) {
+    if (_writeTimer) { setBadge('↑ guardando...', '#fde68a'); return; }
     fetch(DB + '.json')
       .then(function(r) { return r.json(); })
       .then(function(data) {
