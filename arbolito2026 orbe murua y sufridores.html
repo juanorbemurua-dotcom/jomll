@@ -2011,63 +2011,51 @@ async function cargarPDFManual(event) {
 
 <script>
 (function() {
-  const WEBHOOK = 'https://gusano.app.n8n.cloud/webhook/arbolito-sync';
-  const ID      = 'arbolito-sufridores';
+  const DB = 'https://arbolito-golf-default-rtdb.europe-west1.firebasedatabase.app/arbolito-sufridores';
 
-  // Badge indicador de sync
   const badge = document.createElement('div');
   badge.style.cssText = 'position:fixed;bottom:14px;right:14px;background:rgba(20,83,45,0.92);color:#86efac;font-size:0.76rem;font-weight:600;padding:5px 12px;border-radius:20px;z-index:9998;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:color 0.3s;';
   badge.textContent = '⟳ conectando...';
   document.body.appendChild(badge);
+  function setBadge(t, c) { badge.textContent = t; badge.style.color = c || '#86efac'; }
 
-  function setBadge(txt, color) { badge.textContent = txt; badge.style.color = color || '#86efac'; }
+  const _guardar = window.guardarDatos;
+  let _writeTimer = null;
 
-  // Guardar en n8n
-  function pushN8N(datos) {
-    fetch(WEBHOOK, {
-      method: 'POST',
+  function pushFirebase(datos) {
+    fetch(`${DB}.json`, {
+      method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'write', id: ID, jugadores: datos })
-    }).then(() => setBadge('✓ sincronizado', '#4ade80'))
+      body: JSON.stringify({ jugadores: datos })
+    }).then(r => r.ok ? setBadge('✓ sincronizado', '#4ade80') : setBadge('⚠ error al guardar', '#fca5a5'))
       .catch(() => setBadge('⚠ sin conexión', '#fca5a5'));
   }
 
-  // Envolver guardarDatos para que también sincronice con n8n
-  const _guardar = window.guardarDatos;
-  window.guardarDatos = function(datos) { _guardar(datos); pushN8N(datos); };
+  window.guardarDatos = function(datos) {
+    _guardar(datos);
+    if (_writeTimer) clearTimeout(_writeTimer);
+    _writeTimer = setTimeout(() => pushFirebase(datos), 1000);
+  };
 
-  // Leer desde n8n y actualizar si hay cambios
-  function pullN8N(silencioso) {
-    fetch(WEBHOOK, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action: 'read', id: ID })
-    })
-    .then(r => r.json())
-    .then(data => {
-      if (!data.jugadores || !data.jugadores.length) {
-        // Primera vez: subir los datos locales
-        pushN8N(cargarDatos());
-        setBadge('● en vivo', '#86efac');
-        return;
-      }
-      const actual = JSON.stringify(cargarDatos());
-      const remoto = JSON.stringify(data.jugadores);
-      if (actual !== remoto) {
-        _guardar(data.jugadores);
-        renderTabla();
-        if (typeof sincronizarSelectActividad === 'function') sincronizarSelectActividad();
-        if (silencioso) setBadge('↻ actualizado', '#fde68a');
-        setTimeout(() => setBadge('● en vivo', '#86efac'), 2500);
-      } else {
-        setBadge('● en vivo', '#86efac');
-      }
-    })
-    .catch(() => setBadge('⚠ sin conexión', '#fca5a5'));
+  function pullFirebase(silencioso) {
+    fetch(`${DB}.json`)
+      .then(r => r.json())
+      .then(data => {
+        if (!data || !data.jugadores || !data.jugadores.length) { setBadge('● en vivo', '#86efac'); return; }
+        const actual = JSON.stringify(cargarDatos());
+        const remoto = JSON.stringify(data.jugadores);
+        if (actual !== remoto) {
+          _guardar(data.jugadores);
+          renderTabla();
+          if (typeof sincronizarSelectActividad === 'function') sincronizarSelectActividad();
+          if (silencioso) { setBadge('↻ actualizado', '#fde68a'); setTimeout(() => setBadge('● en vivo', '#86efac'), 2500); }
+        } else { setBadge('● en vivo', '#86efac'); }
+      })
+      .catch(() => setBadge('⚠ sin conexión', '#fca5a5'));
   }
 
-  pullN8N(false);
-  setInterval(() => pullN8N(true), 15000);
+  pullFirebase(false);
+  setInterval(() => pullFirebase(true), 15000);
 })();
 </script>
 
