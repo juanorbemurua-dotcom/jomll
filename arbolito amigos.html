@@ -384,6 +384,12 @@
             <a id="enlace-rfeg" href="#" target="_blank" class="btn-rfeg" title="Consultar en RFEG">🔍 RFEG</a>
         </div>
     </div>
+    <div id="div-manual" style="display:none;margin-top:8px;">
+        <div class="form-group">
+            <label style="font-size:0.82rem;color:#fde68a;">Nombre (RFEG sin conexión)</label>
+            <input type="text" id="inp-nombre-manual" placeholder="Ej. Juan García López" style="max-width:280px;">
+        </div>
+    </div>
     <p id="msg-estado" style="margin-top: 10px; font-size: 0.82rem; color: rgb(22, 163, 74); min-height: 18px;">✓ Archivo guardado correctamente.</p>
 </div>
 
@@ -1217,6 +1223,24 @@ async function cargarPDFManual(event) {
 
         const btn = document.getElementById('btn-add');
         btn.disabled = true;
+
+        const elManual = document.getElementById('inp-nombre-manual');
+        const nombreManual = elManual ? elManual.value.trim() : '';
+        if (nombreManual) {
+            jugadores.push({ nombre: nombreManual, licencia: licencia.toUpperCase(), hcpIni, hcpAct: hcpIni, fechaMod: '' });
+            guardarDatos(jugadores);
+            renderTabla();
+            ['inp-licencia','inp-hcp-ini'].forEach(id => document.getElementById(id).value = '');
+            elManual.value = '';
+            const divManual = document.getElementById('div-manual');
+            if (divManual) divManual.style.display = 'none';
+            actualizarEnlaceRFEG();
+            setEstado(`✓ ${nombreManual} añadido manualmente.`, 'ok');
+            document.getElementById('inp-licencia').focus();
+            btn.disabled = false;
+            return;
+        }
+
         setEstado('Consultando RFEG...', 'info');
 
         try {
@@ -1232,7 +1256,9 @@ async function cargarPDFManual(event) {
             setEstado(`✓ ${nombre} añadido · HCP actual: ${hcpAct}`, 'ok');
             document.getElementById('inp-licencia').focus();
         } catch (err) {
-            setEstado('⚠ ' + err.message, 'error');
+            const divManual = document.getElementById('div-manual');
+            if (divManual) divManual.style.display = 'block';
+            setEstado('⚠ RFEG no disponible — ingresá el nombre y volvé a hacer clic en Añadir.', 'error');
         } finally {
             btn.disabled = false;
         }
