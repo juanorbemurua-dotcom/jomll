@@ -1356,7 +1356,7 @@ async function cargarPDFManual(event) {
         setEstado('Consultando RFEG...', 'info');
 
         try {
-            const { nombre, hcpAct, fechaMod } = await buscarEnRFEG(licencia);
+            const { nombre, hcpAct, fechaMod } = await buscarEnRFEGConReintentos(licencia, 3);
             document.getElementById('inp-nombre').value = nombre;
             document.getElementById('inp-hcp-act').value = hcpAct;
 
@@ -1389,49 +1389,69 @@ async function cargarPDFManual(event) {
         let html = '';
         for (const proxy of proxies) {
             try {
-                const res = await fetchTimeout(proxy(rfegUrl), 10000);
+                const res = await fetchTimeout(proxy(rfegUrl), 12000);
                 if (!res.ok) continue;
                 const text = await res.text();
                 try { html = JSON.parse(text).contents || ''; } catch { html = text; }
                 if (html.length > 500) break;
             } catch { continue; }
+            html = '';
         }
 
         if (!html) throw new Error('No se pudo conectar con la RFEG.');
 
-        // Parsear HTML con DOMParser y buscar la fila con "Válido"
         const doc = new DOMParser().parseFromString(html, 'text/html');
         const tds = Array.from(doc.querySelectorAll('td'));
-        const validoTd = tds.find(td => /^v[áa]lido$/i.test(td.textContent.trim()));
+        console.log(`[RFEG ${licencia}] celdas:`, tds.map(td => td.textContent.trim()).filter(t => t));
 
+        const validoTd = tds.find(td => /^v[áa]lid[oa]$/i.test(td.textContent.trim()));
         if (validoTd) {
             const fila = validoTd.closest('tr');
             if (fila) {
-                const celdas = Array.from(fila.querySelectorAll('td'))
-                    .map(td => td.textContent.trim());
-                // Estructura: [..., nombre, licencia, handicap, Válido, fecha]
-                const iValido = celdas.findIndex(c => /^v[áa]lido$/i.test(c));
-                if (iValido >= 3) {
-                    const nombre = celdas[iValido - 3]
-                        .toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                const celdas = Array.from(fila.querySelectorAll('td')).map(td => td.textContent.trim());
+                console.log(`[RFEG ${licencia}] fila válido:`, celdas);
+                const iValido = celdas.findIndex(c => /^v[áa]lid[oa]$/i.test(c));
+                for (const offset of [3, 2, 4]) {
+                    if (iValido < offset) continue;
+                    const nombre = celdas[iValido - offset].toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
                     const hcpAct = parseFloat(celdas[iValido - 1].replace(',', '.'));
                     const fechaMod = celdas[iValido + 1] || '';
-                    if (nombre && !isNaN(hcpAct)) return { nombre, hcpAct, fechaMod };
+                    if (nombre.length > 3 && !isNaN(hcpAct)) return { nombre, hcpAct, fechaMod };
                 }
             }
         }
 
-        // Fallback: buscar en texto plano
         const texto = doc.body ? doc.body.innerText || doc.body.textContent : html;
-        const m = texto.match(/([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ ]{4,})\s+[\w-]+\s+([\d,]+)\s+V[áa]lido\s+([\d-]+)/);
+        const licNum = licencia.replace(/\D/g, '');
+        const mLic = texto.match(new RegExp(`([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ, ]{4,})\\s+${licNum}\\D*(\\d+[,.]\\d+)`));
+        if (mLic) {
+            const nombre = mLic[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+            const hcpAct = parseFloat(mLic[2].replace(',', '.'));
+            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
+        }
+
+        const m = texto.match(/([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ ]{4,})\s+[\w-]+\s+([\d,]+)\s+V[áa]lid/i);
         if (m) {
             const nombre = m[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
             const hcpAct = parseFloat(m[2].replace(',', '.'));
-            const fechaMod = m[3] || '';
-            return { nombre, hcpAct, fechaMod };
+            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
         }
 
-        throw new Error(`No se encontró la licencia "${licencia}" en la RFEG.`);
+        throw new Error(`No se encontró "${licencia}" en la RFEG.`);
+    }
+
+    async function buscarEnRFEGConReintentos(licencia, maxReintentos = 5, onIntento = null) {
+        let ultimoError;
+        for (let intento = 1; intento <= maxReintentos; intento++) {
+            try {
+                if (onIntento) onIntento(intento);
+                return await buscarEnRFEG(licencia);
+            } catch(e) {
+                ultimoError = e;
+                if (intento < maxReintentos) await new Promise(r => setTimeout(r, 1500));
+            }
+        }
+        throw ultimoError;
     }
 
     function editarHcpIni(td, idx) {
@@ -1476,7 +1496,7 @@ async function cargarPDFManual(event) {
                 const j = jugadores[i];
                 btn.textContent = `↻ Actualizando ${i + 1}/${jugadores.length}...`;
                 try {
-                    const { nombre, hcpAct, fechaMod } = await buscarEnRFEG(j.licencia);
+                    const { nombre, hcpAct, fechaMod } = await buscarEnRFEGConReintentos(j.licencia, 5, (intento) => { btn.textContent = `↻ Actualizando ${i + 1}/${jugadores.length}${intento > 1 ? ` (reint. ${intento}/5)` : ""}...`; });
                     jugadores[i].hcpAct = hcpAct;
                     jugadores[i].nombre = nombre;
                     jugadores[i].fechaMod = fechaMod || '';
