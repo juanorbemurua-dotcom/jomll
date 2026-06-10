@@ -713,7 +713,7 @@ function renderTablaActividad() {
 
 (function() {
   const sel = document.getElementById('selectJugador');
-  if (sel) JUGADORES_ACT.forEach((j, i) => {
+  if (sel) { sel.innerHTML = '<option value="">— Seleccionar jugador —</option>'; JUGADORES_ACT.forEach((j, i) => {
     const o = document.createElement('option');
     o.value = i; o.textContent = j.nombre;
     sel.appendChild(o);
@@ -1324,7 +1324,8 @@ async function cargarPDFManual(event) {
         const btn = document.getElementById('btn-update');
         try {
             const jugadores = cargarDatos();
-            if (jugadores.length === 0) { setEstado('No hay jugadores en la tabla.', 'error'); return; }
+            if (jugadores.length === 0) { setEstado('No hay jugadores en la tabla.', 'error'); sincronizarSelectActividad();
+            return; }
 
             btn.disabled = true;
             const añoActual = String(new Date().getFullYear());
@@ -1430,6 +1431,7 @@ async function cargarPDFManual(event) {
         if (jugadores.length === 0) {
             document.getElementById('tabla-body').innerHTML =
                 '<tr><td colspan="9" class="empty">Aún no hay jugadores. Añade el primero con el formulario.</td></tr>';
+            sincronizarSelectActividad();
             return;
         }
 
