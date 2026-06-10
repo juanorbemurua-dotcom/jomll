@@ -1796,7 +1796,7 @@ async function cargarPDFManual(event) {
   window.guardarDatos = function(datos) {
     _guardar(datos);
     if (_writeTimer) clearTimeout(_writeTimer);
-    _writeTimer = setTimeout(function() { pushFirebase(datos); }, 1000);
+    _writeTimer = setTimeout(function() { pushFirebase(datos); _writeTimer = null; }, 1000);
   };
 
   function pullFirebase(silencioso) {
