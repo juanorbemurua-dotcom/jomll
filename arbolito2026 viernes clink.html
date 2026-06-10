@@ -361,7 +361,7 @@
     <p id="titulo-subtitulo" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">Seguimiento de Handicap · Temporada 2026</p>
 </header>
 
-<p class="fecha-hoy" id="fechaHoy">Fecha actual: sábado, 30 de mayo de 2026</p>
+<p class="fecha-hoy" id="fechaHoy">Fecha actual: miércoles, 10 de junio de 2026</p>
 
 <!-- Formulario -->
 <div class="form-card">
@@ -369,18 +369,18 @@
     <div class="form-grid">
         <div class="form-group">
             <label>Nº Licencia</label>
-            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()">
+            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()" fdprocessedid="2mkoqh">
         </div>
         <div class="form-group">
             <label>HCP 01/01/2026</label>
-            <input type="number" id="inp-hcp-ini" placeholder="Ej. 18.4" step="0.1">
+            <input type="number" id="inp-hcp-ini" placeholder="Ej. 18.4" step="0.1" fdprocessedid="a1ij58">
         </div>
         <div class="form-group" style="display:none">
             <input type="text" id="inp-nombre">
             <input type="number" id="inp-hcp-act">
         </div>
         <div class="form-group" style="display:flex;gap:8px;align-items:flex-end;">
-            <button class="btn-add" id="btn-add" onclick="añadirJugador()">Añadir</button>
+            <button class="btn-add" id="btn-add" onclick="añadirJugador()" fdprocessedid="t8bq9">Añadir</button>
             <a id="enlace-rfeg" href="#" target="_blank" class="btn-rfeg" title="Consultar en RFEG">🔍 RFEG</a>
         </div>
     </div>
@@ -398,9 +398,9 @@
     <div class="tabla-header">
         <h2>🏆 Clasificación por Mejora de Handicap</h2>
         <div style="display:flex;gap:8px;">
-            <button class="btn-update" id="btn-update" onclick="actualizarTodos()">↻ Actualizar RFEG</button>
-            <button class="btn-export" onclick="exportarExcel()">⬇ Exportar Excel</button>
-            <button class="btn-export" onclick="guardarJSON()" title="Guardar copia de seguridad">💾 Guardar</button>
+            <button class="btn-update" id="btn-update" onclick="actualizarTodos()" fdprocessedid="42anb5">↻ Actualizar RFEG</button>
+            <button class="btn-export" onclick="exportarExcel()" fdprocessedid="c3iao">⬇ Exportar Excel</button>
+            <button class="btn-export" onclick="guardarJSON()" title="Guardar copia de seguridad" fdprocessedid="u4odwb">💾 Guardar</button>
             <label class="btn-export" style="cursor:pointer;margin:0" title="Cargar copia de seguridad">
                 📂 Cargar<input type="file" accept=".json" onchange="cargarJSON(event)" style="display:none">
             </label>
@@ -424,7 +424,203 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody id="tabla-body"></tbody>
+        <tbody id="tabla-body"><tr class="top1">
+                <td><span class="medal">🥇</span></td>
+                <td class="nombre">Gonzalo Pardo Arin</td>
+                <td class="licencia">VB09020318</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 13)">-0.5</td>
+                <td class="hcp">-0.2</td>
+                <td><span class="incremento inc-mejor">0.3</span></td>
+                <td><span class="incremento inc-mejor">-60.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">06-06-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 13, 'apuesta')">330€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 13, 'propietario')">gonzalo</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 13, 'propietario2')">alejandro</td>
+                <td><button class="btn-del" onclick="eliminarJugador(13)" title="Eliminar" fdprocessedid="qyis7i">✕</button></td>
+            </tr><tr class="top6">
+                <td><span class="medal">🥈</span></td>
+                <td class="nombre">Luis AntuñAno Eguillor</td>
+                <td class="licencia">VB01027471</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 9)">3.6</td>
+                <td class="hcp">2.6</td>
+                <td><span class="incremento inc-mejor">-1.0</span></td>
+                <td><span class="incremento inc-mejor">-27.8%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">6</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">07-06-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 9, 'apuesta')">200€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 9, 'propietario')">lati</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 9, 'propietario2')">lati</td>
+                <td><button class="btn-del" onclick="eliminarJugador(9)" title="Eliminar" fdprocessedid="ynyasw">✕</button></td>
+            </tr><tr class="top6">
+                <td><span class="medal">🥉</span></td>
+                <td class="nombre">Ramon Elosegui Bergareche</td>
+                <td class="licencia">VB01020079</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 1)">10.0</td>
+                <td class="hcp">8.7</td>
+                <td><span class="incremento inc-mejor">-1.3</span></td>
+                <td><span class="incremento inc-mejor">-13.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">4</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">07-06-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 1, 'apuesta')">190€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 1, 'propietario')">moncho</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 1, 'propietario2')">piti</td>
+                <td><button class="btn-del" onclick="eliminarJugador(1)" title="Eliminar" fdprocessedid="voz6x">✕</button></td>
+            </tr><tr class="topGreen">
+                <td><span class="pos">4</span></td>
+                <td class="nombre">Gorka  Montero Fernandez</td>
+                <td class="licencia">VB09400249</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 10)">11.0</td>
+                <td class="hcp">10.5</td>
+                <td><span class="incremento inc-mejor">-0.5</span></td>
+                <td><span class="incremento inc-mejor">-4.5%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">5</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">08-06-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 10, 'apuesta')">90€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 10, 'propietario')">gorka</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 10, 'propietario2')">piti</td>
+                <td><button class="btn-del" onclick="eliminarJugador(10)" title="Eliminar" fdprocessedid="3pkqx9">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">5</span></td>
+                <td class="nombre">Victor San Gil Noain</td>
+                <td class="licencia">VB09320423</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 3)">5.1</td>
+                <td class="hcp">5.1</td>
+                <td><span class="incremento inc-igual">0.0</span></td>
+                <td><span class="incremento inc-igual">0.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">4</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">31-05-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 3, 'apuesta')">70€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 3, 'propietario')">victor</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 3, 'propietario2')">alejandro</td>
+                <td><button class="btn-del" onclick="eliminarJugador(3)" title="Eliminar" fdprocessedid="fpche">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">6</span></td>
+                <td class="nombre">Alejo Cuadra Ibarguchi</td>
+                <td class="licencia">VB090445-P</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 7)">2.6</td>
+                <td class="hcp">2.6</td>
+                <td><span class="incremento inc-igual">0.0</span></td>
+                <td><span class="incremento inc-igual">0.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">30-05-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 7, 'apuesta')">120€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 7, 'propietario')">alejo</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 7, 'propietario2')">alejo</td>
+                <td><button class="btn-del" onclick="eliminarJugador(7)" title="Eliminar" fdprocessedid="8by4lab">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">7</span></td>
+                <td class="nombre">Juan Ignacio Orbe Murua</td>
+                <td class="licencia">VB01069771</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 12)">6.5</td>
+                <td class="hcp">6.5</td>
+                <td><span class="incremento inc-igual">0.0</span></td>
+                <td><span class="incremento inc-igual">0.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">3</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">30-05-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 12, 'apuesta')">100€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 12, 'propietario')">juan</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 12, 'propietario2')">lati</td>
+                <td><button class="btn-del" onclick="eliminarJugador(12)" title="Eliminar" fdprocessedid="f08prf">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">8</span></td>
+                <td class="nombre">Eugenio Rezola Murua</td>
+                <td class="licencia">VB01026531</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 8)">11.8</td>
+                <td class="hcp">12.1</td>
+                <td><span class="incremento inc-peor">+0.3</span></td>
+                <td><span class="incremento inc-peor">+2.5%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">04-05-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 8, 'apuesta')">20€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 8, 'propietario')">eugenio</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 8, 'propietario2')">piti</td>
+                <td><button class="btn-del" onclick="eliminarJugador(8)" title="Eliminar" fdprocessedid="bw556s">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">9</span></td>
+                <td class="nombre">Jaime BeñAran Arocena</td>
+                <td class="licencia">VB09020398</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 0)">3.0</td>
+                <td class="hcp">3.1</td>
+                <td><span class="incremento inc-peor">+0.1</span></td>
+                <td><span class="incremento inc-peor">+3.3%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 0, 'apuesta')">140€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 0, 'propietario')">jaime</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 0, 'propietario2')">piti</td>
+                <td><button class="btn-del" onclick="eliminarJugador(0)" title="Eliminar" fdprocessedid="1ye84sj">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">10</span></td>
+                <td class="nombre">Pablo Manuel Orbe Murua</td>
+                <td class="licencia">VB01069770</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 4)">14.3</td>
+                <td class="hcp">14.8</td>
+                <td><span class="incremento inc-peor">+0.5</span></td>
+                <td><span class="incremento inc-peor">+3.5%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">07-06-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 4, 'apuesta')">30€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 4, 'propietario')">pablo</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 4, 'propietario2')">gorka</td>
+                <td><button class="btn-del" onclick="eliminarJugador(4)" title="Eliminar" fdprocessedid="9tfq03">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">11</span></td>
+                <td class="nombre">Alejandro Muro Aristizabal</td>
+                <td class="licencia">VB09245518</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 2)">16.4</td>
+                <td class="hcp">17.4</td>
+                <td><span class="incremento inc-peor">+1.0</span></td>
+                <td><span class="incremento inc-peor">+6.1%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">8</td>
+                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">09-06-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 2, 'apuesta')">100€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 2, 'propietario')">alejandro</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 2, 'propietario2')">victor</td>
+                <td><button class="btn-del" onclick="eliminarJugador(2)" title="Eliminar" fdprocessedid="sf8vco">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">12</span></td>
+                <td class="nombre">Andres Murua Urruticoechea</td>
+                <td class="licencia">VB09127515</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 11)">14.6</td>
+                <td class="hcp">15.6</td>
+                <td><span class="incremento inc-peor">+1.0</span></td>
+                <td><span class="incremento inc-peor">+6.8%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 11, 'apuesta')">30€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 11, 'propietario')">andres</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 11, 'propietario2')">piti</td>
+                <td><button class="btn-del" onclick="eliminarJugador(11)" title="Eliminar" fdprocessedid="j5h9ar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">13</span></td>
+                <td class="nombre">Fernando Arocena Garcia Tapia</td>
+                <td class="licencia">VB03031463</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 5)">13.6</td>
+                <td class="hcp">14.6</td>
+                <td><span class="incremento inc-peor">+1.0</span></td>
+                <td><span class="incremento inc-peor">+7.4%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">31-05-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 5, 'apuesta')">50€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 5, 'propietario')">muli</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 5, 'propietario2')">jaime</td>
+                <td><button class="btn-del" onclick="eliminarJugador(5)" title="Eliminar" fdprocessedid="m4pc0d">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">14</span></td>
+                <td class="nombre">Fernando Aguirre FlañO</td>
+                <td class="licencia">VB09233692</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 6)">3.4</td>
+                <td class="hcp">4.0</td>
+                <td><span class="incremento inc-peor">+0.6</span></td>
+                <td><span class="incremento inc-peor">+17.6%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">3</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">06-06-2026</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 6, 'apuesta')">150€</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 6, 'propietario')">fernando</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 6, 'propietario2')">jaime</td>
+                <td><button class="btn-del" onclick="eliminarJugador(6)" title="Eliminar" fdprocessedid="t53emv">✕</button></td>
+            </tr></tbody>
     </table>
 </div>
 
@@ -433,9 +629,9 @@
   <div style="background:#14532d;color:#fde68a;font-weight:700;font-size:1.05rem;padding:14px 20px;border-radius:10px 10px 0 0;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;">
     <span>⛳ Actividad — Últimas 20 rondas jugadas</span>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-      <select id="selectJugador" onchange="renderTablaActividad()" style="background:#166534;color:#fde68a;border:1px solid rgba(253,230,138,0.5);border-radius:6px;padding:5px 10px;font-weight:600;font-size:0.85rem;cursor:pointer;max-width:240px;"><option value="">— Seleccionar jugador —</option><option value="0">Gonzalo Zuñiga Ascunce</option><option value="1">Juan Miguel Dorronsoro Dorronsoro</option><option value="2">Juan Rezola Sansinenea</option><option value="3">Pedro Suquia Garmendia</option><option value="4">Jose Ignacio Coronado Eceizabarrena</option><option value="5">Juan Ignacio Orbe Murua</option></select>
-      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;">🔄 Actualizar RFEG</button>
-      <button id="btnFichasPDF" onclick="exportarFichasPDF()" style="background: rgb(180, 83, 9); color: rgb(255, 255, 255); border: 1px solid transparent; border-radius: 6px; padding: 6px 14px; font-weight: 700; font-size: 0.88rem; cursor: pointer;" title="Hay cambios — regenerar fichas PDF">📄 Fichas PDF ●</button>
+      <select id="selectJugador" onchange="renderTablaActividad()" style="background:#166534;color:#fde68a;border:1px solid rgba(253,230,138,0.5);border-radius:6px;padding:5px 10px;font-weight:600;font-size:0.85rem;cursor:pointer;max-width:240px;" fdprocessedid="7ejcve"><option value="">— Seleccionar jugador —</option><option value="0">Juan Ignacio Orbe Murua</option><option value="1">Jaime BeñAran Arocena</option><option value="2">Ramon Elosegui Bergareche</option><option value="3">Alejandro Muro Aristizabal</option><option value="4">Victor San Gil Noain</option><option value="5">Pablo Manuel Orbe Murua</option><option value="6">Fernando Arocena Garcia Tapia</option><option value="7">Fernando Aguirre FlañO</option><option value="8">Alejo Cuadra Ibarguchi</option><option value="9">Eugenio Rezola Murua</option><option value="10">Luis AntuñAno Eguillor</option><option value="11">Gorka  Montero Fernandez</option><option value="12">Andres Murua Urruticoechea</option><option value="13">Gonzalo Pardo Arin</option></select>
+      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;" fdprocessedid="q0ptxo">🔄 Actualizar RFEG</button>
+      <button id="btnFichasPDF" onclick="exportarFichasPDF()" style="background: rgb(180, 83, 9); color: rgb(255, 255, 255); border: 1px solid transparent; border-radius: 6px; padding: 6px 14px; font-weight: 700; font-size: 0.88rem; cursor: pointer;" title="Hay cambios — regenerar fichas PDF" fdprocessedid="95hgs">📄 Fichas PDF ●</button>
     </div>
   </div>
   <div id="actStatus" style="display: none; padding: 8px 16px; font-size: 0.82rem; background: rgb(240, 253, 244); border-left: 3px solid rgb(22, 101, 52); color: rgb(22, 102, 52);"></div>
@@ -450,177 +646,7 @@
     .dif-norm { color:#111; font-weight:700; }
     .act-info-bar { background:#f0fdf4; border-bottom:2px solid #bbf7d0; padding:10px 16px; display:flex; gap:24px; flex-wrap:wrap; align-items:center; font-size:0.85rem; color:#166534; font-weight:600; }
     .act-info-bar span { font-weight:400; color:#475569; }
-  </style><div class="act-info-bar">
-    <div>Jugador: <span>Juan Miguel Dorronsoro Dorronsoro</span></div>
-    <div>Licencia: <span>VB14431288</span></div>
-    <div>HCP actual: <span>25.9</span></div>
-    <div>Actualizado: <span>21/08/2025</span></div>
-  </div><table class="act-table">
-    <thead><tr>
-      <th>Fecha</th><th>Torneo</th><th>Campo de Golf</th><th>HCP</th><th>STB</th><th>Pen.</th><th>Diferencial</th>
-    </tr></thead>
-    <tbody><tr>
-      <td class="act-fecha">21/08/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="SANTA MARÍA SAN MIGUEL XV ANDALUCIA GOLF CHALLENGE">SANTA MARÍA SAN MIGUEL XV ANDALUCIA GOLF CHALLENGE</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="SANTA MARIA GOLF">SANTA MARIA GOLF</td>
-      <td class="act-hcp">31</td>
-      <td class="act-stb">27</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">33.2</span></td>
-    </tr><tr>
-      <td class="act-fecha">07/06/2025</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="XVI TORNEO GRUPO COPE DE COMUNICACION">XVI TORNEO GRUPO COPE DE COMUNICACION</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp">31</td>
-      <td class="act-stb">27</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">33.2</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">19/07/2024</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="CIRCUITO PREMIUM MAHOU SAN MIGUEL">CIRCUITO PREMIUM MAHOU SAN MIGUEL</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp" style="background:#fff5f5">32</td>
-      <td class="act-stb" style="background:#fff5f5">42</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 21.5</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">06/05/2023</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="FINAL II LIGA SUSHI DONOSTI 2022">FINAL II LIGA SUSHI DONOSTI 2022</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp" style="background:#fff5f5">32</td>
-      <td class="act-stb" style="background:#fff5f5">31</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 21.5</span></td>
-    </tr><tr>
-      <td class="act-fecha">22/04/2023</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="II LIGA SUSHI DONOSTI - 5ª JORNADA">II LIGA SUSHI DONOSTI - 5ª JORNADA</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp">32</td>
-      <td class="act-stb">32</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">30.7</span></td>
-    </tr><tr>
-      <td class="act-fecha">27/08/2022</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="PREMIO FUNDACION WHY NOT, SABADO 27">PREMIO FUNDACION WHY NOT, SABADO 27</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp">32</td>
-      <td class="act-stb">32</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">29.9</span></td>
-    </tr><tr>
-      <td class="act-fecha">20/08/2022</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="3ª JORNADA LIGA SUSHIDONOSTI 2022">3ª JORNADA LIGA SUSHIDONOSTI 2022</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp">32</td>
-      <td class="act-stb">29</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">33.2</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">16/07/2022</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="II LIGA SUSHI DONOSTI - 2ª JORNADA">II LIGA SUSHI DONOSTI - 2ª JORNADA</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp" style="background:#fff5f5">32</td>
-      <td class="act-stb" style="background:#fff5f5">36</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 27.4</span></td>
-    </tr><tr>
-      <td class="act-fecha">26/06/2022</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="II LIGA SUSHI DONOSTI - 1ª JORNADA">II LIGA SUSHI DONOSTI - 1ª JORNADA</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp">32</td>
-      <td class="act-stb">28</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">33.2</span></td>
-    </tr><tr>
-      <td class="act-fecha">04/06/2022</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="FINAL LIGA SUSHI DONOSTI 2021">FINAL LIGA SUSHI DONOSTI 2021</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp">32</td>
-      <td class="act-stb">32</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">33.2</span></td>
-    </tr><tr>
-      <td class="act-fecha">20/05/2022</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="CIRCUITO OLYMPIA ROAD TOUR 2022">CIRCUITO OLYMPIA ROAD TOUR 2022</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp">32</td>
-      <td class="act-stb">31</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">29.9</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">18/12/2021</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="PREMIO SOCIAL BASOZABAL">PREMIO SOCIAL BASOZABAL</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp" style="background:#fff5f5">32</td>
-      <td class="act-stb" style="background:#fff5f5">39</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 24.0</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">23/10/2021</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="LIGA SUSHI DONOSTI - 4ª JORNADA">LIGA SUSHI DONOSTI - 4ª JORNADA</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp" style="background:#fff5f5">32</td>
-      <td class="act-stb" style="background:#fff5f5">34</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 28.2</span></td>
-    </tr><tr>
-      <td class="act-fecha">03/09/2021</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="CIRCUITO MITSUBISHI VIERNES 3 SEP">CIRCUITO MITSUBISHI VIERNES 3 SEP</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp">32</td>
-      <td class="act-stb">32</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">29.9</span></td>
-    </tr><tr>
-      <td class="act-fecha">28/08/2021</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="WHY NOT? SÁBADO 28">WHY NOT? SÁBADO 28</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp">32</td>
-      <td class="act-stb">26</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">34.9</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">14/08/2021</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="LIGA SUSHI DONOSTI - 2ª JORNADA">LIGA SUSHI DONOSTI - 2ª JORNADA</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp" style="background:#fff5f5">34</td>
-      <td class="act-stb" style="background:#fff5f5">43</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 23.2</span></td>
-    </tr><tr>
-      <td class="act-fecha">23/07/2021</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="CIRCUITO OLYMPIA ROAD TOUR 2021">CIRCUITO OLYMPIA ROAD TOUR 2021</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp">34</td>
-      <td class="act-stb">30</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">33.2</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">18/07/2021</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="LIGA SUSHI DONOSTI - 1ª JORNADA">LIGA SUSHI DONOSTI - 1ª JORNADA</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp" style="background:#fff5f5">34</td>
-      <td class="act-stb" style="background:#fff5f5">36</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 28.2</span></td>
-    </tr><tr style="background:#fff5f5">
-      <td class="act-fecha" style="background:#fff5f5">28/03/2021</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="PREMIO JOYERIA AYESTARAN">PREMIO JOYERIA AYESTARAN</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp" style="background:#fff5f5">35</td>
-      <td class="act-stb" style="background:#fff5f5">41</td>
-      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 24.9</span></td>
-    </tr><tr>
-      <td class="act-fecha">20/03/2021</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="TORNEO SOCIAL BASOZABAL">TORNEO SOCIAL BASOZABAL</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
-      <td class="act-hcp">35</td>
-      <td class="act-stb">34</td>
-      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
-      <td style="text-align:center"><span class="dif-norm">29.9</span></td>
-    </tr></tbody>
-  </table></div>
+  </style><div style="padding:32px;text-align:center;color:#94a3b8;font-style:italic;font-size:0.95rem;">Seleccioná un jugador para ver sus últimas 20 rondas</div></div>
 </div>
 
 <script>
@@ -1233,167 +1259,156 @@ async function cargarPDFManual(event) {
     // DATOS — se actualizan al pulsar 💾 Guardar y reemplazar el archivo
     let _jugadores = [
                 {
-                        "nombre": "Jaime BeñAran Arocena",
-                        "licencia": "VB09020398",
-                        "hcpIni": 3,
-                        "hcpAct": 3.1,
-                        "fechaMod": "24-05-2026",
-                        "premiosAño": 1,
                         "apuesta": "140€",
+                        "fechaMod": "24-05-2026",
+                        "hcpAct": 3.1,
+                        "hcpIni": 3,
+                        "licencia": "VB09020398",
+                        "nombre": "Jaime BeñAran Arocena",
+                        "premiosAño": 1,
                         "propietario": "jaime",
                         "propietario2": "piti"
                 },
                 {
-                        "nombre": "Ramon Elosegui Bergareche",
-                        "licencia": "VB01020079",
-                        "hcpIni": 10,
-                        "hcpAct": 9.5,
-                        "fechaMod": "24-05-2026",
-                        "premiosAño": 4,
                         "apuesta": "190€",
+                        "fechaMod": "07-06-2026",
+                        "hcpAct": 8.7,
+                        "hcpIni": 10,
+                        "licencia": "VB01020079",
+                        "nombre": "Ramon Elosegui Bergareche",
+                        "premiosAño": 4,
                         "propietario": "moncho",
                         "propietario2": "piti"
                 },
                 {
-                        "nombre": "Alejandro Muro Aristizabal",
-                        "licencia": "VB09245518",
-                        "hcpIni": 16.4,
-                        "hcpAct": 17.2,
-                        "fechaMod": "24-05-2026",
-                        "premiosAño": 5,
                         "apuesta": "100€",
+                        "fechaMod": "09-06-2026",
+                        "hcpAct": 17.4,
+                        "hcpIni": 16.4,
+                        "licencia": "VB09245518",
+                        "nombre": "Alejandro Muro Aristizabal",
+                        "premiosAño": 8,
                         "propietario": "alejandro",
                         "propietario2": "victor"
                 },
                 {
-                        "nombre": "Victor San Gil Noain",
-                        "licencia": "VB09320423",
-                        "hcpIni": 5.1,
-                        "hcpAct": 5.1,
-                        "fechaMod": "17-05-2026",
-                        "premiosAño": 4,
                         "apuesta": "70€",
+                        "fechaMod": "31-05-2026",
+                        "hcpAct": 5.1,
+                        "hcpIni": 5.1,
+                        "licencia": "VB09320423",
+                        "nombre": "Victor San Gil Noain",
+                        "premiosAño": 4,
                         "propietario": "victor",
                         "propietario2": "alejandro"
                 },
                 {
-                        "nombre": "Pablo Manuel Orbe Murua",
-                        "licencia": "VB01069770",
-                        "hcpIni": 14.3,
-                        "hcpAct": 14.8,
-                        "fechaMod": "29-05-2026",
-                        "premiosAño": 0,
                         "apuesta": "30€",
+                        "fechaMod": "07-06-2026",
+                        "hcpAct": 14.8,
+                        "hcpIni": 14.3,
+                        "licencia": "VB01069770",
+                        "nombre": "Pablo Manuel Orbe Murua",
+                        "premiosAño": 0,
                         "propietario": "pablo",
                         "propietario2": "gorka"
                 },
                 {
-                        "nombre": "Fernando Arocena Garcia Tapia",
-                        "licencia": "VB03031463",
-                        "hcpIni": 13.6,
-                        "hcpAct": 14.1,
-                        "fechaMod": "24-05-2026",
-                        "premiosAño": 1,
                         "apuesta": "50€",
+                        "fechaMod": "31-05-2026",
+                        "hcpAct": 14.6,
+                        "hcpIni": 13.6,
+                        "licencia": "VB03031463",
+                        "nombre": "Fernando Arocena Garcia Tapia",
+                        "premiosAño": 1,
                         "propietario": "muli",
                         "propietario2": "jaime"
                 },
                 {
-                        "nombre": "Fernando Aguirre FlañO",
-                        "licencia": "VB09233692",
-                        "hcpIni": 3.4,
-                        "hcpAct": 3.4,
-                        "fechaMod": "17-05-2026",
-                        "premiosAño": 3,
                         "apuesta": "150€",
+                        "fechaMod": "06-06-2026",
+                        "hcpAct": 4,
+                        "hcpIni": 3.4,
+                        "licencia": "VB09233692",
+                        "nombre": "Fernando Aguirre FlañO",
+                        "premiosAño": 3,
                         "propietario": "fernando",
                         "propietario2": "jaime"
                 },
                 {
-                        "nombre": "Alejo Cuadra Ibarguchi",
-                        "licencia": "VB090445-P",
-                        "hcpIni": 2.6,
-                        "hcpAct": 2.6,
-                        "fechaMod": "30-05-2026",
-                        "premiosAño": 2,
                         "apuesta": "120€",
+                        "fechaMod": "30-05-2026",
+                        "hcpAct": 2.6,
+                        "hcpIni": 2.6,
+                        "licencia": "VB090445-P",
+                        "nombre": "Alejo Cuadra Ibarguchi",
+                        "premiosAño": 2,
                         "propietario": "alejo",
                         "propietario2": "alejo"
                 },
                 {
-                        "nombre": "Eugenio Rezola Murua",
-                        "licencia": "VB01026531",
-                        "hcpIni": 11.8,
-                        "hcpAct": 12.1,
-                        "fechaMod": "04-05-2026",
-                        "premiosAño": 2,
                         "apuesta": "20€",
+                        "fechaMod": "04-05-2026",
+                        "hcpAct": 12.1,
+                        "hcpIni": 11.8,
+                        "licencia": "VB01026531",
+                        "nombre": "Eugenio Rezola Murua",
+                        "premiosAño": 2,
                         "propietario": "eugenio",
                         "propietario2": "piti"
                 },
                 {
-                        "nombre": "Luis AntuñAno Eguillor",
-                        "licencia": "VB01027471",
-                        "hcpIni": 3.6,
-                        "hcpAct": 2.6,
-                        "fechaMod": "26-05-2026",
-                        "premiosAño": 6,
                         "apuesta": "200€",
+                        "fechaMod": "07-06-2026",
+                        "hcpAct": 2.6,
+                        "hcpIni": 3.6,
+                        "licencia": "VB01027471",
+                        "nombre": "Luis AntuñAno Eguillor",
+                        "premiosAño": 6,
                         "propietario": "lati",
                         "propietario2": "lati"
                 },
                 {
-                        "nombre": "Gorka  Montero Fernandez",
-                        "licencia": "VB09400249",
-                        "hcpIni": 11,
-                        "hcpAct": 10.6,
-                        "fechaMod": "24-05-2026",
-                        "premiosAño": 5,
                         "apuesta": "90€",
+                        "fechaMod": "08-06-2026",
+                        "hcpAct": 10.5,
+                        "hcpIni": 11,
+                        "licencia": "VB09400249",
+                        "nombre": "Gorka  Montero Fernandez",
+                        "premiosAño": 5,
                         "propietario": "gorka",
                         "propietario2": "piti"
                 },
                 {
-                        "nombre": "Andres Murua Urruticoechea",
-                        "licencia": "VB09127515",
-                        "hcpIni": 14.6,
-                        "hcpAct": 15.6,
-                        "fechaMod": "24-05-2026",
-                        "premiosAño": 2,
                         "apuesta": "30€",
+                        "fechaMod": "24-05-2026",
+                        "hcpAct": 15.6,
+                        "hcpIni": 14.6,
+                        "licencia": "VB09127515",
+                        "nombre": "Andres Murua Urruticoechea",
+                        "premiosAño": 2,
                         "propietario": "andres",
                         "propietario2": "piti"
                 },
                 {
-                        "nombre": "Miguel Irujo Petit",
-                        "licencia": "VB01069396",
-                        "hcpIni": 0,
-                        "hcpAct": 0,
-                        "fechaMod": "",
-                        "premiosAño": 0,
-                        "apuesta": "0€",
-                        "propietario": "piti",
-                        "propietario2": "piti"
-                },
-                {
-                        "nombre": "Juan Ignacio Orbe Murua",
-                        "licencia": "VB01069771",
-                        "hcpIni": 6.5,
-                        "hcpAct": 6.5,
-                        "fechaMod": "30-05-2026",
-                        "premiosAño": 3,
                         "apuesta": "100€",
+                        "fechaMod": "30-05-2026",
+                        "hcpAct": 6.5,
+                        "hcpIni": 6.5,
+                        "licencia": "VB01069771",
+                        "nombre": "Juan Ignacio Orbe Murua",
+                        "premiosAño": 3,
                         "propietario": "juan",
                         "propietario2": "lati"
                 },
                 {
-                        "nombre": "Gonzalo Pardo Arin",
-                        "licencia": "VB09020318",
-                        "hcpIni": -0.5,
-                        "hcpAct": -0.2,
-                        "fechaMod": "24-05-2026",
-                        "premiosAño": 1,
                         "apuesta": "330€",
+                        "fechaMod": "06-06-2026",
+                        "hcpAct": -0.2,
+                        "hcpIni": -0.5,
+                        "licencia": "VB09020318",
+                        "nombre": "Gonzalo Pardo Arin",
+                        "premiosAño": 1,
                         "propietario": "gonzalo",
                         "propietario2": "alejandro"
                 }
@@ -1712,18 +1727,18 @@ async function cargarPDFManual(event) {
         const conIncremento = jugadores.map((j, originalIdx) => ({
             ...j,
             originalIdx,
-            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / j.hcpIni * 100).toFixed(1) : 0
+            incremento: j.hcpIni !== 0 ? +((j.hcpIni - j.hcpAct) / Math.abs(j.hcpIni) * 100).toFixed(1) : 0
         }));
 
         // Orden inverso al % incremento: de menor (más mejora) a mayor
-        conIncremento.sort((a, b) => a.incremento - b.incremento);
+        conIncremento.sort((a, b) => b.incremento - a.incremento);
 
         const medallas = ['🥇','🥈','🥉'];
 
         const filas = conIncremento.map((j, pos) => {
             const signo = j.incremento > 0 ? '+' : '';
-            const cls   = j.incremento < 0 ? 'inc-mejor'
-                        : j.incremento > 0 ? 'inc-peor'
+            const cls   = j.incremento > 0 ? 'inc-mejor'
+                        : j.incremento < 0 ? 'inc-peor'
                         : 'inc-igual';
 
             const posTexto = pos < 3
@@ -1745,7 +1760,7 @@ async function cargarPDFManual(event) {
                 <td class="licencia">${escHtml(j.licencia)}</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, ${j.originalIdx})">${j.hcpIni.toFixed(1)}</td>
                 <td class="hcp">${j.hcpAct.toFixed(1)}</td>
-                <td><span class="incremento ${cls}">${signo}${(j.hcpAct - j.hcpIni).toFixed(1)}</span></td>
+                <td><span class="incremento ${cls}">${signo}${(j.hcpIni - j.hcpAct).toFixed(1)}</span></td>
                 <td><span class="incremento ${cls}">${signo}${j.incremento.toFixed(1)}%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">${premiosAño}</td>
                 <td style="font-size:0.82rem;color:${esReciente?'#dc2626':'#64748b'};font-weight:${esReciente?'700':'400'}">${j.fechaMod || '—'}</td>
@@ -1849,7 +1864,7 @@ async function cargarPDFManual(event) {
 
         const conIncremento = jugadores.map(j => ({
             ...j,
-            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / j.hcpIni * 100).toFixed(1) : 0
+            incremento: j.hcpIni !== 0 ? +((j.hcpIni - j.hcpAct) / Math.abs(j.hcpIni) * 100).toFixed(1) : 0
         })).sort((a, b) => a.incremento - b.incremento);
 
         const datos = conIncremento.map((j, pos) => ({
@@ -1940,5 +1955,5 @@ async function cargarPDFManual(event) {
   pullFirebase(false);
   setInterval(function() { pullFirebase(true); }, 15000);
 })();
-</script>
+</script><div style="position: fixed; bottom: 14px; right: 14px; background: rgba(20, 83, 45, 0.92); color: rgb(134, 239, 172); font-size: 0.76rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; z-index: 9998; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 8px; transition: color 0.3s;">⟳ conectando...</div>
 </body></html>
