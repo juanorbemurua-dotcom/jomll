@@ -420,6 +420,7 @@
                 <th>Últ. Modificación</th>
                 <th>Apuesta</th>
                 <th>Propietario</th>
+                <th>Propietario 2</th>
                 <th></th>
             </tr>
         </thead>
@@ -1652,7 +1653,7 @@ async function cargarPDFManual(event) {
 
         if (jugadores.length === 0) {
             document.getElementById('tabla-body').innerHTML =
-                '<tr><td colspan="11" class="empty">Aún no hay jugadores. Añade el primero con el formulario.</td></tr>';
+                '<tr><td colspan="12" class="empty">Aún no hay jugadores. Añade el primero con el formulario.</td></tr>';
             return;
         }
 
@@ -1699,6 +1700,7 @@ async function cargarPDFManual(event) {
                 <td style="font-size:0.82rem;color:${esReciente?'#dc2626':'#64748b'};font-weight:${esReciente?'700':'400'}">${j.fechaMod || '—'}</td>
                 <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, ${j.originalIdx}, `apuesta`)">${escHtml(j.apuesta || `—`)}</td>
                 <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, ${j.originalIdx}, `propietario`)">${escHtml(j.propietario || `—`)}</td>
+                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, ${j.originalIdx}, `propietario2`)">${escHtml(j.propietario2 || `—`)}</td>
                 <td><button class="btn-del" onclick="eliminarJugador(${j.originalIdx})" title="Eliminar">✕</button></td>
             </tr>`;
         }).join('');
