@@ -1,0 +1,2022 @@
+﻿<html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>arbolito2026 viernes clink</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #1a4731;
+            color: #1e293b;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+
+        header {
+            text-align: center;
+            padding: 20px 0 24px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            color: #fde68a;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: #86efac;
+            margin-top: 6px;
+            font-size: 0.9rem;
+        }
+
+        .fecha-hoy {
+            text-align: center;
+            color: #bbf7d0;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        /* Formulario de alta */
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 16px;
+            max-width: 425px;
+            margin: 0 auto 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .form-card h2 {
+            font-size: 1rem;
+            color: #166534;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1.8fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .btn-rfeg {
+            padding: 9px 14px;
+            background: #f0fdf4;
+            color: #166534;
+            border: 1.5px solid #86efac;
+            border-radius: 7px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+        .btn-rfeg:hover { background: #dcfce7; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 16px;
+            color: #1e293b;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #16a34a;
+        }
+
+        .btn-add {
+            padding: 9px 20px;
+            background: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .btn-add:hover { background: #15803d; }
+
+        /* Tabla */
+        .tabla-container {
+            max-width: 1050px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            overflow-x: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .tabla-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            background: #14532d;
+            color: white;
+        }
+
+        .tabla-header h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-export {
+            padding: 7px 16px;
+            background: #fde68a;
+            color: #14532d;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+
+        .btn-export:hover { background: #fcd34d; }
+
+        .btn-update {
+            padding: 7px 16px;
+            background: #38bdf8;
+            color: #0c4a6e;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+        .btn-update:hover { background: #7dd3fc; }
+        .btn-update:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            background: #dcfce7;
+        }
+
+        th {
+            padding: 11px 14px;
+            text-align: center;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #166534;
+            font-weight: 700;
+            border-bottom: 2px solid #86efac;
+        }
+
+        th:first-child, th:nth-child(2) { text-align: left; }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0fdf4;
+            font-size: 0.93rem;
+            text-align: center;
+        }
+
+        td:first-child, td:nth-child(2) { text-align: left; }
+
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: #f9fafb; }
+        tr:hover td { background: #d1fae5; }
+        tr.top6 td { background: #4ade80; }
+        tr.top6:nth-child(even) td { background: #4ade80; }
+        tr.top6:hover td { background: #22c55e; }
+        tr.top1 td { background: #fde68a; }
+        tr.top1:nth-child(even) td { background: #fde68a; }
+        tr.top1:hover td { background: #fcd34d; }
+        tr.topGreen td { background: #bbf7d0; }
+        tr.topGreen:nth-child(even) td { background: #bbf7d0; }
+        tr.topGreen:hover td { background: #86efac; }
+
+        .pos {
+            font-weight: 700;
+            color: #64748b;
+            width: 30px;
+        }
+
+        .nombre { font-weight: 600; }
+
+        .licencia {
+            font-family: monospace;
+            color: #475569;
+            font-size: 0.88rem;
+        }
+
+        .hcp { font-weight: 600; }
+        .hcp-editable { cursor: pointer; }
+        .hcp-editable:hover { background: #fef9c3 !important; }
+        .hcp-editable input {
+            width: 70px;
+            padding: 2px 6px;
+            border: 2px solid #16a34a;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            outline: none;
+        }
+
+        .incremento {
+            font-weight: 700;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            padding: 3px 10px;
+        }
+
+        .inc-mejor   { color: #15803d; background: #dcfce7; }
+        .inc-peor    { color: #b91c1c; background: #fee2e2; }
+        .inc-igual   { color: #64748b; background: #f1f5f9; }
+
+        .btn-del {
+            background: #fee2e2;
+            border: 1.5px solid #fca5a5;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            min-width: 36px;
+            min-height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-del:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .medal { font-size: 1.1rem; }
+
+        @media (max-width: 640px) {
+            body { padding: 10px; }
+
+            header h1 { font-size: 1.4rem; }
+            header p  { font-size: 0.8rem; }
+
+            .form-card { padding: 12px; }
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .form-grid > :nth-child(2) { grid-column: 1 / -1; }
+            .form-grid > :last-child   { grid-column: 1 / -1; }
+
+            .tabla-container { overflow-x: auto; }
+            .tabla-header {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 10px 12px;
+            }
+            .tabla-header > div { flex-wrap: wrap; gap: 6px; }
+            .btn-export, .btn-update { font-size: 0.78rem; padding: 6px 10px; }
+            .btn-add  { width: 100%; }
+            .btn-rfeg { width: 100%; text-align: center; }
+
+            th { padding: 8px 8px; font-size: 0.7rem; }
+            td { padding: 8px 8px; font-size: 0.85rem; }
+
+            /* Actividad */
+            #seccion-actividad > div:first-child {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 8px !important;
+                padding: 10px 12px !important;
+            }
+            #seccion-actividad > div:first-child > div {
+                width: 100%;
+                flex-wrap: wrap;
+                gap: 6px !important;
+            }
+            #selectJugador { max-width: 100% !important; width: 100%; }
+            #btnActualizar  { width: 100%; }
+            #lblCargarPDF   { width: 100%; text-align: center; display: block; }
+            #actContainer   { overflow-x: auto; }
+            .act-info-bar   { gap: 10px; font-size: 0.8rem; padding: 8px 12px; }
+        }
+    </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script></head>
+<body>
+
+<div id="webview-banner" style="display:none;background:#fef3c7;border-bottom:2px solid #f59e0b;padding:12px 16px;text-align:center;font-size:0.9rem;color:#92400e;">
+  ⚠️ <strong>Estás abriendo el archivo desde WhatsApp.</strong><br>
+  Para actualizar los datos de la RFEG, abrí el archivo en <strong>Safari</strong>:<br>
+  Pulsá el ícono <strong>compartir ↑</strong> → <strong>"Abrir en Safari"</strong>
+</div>
+<script>
+(function() {
+  var isIOS = /iPhone|iPad/i.test(navigator.userAgent);
+  var isFile = location.protocol === 'file:';
+  var isWhatsApp = /WhatsApp/i.test(navigator.userAgent);
+  // En WebView de WhatsApp en iOS, fetch suele fallar — mostrar aviso
+  if (isIOS && isFile && isWhatsApp) {
+    document.getElementById('webview-banner').style.display = 'block';
+  } else if (isIOS && isFile) {
+    // Puede ser otro WebView — test rápido de conectividad
+    fetch('https://corsproxy.io/?ping', { signal: (function(){ var c=new AbortController(); setTimeout(function(){c.abort();},3000); return c.signal; }()) })
+      .catch(function() { document.getElementById('webview-banner').style.display = 'block'; });
+  }
+})();
+</script>
+
+
+<header>
+    <h1 id="titulo-principal" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">⛳ Arbolito 2026</h1>
+    <p id="titulo-subtitulo" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">Seguimiento de Handicap · Temporada 2026</p>
+</header>
+
+<p class="fecha-hoy" id="fechaHoy">Fecha actual: sábado, 30 de mayo de 2026</p>
+
+<!-- Formulario -->
+<div class="form-card">
+    <h2>➕ Añadir jugador</h2>
+    <div class="form-grid">
+        <div class="form-group">
+            <label>Nº Licencia</label>
+            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()">
+        </div>
+        <div class="form-group">
+            <label>HCP 01/01/2026</label>
+            <input type="number" id="inp-hcp-ini" placeholder="Ej. 18.4" step="0.1">
+        </div>
+        <div class="form-group" style="display:none">
+            <input type="text" id="inp-nombre">
+            <input type="number" id="inp-hcp-act">
+        </div>
+        <div class="form-group" style="display:flex;gap:8px;align-items:flex-end;">
+            <button class="btn-add" id="btn-add" onclick="añadirJugador()">Añadir</button>
+            <a id="enlace-rfeg" href="https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx?HLic=VB01069771" target="_blank" class="btn-rfeg" title="Consultar en RFEG">🔍 RFEG</a>
+        </div>
+    </div>
+    <p id="msg-estado" style="margin-top: 10px; font-size: 0.82rem; color: rgb(22, 163, 74); min-height: 18px;">✓ 14 jugadores actualizados correctamente.</p>
+</div>
+
+<!-- Tabla -->
+<div class="tabla-container">
+    <div class="tabla-header">
+        <h2>🏆 Clasificación por Mejora de Handicap</h2>
+        <div style="display:flex;gap:8px;">
+            <button class="btn-update" id="btn-update" onclick="actualizarTodos()">↻ Actualizar RFEG</button>
+            <button class="btn-export" onclick="exportarExcel()">⬇ Exportar Excel</button>
+            <button class="btn-export" onclick="guardarJSON()" title="Guardar copia de seguridad">💾 Guardar</button>
+            <label class="btn-export" style="cursor:pointer;margin:0" title="Cargar copia de seguridad">
+                📂 Cargar<input type="file" accept=".json" onchange="cargarJSON(event)" style="display:none">
+            </label>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Pos.</th>
+                <th>Nombre</th>
+                <th>Nº Licencia</th>
+                <th>HCP 01/01/26</th>
+                <th>HCP Hoy</th>
+                <th>Diferencia</th>
+                <th>% Incremento</th>
+                <th>Premios jugados año</th>
+                <th>Últ. Modificación</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="tabla-body"><tr class="top1">
+                <td><span class="medal">🥇</span></td>
+                <td class="nombre">Gonzalo Pardo Arin</td>
+                <td class="licencia">VB09020318</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 3)">-0.5</td>
+                <td class="hcp">-0.2</td>
+                <td><span class="incremento inc-mejor">0.3</span></td>
+                <td><span class="incremento inc-mejor">-60.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(3)" title="Eliminar">✕</button></td>
+            </tr><tr class="top6">
+                <td><span class="medal">🥈</span></td>
+                <td class="nombre">Luis AntuñAno Eguillor</td>
+                <td class="licencia">VB01027471</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 0)">3.6</td>
+                <td class="hcp">2.6</td>
+                <td><span class="incremento inc-mejor">-1.0</span></td>
+                <td><span class="incremento inc-mejor">-27.8%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">6</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">26-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(0)" title="Eliminar">✕</button></td>
+            </tr><tr class="top6">
+                <td><span class="medal">🥉</span></td>
+                <td class="nombre">Ramon Elosegui Bergareche</td>
+                <td class="licencia">VB01020079</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 1)">10.0</td>
+                <td class="hcp">9.5</td>
+                <td><span class="incremento inc-mejor">-0.5</span></td>
+                <td><span class="incremento inc-mejor">-5.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">4</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(1)" title="Eliminar">✕</button></td>
+            </tr><tr class="topGreen">
+                <td><span class="pos">4</span></td>
+                <td class="nombre">Gorka  Montero Fernandez</td>
+                <td class="licencia">VB09400249</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 2)">11.0</td>
+                <td class="hcp">10.6</td>
+                <td><span class="incremento inc-mejor">-0.4</span></td>
+                <td><span class="incremento inc-mejor">-3.6%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">5</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(2)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">5</span></td>
+                <td class="nombre">Victor San Gil Noain</td>
+                <td class="licencia">VB09320423</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 7)">5.1</td>
+                <td class="hcp">5.1</td>
+                <td><span class="incremento inc-igual">0.0</span></td>
+                <td><span class="incremento inc-igual">0.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">4</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">17-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(7)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">6</span></td>
+                <td class="nombre">Alejo Cuadra Ibarguchi</td>
+                <td class="licencia">VB090445-P</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 9)">2.6</td>
+                <td class="hcp">2.6</td>
+                <td><span class="incremento inc-igual">0.0</span></td>
+                <td><span class="incremento inc-igual">0.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
+                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">30-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(9)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">7</span></td>
+                <td class="nombre">Fernando Aguirre FlañO</td>
+                <td class="licencia">VB09233692</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 10)">3.4</td>
+                <td class="hcp">3.4</td>
+                <td><span class="incremento inc-igual">0.0</span></td>
+                <td><span class="incremento inc-igual">0.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">3</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">17-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(10)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">8</span></td>
+                <td class="nombre">Juan Ignacio Orbe Murua</td>
+                <td class="licencia">VB01069771</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 13)">6.5</td>
+                <td class="hcp">6.5</td>
+                <td><span class="incremento inc-igual">0.0</span></td>
+                <td><span class="incremento inc-igual">0.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">3</td>
+                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">30-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(13)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">9</span></td>
+                <td class="nombre">Eugenio Rezola Murua</td>
+                <td class="licencia">VB01026531</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 11)">11.8</td>
+                <td class="hcp">12.1</td>
+                <td><span class="incremento inc-peor">+0.3</span></td>
+                <td><span class="incremento inc-peor">+2.5%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">04-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(11)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">10</span></td>
+                <td class="nombre">Jaime BeñAran Arocena</td>
+                <td class="licencia">VB09020398</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 8)">3.0</td>
+                <td class="hcp">3.1</td>
+                <td><span class="incremento inc-peor">+0.1</span></td>
+                <td><span class="incremento inc-peor">+3.3%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(8)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">11</span></td>
+                <td class="nombre">Pablo Manuel Orbe Murua</td>
+                <td class="licencia">VB01069770</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 6)">14.3</td>
+                <td class="hcp">14.8</td>
+                <td><span class="incremento inc-peor">+0.5</span></td>
+                <td><span class="incremento inc-peor">+3.5%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
+                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">29-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(6)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">12</span></td>
+                <td class="nombre">Fernando Arocena Garcia Tapia</td>
+                <td class="licencia">VB03031463</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 5)">13.6</td>
+                <td class="hcp">14.1</td>
+                <td><span class="incremento inc-peor">+0.5</span></td>
+                <td><span class="incremento inc-peor">+3.7%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(5)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">13</span></td>
+                <td class="nombre">Alejandro Muro Aristizabal</td>
+                <td class="licencia">VB09245518</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 12)">16.4</td>
+                <td class="hcp">17.2</td>
+                <td><span class="incremento inc-peor">+0.8</span></td>
+                <td><span class="incremento inc-peor">+4.9%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">5</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(12)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">14</span></td>
+                <td class="nombre">Andres Murua Urruticoechea</td>
+                <td class="licencia">VB09127515</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 4)">14.6</td>
+                <td class="hcp">15.6</td>
+                <td><span class="incremento inc-peor">+1.0</span></td>
+                <td><span class="incremento inc-peor">+6.8%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(4)" title="Eliminar">✕</button></td>
+            </tr></tbody>
+    </table>
+</div>
+
+<!-- Actividad: Últimas 20 rondas -->
+<div id="seccion-actividad" style="max-width:960px;margin:28px auto 0;padding:0 0 40px;">
+  <div style="background:#14532d;color:#fde68a;font-weight:700;font-size:1.05rem;padding:14px 20px;border-radius:10px 10px 0 0;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;">
+    <span>⛳ Actividad — Últimas 20 rondas jugadas</span>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <select id="selectJugador" onchange="renderTablaActividad()" style="background:#166534;color:#fde68a;border:1px solid rgba(253,230,138,0.5);border-radius:6px;padding:5px 10px;font-weight:600;font-size:0.85rem;cursor:pointer;max-width:240px;"><option value="">— Seleccionar jugador —</option><option value="0">Juan Ignacio Orbe Murua</option><option value="1">Luis AntuñAno Eguillor</option><option value="2">Ramon Elosegui Bergareche</option><option value="3">Gorka  Montero Fernandez</option><option value="4">Gonzalo Pardo Arin</option><option value="5">Andres Murua Urruticoechea</option><option value="6">Fernando Arocena Garcia Tapia</option><option value="7">Pablo Manuel Orbe Murua</option><option value="8">Victor San Gil Noain</option><option value="9">Jaime BeñAran Arocena</option><option value="10">Alejo Cuadra Ibarguchi</option><option value="11">Fernando Aguirre FlañO</option><option value="12">Eugenio Rezola Murua</option><option value="13">Alejandro Muro Aristizabal</option></select>
+      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;">🔄 Actualizar RFEG</button>
+      <button id="btnFichasPDF" onclick="exportarFichasPDF()" style="background: rgb(180, 83, 9); color: rgb(255, 255, 255); border: 1px solid transparent; border-radius: 6px; padding: 6px 14px; font-weight: 700; font-size: 0.88rem; cursor: pointer;" title="Hay cambios — regenerar fichas PDF">📄 Fichas PDF ●</button>
+    </div>
+  </div>
+  <div id="actStatus" style="display: none; padding: 8px 16px; font-size: 0.82rem; background: rgb(240, 253, 244); border-left: 3px solid rgb(22, 101, 52); color: rgb(22, 102, 52);"></div>
+  <div id="actContainer" style="overflow-x:auto;border:1px solid #bbf7d0;border-top:none;border-radius:0 0 10px 10px;"><style>
+    .act-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+    .act-table th { background:#166534; color:#fde68a; padding:8px 10px; text-align:center; white-space:nowrap; position:-webkit-sticky; position:sticky; top:0; }
+    .act-table td { padding:6px 10px; border-bottom:1px solid #e5e7eb; vertical-align:middle; background:#fff; }
+    .act-table tbody tr:nth-child(even) td { background:#fff; }
+    .act-hcp, .act-stb { text-align:center; font-weight:600; color:#475569; }
+    .act-fecha { white-space:nowrap; color:#64748b; font-size:0.8rem; }
+    .dif-star { color:#b91c1c; font-weight:700; background:#fee2e2; padding:2px 6px; border-radius:3px; white-space:nowrap; }
+    .dif-norm { color:#111; font-weight:700; }
+    .act-info-bar { background:#f0fdf4; border-bottom:2px solid #bbf7d0; padding:10px 16px; display:flex; gap:24px; flex-wrap:wrap; align-items:center; font-size:0.85rem; color:#166534; font-weight:600; }
+    .act-info-bar span { font-weight:400; color:#475569; }
+  </style><div class="act-info-bar">
+    <div>Jugador: <span>Juan Ignacio Orbe Murua</span></div>
+    <div>Licencia: <span>VB01069771</span></div>
+    <div>HCP actual: <span>6.5</span></div>
+    <div>Actualizado: <span>29/05/2026</span></div>
+  </div><table class="act-table">
+    <thead><tr>
+      <th>Fecha</th><th>Torneo</th><th>Campo de Golf</th><th>HCP</th><th>STB</th><th>Pen.</th><th>Diferencial</th>
+    </tr></thead>
+    <tbody><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">29/05/2026</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="CIRCUITO OLYMPIA ROAD TOUR 2026 - VIERNES">CIRCUITO OLYMPIA ROAD TOUR 2026 - VIERNES</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
+      <td class="act-hcp" style="background:#fff5f5">9</td>
+      <td class="act-stb" style="background:#fff5f5">38</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 5.6</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">01/05/2026</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="CAMPEONATO SENIOR DE BASOZABAL">CAMPEONATO SENIOR DE BASOZABAL</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
+      <td class="act-hcp" style="background:#fff5f5">9</td>
+      <td class="act-stb" style="background:#fff5f5">38</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 5.6</span></td>
+    </tr><tr>
+      <td class="act-fecha">25/04/2026</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="PREMIO INDIVIDUAL BLOKE LOGÍSTICO ALKAIN">PREMIO INDIVIDUAL BLOKE LOGÍSTICO ALKAIN</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="SAN SEBASTIAN">SAN SEBASTIAN</td>
+      <td class="act-hcp">7</td>
+      <td class="act-stb">31</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">10.7</span></td>
+    </tr><tr>
+      <td class="act-fecha">05/10/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="NINOS CONTRA EL CANCER">NINOS CONTRA EL CANCER</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="Ulzama - Ulzama">Ulzama - Ulzama</td>
+      <td class="act-hcp">8</td>
+      <td class="act-stb">32</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">9.3</span></td>
+    </tr><tr>
+      <td class="act-fecha">20/09/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="10º TORNEO RESTAURANTES DEL REYNO">10º TORNEO RESTAURANTES DEL REYNO</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="SEÑORÍO ZUASTI">SEÑORÍO ZUASTI</td>
+      <td class="act-hcp">6</td>
+      <td class="act-stb">32</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">9.3</span></td>
+    </tr><tr>
+      <td class="act-fecha">05/08/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="XLVII NEREA - LARREA - IÑIGO ECHAVE">XLVII NEREA - LARREA - IÑIGO ECHAVE</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RGC ZARAUZ">RGC ZARAUZ</td>
+      <td class="act-hcp">7</td>
+      <td class="act-stb">30</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">9.4</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">28/06/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="TORNEO BARNES INTERNATIONAL">TORNEO BARNES INTERNATIONAL</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
+      <td class="act-hcp" style="background:#fff5f5">8</td>
+      <td class="act-stb" style="background:#fff5f5">35</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 7.3</span></td>
+    </tr><tr>
+      <td class="act-fecha">27/06/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="XXI CIRCUITO COAVN DE GOLF">XXI CIRCUITO COAVN DE GOLF</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="IZKI">IZKI</td>
+      <td class="act-hcp">9</td>
+      <td class="act-stb">25</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">14.8</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">21/06/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="PREMIO BENÉFICO NAGUSILAN">PREMIO BENÉFICO NAGUSILAN</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="SAN SEBASTIAN">SAN SEBASTIAN</td>
+      <td class="act-hcp" style="background:#fff5f5">7</td>
+      <td class="act-stb" style="background:#fff5f5">38</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 4.9</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">24/05/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="I TORNEO LEXUS SAN SEBASTIAN">I TORNEO LEXUS SAN SEBASTIAN</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
+      <td class="act-hcp" style="background:#fff5f5">8</td>
+      <td class="act-stb" style="background:#fff5f5">37</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 5.6</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">22/05/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="TORNEO ANDBANK">TORNEO ANDBANK</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="SAN SEBASTIAN">SAN SEBASTIAN</td>
+      <td class="act-hcp" style="background:#fff5f5">7</td>
+      <td class="act-stb" style="background:#fff5f5">30</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 5.6</span></td>
+    </tr><tr>
+      <td class="act-fecha">12/04/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="TORNEO MASTERS BY BIGOUTLET">TORNEO MASTERS BY BIGOUTLET</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
+      <td class="act-hcp">8</td>
+      <td class="act-stb">33</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">11.5</span></td>
+    </tr><tr>
+      <td class="act-fecha">06/04/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="CAMPEONATO BASOZABAL SENIOR">CAMPEONATO BASOZABAL SENIOR</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
+      <td class="act-hcp">8</td>
+      <td class="act-stb">25</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">15.7</span></td>
+    </tr><tr>
+      <td class="act-fecha">30/03/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="PREMIO JOYERIA AYESTARAN">PREMIO JOYERIA AYESTARAN</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
+      <td class="act-hcp">8</td>
+      <td class="act-stb">28</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">13.1</span></td>
+    </tr><tr>
+      <td class="act-fecha">01/03/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="TORNEO SOCIAL BASOZABAL">TORNEO SOCIAL BASOZABAL</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
+      <td class="act-hcp">7</td>
+      <td class="act-stb">28</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">12.3</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">28/12/2024</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="TORNEO COMITE DE COMPETICION">TORNEO COMITE DE COMPETICION</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="BASOZABAL">BASOZABAL</td>
+      <td class="act-hcp" style="background:#fff5f5">7</td>
+      <td class="act-stb" style="background:#fff5f5">35</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 4.8</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">30/11/2024</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="OLYMPIA ROAD SOCIAL">OLYMPIA ROAD SOCIAL</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="SAN SEBASTIAN">SAN SEBASTIAN</td>
+      <td class="act-hcp" style="background:#fff5f5">6</td>
+      <td class="act-stb" style="background:#fff5f5">31</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 9.1</span></td>
+    </tr><tr>
+      <td class="act-fecha">15/11/2024</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="TORNEO ARQUITECTOS VASCO NAVARRO 2024">TORNEO ARQUITECTOS VASCO NAVARRO 2024</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="MEAZTEGI">MEAZTEGI</td>
+      <td class="act-hcp">4</td>
+      <td class="act-stb">25</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">13.2</span></td>
+    </tr><tr>
+      <td class="act-fecha">12/10/2024</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="PREMIO INDIVIDUAL RGCSS LIGA">PREMIO INDIVIDUAL RGCSS LIGA</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="SAN SEBASTIAN">SAN SEBASTIAN</td>
+      <td class="act-hcp">6</td>
+      <td class="act-stb">25</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">14.9</span></td>
+    </tr><tr>
+      <td class="act-fecha">30/08/2024</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="PREMIO FUNDACIÓN WHY NOT 30-08-24">PREMIO FUNDACIÓN WHY NOT 30-08-24</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="BASOZABAL">BASOZABAL</td>
+      <td class="act-hcp">7</td>
+      <td class="act-stb">31</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">9.8</span></td>
+    </tr></tbody>
+  </table></div>
+</div>
+
+<script>
+function fetchTimeout(url, ms) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(t));
+}
+
+const JUGADORES_ACT = [
+  {
+    nombre: "Gonzalo Zuñiga Ascunce", licencia: "VB09720776", hcpAct: 11.9, pdfFecha: "08/12/2025",
+    rondas: [
+      { fecha:"08/12/2025", torneo:"Final Familiar Ligas Golf 18H 2025", campo:"Campo La Sella", hcp:15, stb:38, dif:10.2, star:true },
+      { fecha:"04/10/2025", torneo:"Final Ligas Golf Aragón, Navarra y Rioja", campo:"Los Lagos", hcp:13, stb:32, dif:15.5, star:false },
+      { fecha:"02/08/2025", torneo:"Torneo Ligas-Golf Amateur-Juvenil 2025", campo:"Gorraiz", hcp:16, stb:39, dif:10.2, star:true },
+      { fecha:"26/07/2025", torneo:"Ligas Golf", campo:"Ulzama", hcp:16, stb:34, dif:14.1, star:false },
+      { fecha:"19/07/2025", torneo:"XX Premio Esclerosis Múltiple", campo:"Basozabal", hcp:15, stb:34, dif:14.0, star:false },
+      { fecha:"24/05/2025", torneo:"I Torneo Lexus San Sebastián", campo:"Basozabal", hcp:15, stb:35, dif:13.1, star:true },
+      { fecha:"22/05/2025", torneo:"Torneo Andbank", campo:"San Sebastián", hcp:14, stb:31, dif:16.5, star:false },
+      { fecha:"17/05/2025", torneo:"Ligas Golf Juvenil/Familiar 2025", campo:"Señorío Zuasti", hcp:14, stb:29, dif:18.6, star:false },
+      { fecha:"16/05/2025", torneo:"Circuito Olympia Road Tour 2025", campo:"Basozabal", hcp:15, stb:31, dif:16.5, star:false },
+      { fecha:"12/04/2025", torneo:"Torneo Masters by Bigoutlet", campo:"Basozabal", hcp:16, stb:36, dif:13.1, star:true },
+      { fecha:"06/04/2025", torneo:"Campeonato Basozabal Senior", campo:"Basozabal", hcp:16, stb:30, dif:18.2, star:false },
+      { fecha:"01/03/2025", torneo:"Ligas Golf Aragón-Navarra-La Rioja 18", campo:"Los Lagos", hcp:14, stb:33, dif:15.5, star:false },
+      { fecha:"08/12/2024", torneo:"Final Familiar 2024 Ligas Golf (9 Hoyos)", campo:"Campo La Sella", hcp:6, stb:17, dif:15.0, star:false },
+      { fecha:"09/11/2024", torneo:"Campeonato Senior de Basozabal", campo:"Basozabal", hcp:16, stb:36, dif:13.1, star:true },
+      { fecha:"05/10/2024", torneo:"Ligas Golf", campo:"Los Lagos", hcp:15, stb:40, dif:11.0, star:true },
+      { fecha:"25/09/2024", torneo:"Torneo CM Golf", campo:"El Bosque", hcp:17, stb:41, dif:10.1, star:true },
+      { fecha:"14/09/2024", torneo:"Final Ligas Golf (18 Hoyos)", campo:"IZKI", hcp:18, stb:30, dif:18.9, star:false },
+      { fecha:"07/09/2024", torneo:"Circuito Nacional Summum Golf 2024", campo:"Basozabal", hcp:17, stb:36, dif:14.0, star:false },
+      { fecha:"01/09/2024", torneo:"Ligas Golf", campo:"Calatayud Golf", hcp:15, stb:32, dif:17.8, star:false },
+      { fecha:"28/08/2024", torneo:"9H Los Miércoles al Golf", campo:"El Bosque", hcp:9, stb:22, dif:12.6, star:true }
+    ]
+  },
+  {
+    nombre: "Juan Miguel Dorronsoro Dorronsoro", licencia: "VB14431288", hcpAct: 25.9, pdfFecha: "21/08/2025",
+    rondas: [
+      { fecha:"21/08/2025", torneo:"Santa María San Miguel XV Andalucía Golf Challenge", campo:"Santa Maria Golf", hcp:31, stb:27, dif:33.2, star:false },
+      { fecha:"07/06/2025", torneo:"XVI Torneo Grupo Cope de Comunicación", campo:"Basozabal", hcp:31, stb:27, dif:33.2, star:false },
+      { fecha:"19/07/2024", torneo:"Circuito Premium Mahou San Miguel", campo:"Basozabal", hcp:32, stb:42, dif:21.5, star:true },
+      { fecha:"06/05/2023", torneo:"Final II Liga Sushi Donosti 2022", campo:"Basozabal", hcp:32, stb:31, dif:30.7, star:false },
+      { fecha:"22/04/2023", torneo:"II Liga Sushi Donosti - 5ª Jornada", campo:"Basozabal", hcp:32, stb:32, dif:29.9, star:true },
+      { fecha:"27/08/2022", torneo:"Premio Fundación Why Not Sábado 27", campo:"Basozabal", hcp:32, stb:32, dif:29.9, star:false },
+      { fecha:"20/08/2022", torneo:"3ª Jornada Liga Sushidonosti 2022", campo:"Basozabal", hcp:32, stb:29, dif:33.2, star:false },
+      { fecha:"16/07/2022", torneo:"II Liga Sushi Donosti - 2ª Jornada", campo:"Basozabal", hcp:32, stb:36, dif:27.4, star:true },
+      { fecha:"26/06/2022", torneo:"II Liga Sushi Donosti - 1ª Jornada", campo:"Basozabal", hcp:32, stb:28, dif:33.2, star:false },
+      { fecha:"04/06/2022", torneo:"Final Liga Sushi Donosti 2021", campo:"Basozabal", hcp:32, stb:32, dif:29.9, star:false },
+      { fecha:"20/05/2022", torneo:"Circuito Olympia Road Tour 2022", campo:"Basozabal", hcp:32, stb:31, dif:30.7, star:false },
+      { fecha:"18/12/2021", torneo:"Premio Social Basozabal", campo:"Basozabal", hcp:32, stb:39, dif:24.0, star:true },
+      { fecha:"23/10/2021", torneo:"Liga Sushi Donosti - 4ª Jornada", campo:"Basozabal", hcp:32, stb:34, dif:28.2, star:true },
+      { fecha:"03/09/2021", torneo:"Circuito Mitsubishi Viernes 3 Sep", campo:"Basozabal", hcp:32, stb:32, dif:29.9, star:false },
+      { fecha:"28/08/2021", torneo:"Why Not? Sábado 28", campo:"Basozabal", hcp:32, stb:26, dif:34.9, star:false },
+      { fecha:"14/08/2021", torneo:"Liga Sushi Donosti - 2ª Jornada", campo:"Basozabal", hcp:34, stb:43, dif:23.2, star:true },
+      { fecha:"23/07/2021", torneo:"Circuito Olympia Road Tour 2021", campo:"Basozabal", hcp:34, stb:30, dif:33.2, star:false },
+      { fecha:"18/07/2021", torneo:"Liga Sushi Donosti - 1ª Jornada", campo:"Basozabal", hcp:34, stb:36, dif:28.2, star:true },
+      { fecha:"28/03/2021", torneo:"Premio Joyería Ayestarán", campo:"Basozabal", hcp:35, stb:41, dif:24.9, star:true },
+      { fecha:"20/03/2021", torneo:"Torneo Social Basozabal", campo:"Basozabal", hcp:35, stb:34, dif:29.9, star:false }
+    ]
+  },
+  {
+    nombre: "Juan Rezola Sansinenea", licencia: "VB09720914", hcpAct: 16.7, pdfFecha: "16/05/2026",
+    rondas: [
+      { fecha:"16/05/2026", torneo:"II Torneo Lexus San Sebastián", campo:"Basozabal", hcp:20, stb:25, dif:25.7, star:false },
+      { fecha:"19/07/2025", torneo:"XX Premio Esclerosis Múltiple", campo:"Basozabal", hcp:20, stb:30, dif:21.5, star:false },
+      { fecha:"07/06/2025", torneo:"XVI Torneo Grupo Cope de Comunicación", campo:"Basozabal", hcp:19, stb:33, dif:18.2, star:true },
+      { fecha:"24/05/2025", torneo:"I Torneo Lexus San Sebastián", campo:"Basozabal", hcp:19, stb:35, dif:16.5, star:true },
+      { fecha:"16/05/2025", torneo:"Circuito Olympia Road Tour 2025", campo:"Basozabal", hcp:18, stb:26, dif:23.2, star:false },
+      { fecha:"12/04/2025", torneo:"Torneo Masters by Bigoutlet", campo:"Basozabal", hcp:17, stb:30, dif:19.0, star:true },
+      { fecha:"06/04/2025", torneo:"Campeonato Basozabal Senior", campo:"Basozabal", hcp:17, stb:30, dif:19.0, star:true },
+      { fecha:"30/03/2025", torneo:"Premio Joyería Ayestarán", campo:"Basozabal", hcp:17, stb:22, dif:25.7, star:false },
+      { fecha:"01/03/2025", torneo:"Torneo Social Basozabal", campo:"Basozabal", hcp:17, stb:16, dif:30.7, star:false },
+      { fecha:"28/12/2024", torneo:"Torneo Comité de Competición", campo:"Basozabal", hcp:16, stb:21, dif:24.0, star:false },
+      { fecha:"09/11/2024", torneo:"Campeonato Senior de Basozabal", campo:"Basozabal", hcp:16, stb:24, dif:23.2, star:false },
+      { fecha:"07/09/2024", torneo:"Circuito Nacional Summum Golf 2024", campo:"Basozabal", hcp:16, stb:24, dif:23.2, star:false },
+      { fecha:"31/08/2024", torneo:"Premio Fundación Why Not 31-08-24", campo:"Basozabal", hcp:16, stb:34, dif:14.8, star:true },
+      { fecha:"24/08/2024", torneo:"Top 10 Summum Golf", campo:"Ulzama", hcp:17, stb:28, dif:19.8, star:true },
+      { fecha:"19/07/2024", torneo:"Circuito Premium Mahou San Miguel", campo:"Basozabal", hcp:16, stb:19, dif:27.4, star:false },
+      { fecha:"14/07/2024", torneo:"IV Torneo Fundación BAE", campo:"Basozabal", hcp:16, stb:21, dif:25.7, star:false },
+      { fecha:"08/06/2024", torneo:"XV Torneo Grupo Cope de Comunicación", campo:"Basozabal", hcp:16, stb:27, dif:20.7, star:false },
+      { fecha:"01/06/2024", torneo:"Torneo Barnes International", campo:"Basozabal", hcp:16, stb:27, dif:20.7, star:false },
+      { fecha:"25/05/2024", torneo:"Circuito Olympia Road Tour 2024", campo:"Basozabal", hcp:15, stb:30, dif:17.3, star:true },
+      { fecha:"04/05/2024", torneo:"XXII Premio Gipuzkoa", campo:"Basozabal", hcp:15, stb:35, dif:13.1, star:true }
+    ]
+  },
+  {
+    nombre: "Pedro Suquia Garmendia", licencia: "VB09724370", hcpAct: 11.9, pdfFecha: "07/06/2025",
+    rondas: [
+      { fecha:"07/06/2025", torneo:"XVI Torneo Grupo Cope de Comunicación", campo:"Basozabal", hcp:15, stb:28, dif:19.0, star:false },
+      { fecha:"12/04/2025", torneo:"Torneo Masters by Bigoutlet", campo:"Basozabal", hcp:14, stb:27, dif:19.0, star:false },
+      { fecha:"07/09/2024", torneo:"Circuito Nacional Summum Golf 2024", campo:"Basozabal", hcp:14, stb:34, dif:13.1, star:true },
+      { fecha:"22/07/2023", torneo:"Circuito Premium Mahou San Miguel", campo:"Basozabal", hcp:14, stb:29, dif:17.3, star:false },
+      { fecha:"03/06/2023", torneo:"Barnes Golf Challenge", campo:"Basozabal", hcp:14, stb:27, dif:19.0, star:false },
+      { fecha:"21/04/2023", torneo:"II Liga Sushi Donosti - 5ª Jornada", campo:"Basozabal", hcp:14, stb:24, dif:21.5, star:false },
+      { fecha:"22/07/2022", torneo:"Circuito Premium Mahou San Miguel", campo:"Basozabal", hcp:14, stb:30, dif:16.5, star:false },
+      { fecha:"26/06/2022", torneo:"II Liga Sushi Donosti - 1ª Jornada", campo:"Basozabal", hcp:15, stb:39, dif:9.8, star:true },
+      { fecha:"28/05/2022", torneo:"Circuito Nacional Andalucía es Golf", campo:"Basozabal", hcp:15, stb:26, dif:20.7, star:false },
+      { fecha:"20/05/2022", torneo:"Circuito Olympia Road Tour 2022", campo:"Basozabal", hcp:15, stb:27, dif:19.8, star:false },
+      { fecha:"30/04/2022", torneo:"XX Premio Gipuzkoa", campo:"Basozabal", hcp:15, stb:37, dif:11.5, star:true },
+      { fecha:"09/04/2022", torneo:"Torneo Social Masters de Augusta 2022", campo:"Basozabal", hcp:15, stb:36, dif:12.3, star:true },
+      { fecha:"15/10/2021", torneo:"Torneo de Golf Acunsa 2021", campo:"Basozabal", hcp:16, stb:37, dif:12.3, star:true },
+      { fecha:"18/09/2021", torneo:"Liga Sushi Donosti - 3ª Jornada", campo:"Basozabal", hcp:17, stb:43, dif:8.1, star:true },
+      { fecha:"14/08/2021", torneo:"Liga Sushi Donosti - 2ª Jornada", campo:"Basozabal", hcp:17, stb:36, dif:14.8, star:true },
+      { fecha:"23/07/2021", torneo:"Circuito Olympia Road Tour 2021", campo:"Basozabal", hcp:17, stb:33, dif:16.5, star:false },
+      { fecha:"18/07/2021", torneo:"Liga Sushi Donosti - 1ª Jornada", campo:"Basozabal", hcp:17, stb:36, dif:14.0, star:true },
+      { fecha:"03/07/2021", torneo:"Torneo Fundación BAE", campo:"Basozabal", hcp:15, stb:34, dif:14.0, star:false },
+      { fecha:"10/04/2021", torneo:"Torneo Social Masters Augusta", campo:"Basozabal", hcp:17, stb:32, dif:17.3, star:false },
+      { fecha:"28/03/2021", torneo:"Premio Joyería Ayestarán", campo:"Basozabal", hcp:17, stb:26, dif:22.3, star:false }
+    ]
+  },
+  {
+    nombre: "Jose Ignacio Coronado Eceizabarrena", licencia: "AM61140346", hcpAct: 15.2, pdfFecha: "07/06/2025",
+    rondas: [
+      { fecha:"07/06/2025", torneo:"XVI Torneo Grupo Cope de Comunicación", campo:"Basozabal", hcp:18, stb:21, dif:27.4, star:false },
+      { fecha:"07/09/2024", torneo:"Circuito Nacional Summum Golf 2024", campo:"Basozabal", hcp:18, stb:30, dif:19.8, star:false },
+      { fecha:"19/07/2024", torneo:"Circuito Premium Mahou San Miguel", campo:"Basozabal", hcp:18, stb:33, dif:17.3, star:true },
+      { fecha:"03/09/2023", torneo:"Summumgolf Mitsubishi 2023", campo:"Basozabal", hcp:18, stb:36, dif:14.8, star:true },
+      { fecha:"05/05/2023", torneo:"Final II Liga Sushi Donosti 2022", campo:"Basozabal", hcp:18, stb:34, dif:16.5, star:true },
+      { fecha:"21/04/2023", torneo:"II Liga Sushi Donosti - 5ª Jornada", campo:"Basozabal", hcp:18, stb:24, dif:24.9, star:false },
+      { fecha:"21/10/2022", torneo:"II Liga Sushi Donosti - 4ª Jornada", campo:"Basozabal", hcp:19, stb:39, dif:13.1, star:true },
+      { fecha:"27/08/2022", torneo:"Premio Fundación Why Not Sábado 27", campo:"Basozabal", hcp:19, stb:35, dif:16.5, star:true },
+      { fecha:"20/08/2022", torneo:"3ª Jornada Liga Sushidonosti 2022", campo:"Basozabal", hcp:19, stb:32, dif:19.8, star:false },
+      { fecha:"22/07/2022", torneo:"Circuito Premium Mahou San Miguel", campo:"Basozabal", hcp:20, stb:39, dif:14.0, star:true },
+      { fecha:"11/06/2022", torneo:"XIII Torneo Grupo Cope de Comunicación", campo:"Basozabal", hcp:20, stb:39, dif:14.0, star:true },
+      { fecha:"03/06/2022", torneo:"Final Liga Sushi Donosti 2021", campo:"Basozabal", hcp:20, stb:34, dif:18.2, star:false },
+      { fecha:"20/05/2022", torneo:"Circuito Olympia Road Tour 2022", campo:"Basozabal", hcp:20, stb:25, dif:25.7, star:false },
+      { fecha:"19/11/2021", torneo:"Liga Sushi Donosti - 5ª Jornada", campo:"Basozabal", hcp:20, stb:25, dif:25.7, star:false },
+      { fecha:"22/10/2021", torneo:"Liga Sushi Donosti - 4ª Jornada", campo:"Basozabal", hcp:20, stb:33, dif:19.0, star:false },
+      { fecha:"15/10/2021", torneo:"Torneo de Golf Acunsa 2021", campo:"Basozabal", hcp:21, stb:36, dif:17.3, star:false },
+      { fecha:"18/09/2021", torneo:"Liga Sushi Donosti - 3ª Jornada", campo:"Basozabal", hcp:21, stb:38, dif:15.7, star:true },
+      { fecha:"14/08/2021", torneo:"Liga Sushi Donosti - 2ª Jornada", campo:"Basozabal", hcp:22, stb:36, dif:19.0, star:false },
+      { fecha:"23/07/2021", torneo:"Circuito Olympia Road Tour 2021", campo:"Basozabal", hcp:21, stb:32, dif:20.7, star:false },
+      { fecha:"18/07/2021", torneo:"Liga Sushi Donosti - 1ª Jornada", campo:"Basozabal", hcp:21, stb:31, dif:21.5, star:false }
+    ]
+  },
+  {
+    nombre: "Juan Ignacio Orbe Murua", licencia: "VB01069771", hcpAct: 7.0, pdfFecha: "01/05/2026",
+    rondas: [
+      { fecha:"01/05/2026", torneo:"Campeonato Senior de Basozabal", campo:"Basozabal", hcp:9, stb:38, dif:5.6, star:true },
+      { fecha:"25/04/2026", torneo:"Premio Individual Bloke Logístico Alkain", campo:"San Sebastián", hcp:7, stb:31, dif:10.7, star:false },
+      { fecha:"05/10/2025", torneo:"Niños contra el Cáncer", campo:"Ulzama", hcp:8, stb:32, dif:9.3, star:true },
+      { fecha:"20/09/2025", torneo:"10º Torneo Restaurantes del Reyno", campo:"Señorío Zuasti", hcp:6, stb:32, dif:9.4, star:false },
+      { fecha:"05/08/2025", torneo:"XLVII Nerea - Larrea - Iñigo Echave", campo:"RGC Zarauz", hcp:7, stb:30, dif:12.2, star:false },
+      { fecha:"28/06/2025", torneo:"Torneo Barnes International", campo:"Basozabal", hcp:8, stb:35, dif:7.3, star:true },
+      { fecha:"27/06/2025", torneo:"XXI Circuito COAVN de Golf", campo:"IZKI", hcp:9, stb:25, dif:14.8, star:false },
+      { fecha:"21/06/2025", torneo:"Premio Benéfico Nagusilan", campo:"San Sebastián", hcp:7, stb:38, dif:4.9, star:true },
+      { fecha:"24/05/2025", torneo:"I Torneo Lexus San Sebastián", campo:"Basozabal", hcp:8, stb:37, dif:5.6, star:true },
+      { fecha:"22/05/2025", torneo:"Torneo Andbank", campo:"San Sebastián", hcp:7, stb:30, dif:11.5, star:false },
+      { fecha:"12/04/2025", torneo:"Torneo Masters by Bigoutlet", campo:"Basozabal", hcp:8, stb:33, dif:9.0, star:true },
+      { fecha:"06/04/2025", torneo:"Campeonato Basozabal Senior", campo:"Basozabal", hcp:8, stb:25, dif:15.7, star:false },
+      { fecha:"30/03/2025", torneo:"Premio Joyería Ayestarán", campo:"Basozabal", hcp:8, stb:28, dif:13.1, star:false },
+      { fecha:"01/03/2025", torneo:"Torneo Social Basozabal", campo:"Basozabal", hcp:7, stb:28, dif:12.3, star:false },
+      { fecha:"28/12/2024", torneo:"Torneo Comité de Competición", campo:"Basozabal", hcp:7, stb:35, dif:4.8, star:true },
+      { fecha:"30/11/2024", torneo:"Olympia Road Social", campo:"San Sebastián", hcp:6, stb:31, dif:9.1, star:true },
+      { fecha:"15/11/2024", torneo:"Torneo Arquitectos Vasco Navarro 2024", campo:"Meaztegi", hcp:4, stb:25, dif:13.2, star:false },
+      { fecha:"12/10/2024", torneo:"Premio Individual RGCSS Liga", campo:"San Sebastián", hcp:6, stb:25, dif:14.9, star:false },
+      { fecha:"30/08/2024", torneo:"Premio Fundación Why Not 30-08-24", campo:"Basozabal", hcp:7, stb:31, dif:9.8, star:false },
+      { fecha:"03/08/2024", torneo:"XIV Premio Why Not Social", campo:"San Sebastián", hcp:6, stb:28, dif:12.4, star:false }
+    ]
+  }
+];
+
+function renderTablaActividad() {
+  const sel = document.getElementById('selectJugador');
+  const idx = sel ? parseInt(sel.value) : NaN;
+  const container = document.getElementById('actContainer');
+  const styles = `<style>
+    .act-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+    .act-table th { background:#166534; color:#fde68a; padding:8px 10px; text-align:center; white-space:nowrap; position:-webkit-sticky; position:sticky; top:0; }
+    .act-table td { padding:6px 10px; border-bottom:1px solid #e5e7eb; vertical-align:middle; background:#fff; }
+    .act-table tbody tr:nth-child(even) td { background:#fff; }
+    .act-hcp, .act-stb { text-align:center; font-weight:600; color:#475569; }
+    .act-fecha { white-space:nowrap; color:#64748b; font-size:0.8rem; }
+    .dif-star { color:#b91c1c; font-weight:700; background:#fee2e2; padding:2px 6px; border-radius:3px; white-space:nowrap; }
+    .dif-norm { color:#111; font-weight:700; }
+    .act-info-bar { background:#f0fdf4; border-bottom:2px solid #bbf7d0; padding:10px 16px; display:flex; gap:24px; flex-wrap:wrap; align-items:center; font-size:0.85rem; color:#166534; font-weight:600; }
+    .act-info-bar span { font-weight:400; color:#475569; }
+  </style>`;
+  if (isNaN(idx) || !JUGADORES_ACT[idx]) {
+    container.innerHTML = styles + `<div style="padding:32px;text-align:center;color:#94a3b8;font-style:italic;font-size:0.95rem;">Seleccioná un jugador para ver sus últimas 20 rondas</div>`;
+    return;
+  }
+  const j = JUGADORES_ACT[idx];
+  const infoBar = `<div class="act-info-bar">
+    <div>Jugador: <span>${j.nombre}</span></div>
+    <div>Licencia: <span>${j.licencia}</span></div>
+    <div>HCP actual: <span>${j.hcpAct}</span></div>
+    ${j.pdfFecha ? `<div>Actualizado: <span>${j.pdfFecha}</span></div>` : ''}
+  </div>`;
+  if (j.rondas.length === 0) {
+    container.innerHTML = styles + infoBar + `<div style="padding:24px;text-align:center;color:#94a3b8;font-style:italic;">Sin datos — pulsa 🔄 Actualizar RFEG</div>`;
+    return;
+  }
+  const idx8 = new Set([...j.rondas.map((r,i)=>({d:r.dif,i}))].sort((a,b)=>a.d-b.d).slice(0,8).map(x=>x.i));
+  const filas = j.rondas.map((r, i) => {
+    const star = idx8.has(i);
+    return `<tr${star ? ' style="background:#fff5f5"' : ''}>
+      <td class="act-fecha"${star ? ' style="background:#fff5f5"' : ''}>${r.fecha}</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis${star?';background:#fff5f5':''}" title="${r.torneo}">${r.torneo}</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis${star?';background:#fff5f5':''}" title="${r.campo}">${r.campo}</td>
+      <td class="act-hcp"${star?' style="background:#fff5f5"':''}>${r.hcp}</td>
+      <td class="act-stb"${star?' style="background:#fff5f5"':''}>${r.stb}</td>
+      <td style="text-align:center${star?';background:#fff5f5':''}">${r.pen !== 0 ? `<span style="color:#b45309;font-weight:600">${r.pen > 0 ? '+' : ''}${r.pen.toFixed(1)}</span>` : '<span style="color:#94a3b8">0</span>'}</td>
+      <td style="text-align:center${star?';background:#fff5f5':''}">${star?`<span class="dif-star">★ ${r.dif.toFixed(1)}</span>`:`<span class="dif-norm">${r.dif.toFixed(1)}</span>`}</td>
+    </tr>`;
+  }).join('');
+  container.innerHTML = styles + infoBar + `<table class="act-table">
+    <thead><tr>
+      <th>Fecha</th><th>Torneo</th><th>Campo de Golf</th><th>HCP</th><th>STB</th><th>Pen.</th><th>Diferencial</th>
+    </tr></thead>
+    <tbody>${filas}</tbody>
+  </table>`;
+}
+
+(function() {
+  const sel = document.getElementById('selectJugador');
+  if (sel) JUGADORES_ACT.forEach((j, i) => {
+    const o = document.createElement('option');
+    o.value = i; o.textContent = j.nombre;
+    sel.appendChild(o);
+  });
+  renderTablaActividad();
+})();
+
+// ── Actualización desde RFEG ──────────────────────────────────────────────
+
+function setStatus(msg, color) {
+  const el = document.getElementById('actStatus');
+  el.textContent = msg;
+  el.style.borderLeftColor = color || '#166534';
+  el.style.color = color || '#166634';
+  el.style.display = msg ? 'block' : 'none';
+}
+
+async function cargarPDFJS() {
+  if (window.pdfjsLib) return;
+  await new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+async function extraerItemsPDF(arrayBuffer) {
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const items = [];
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const page  = await pdf.getPage(p);
+    const vp    = page.getViewport({ scale: 1 });
+    const cont  = await page.getTextContent();
+    for (const it of cont.items) {
+      if (!it.str.trim()) continue;
+      items.push({ str: it.str.trim(), x: Math.round(it.transform[4]), y: Math.round(vp.height - it.transform[5]) });
+    }
+  }
+  return items;
+}
+
+function agruparFilas(items, tol = 4) {
+  const filas = [];
+  for (const it of items) {
+    const f = filas.find(r => Math.abs(r.y - it.y) <= tol);
+    if (f) f.items.push(it);
+    else filas.push({ y: it.y, items: [it] });
+  }
+  filas.sort((a, b) => a.y - b.y);
+  filas.forEach(f => { f.items.sort((a, b) => a.x - b.x); f.text = f.items.map(i => i.str).join(' '); });
+  return filas;
+}
+
+function parsearRFEG(filas) {
+  // HCP actual
+  let hcpAct = null;
+  const hcpFila = filas.find(f => /[Íi]ndice.*h[áa]ndic|WHS/i.test(f.text));
+  if (hcpFila) {
+    const m = hcpFila.text.match(/(\d+[,\.]\d+)/);
+    if (m) hcpAct = parseFloat(m[1].replace(',', '.'));
+  }
+
+  // Mejores 8 diferenciales (para star)
+  const mejIdx = filas.findIndex(f => /mejor.*dif|dif.*utiliz/i.test(f.text));
+  const mejoresDifs = [];
+  if (mejIdx >= 0) {
+    for (let i = mejIdx; i < Math.min(mejIdx + 15, filas.length) && mejoresDifs.length < 8; i++) {
+      filas[i].items.filter(it => /^-?\d+[,\.]\d+$/.test(it.str))
+                    .forEach(it => mejoresDifs.push(parseFloat(it.str.replace(',', '.'))));
+    }
+  }
+
+  // Columnas fijas del PDF RFEG (verificadas con datos reales):
+  // x≈63: fecha primaria | x≈108: torneo | x≈371: campo | x≈731: hcp | x≈763: stb
+  // El diferencial de la ronda N aparece en x≈411 de la fila de la ronda N+1
+  const dateReg = /^(\d{2}\/\d{2}\/\d{4})$/;
+  const pdfLabel = /\b(FECHA|TORNEO|NIVEL|JUGADO|RESULTADO|BRUTO|DIFERENCIAL|HANDICAP|STABLEFORD|AJUSTADO|PENALIZ|LIMITAC|PROMEDIO|ASC|SLOPE|INDIVIDUALES|MEJOR|EXTRAORDINARIO|VALOR|PAR|JUEGO|CAMPO)\b/i;
+  const isNum  = i => /^-?\d+[,\.]?\d*$/.test(i.str);
+  const isRating = i => /\d+[\/\.]\d+[\/\.]\d+/.test(i.str);
+  const isLabel  = i => pdfLabel.test(i.str) || dateReg.test(i.str);
+  // Para torneo: solo rechazar etiquetas exactas (no parciales) para no filtrar "I Torneo XXX"
+  const isTorneoLabel = i => /^(FECHA|TORNEO|NIVEL|JUGADO|RESULTADO|BRUTO|DIFERENCIAL|HANDICAP|STABLEFORD|AJUSTADO|PENALIZ|LIMITAC|PROMEDIO|ASC|SLOPE|INDIVIDUALES|MEJOR|EXTRAORDINARIO|VALOR|PAR|JUEGO|CAMPO|MANUAL|TOPE)$/i.test(i.str) || dateReg.test(i.str);
+
+  // Paso 1: rondas por fecha primaria (solo x entre 55 y 80)
+  // Además requiere número de fila (entero 1-20) en x≈48 — identifica filas reales de la tabla
+  const rounds = [], roundFilaIdx = [];
+  for (let fi = 0; fi < filas.length; fi++) {
+    const fila = filas[fi];
+    const pd = fila.items.find(i => dateReg.test(i.str) && i.x >= 55 && i.x <= 80);
+    if (!pd) continue;
+    const rowNum = fila.items.find(i => /^\d{1,2}$/.test(i.str) && i.x >= 40 && i.x <= 56);
+    if (!rowNum || parseInt(rowNum.str) < 1 || parseInt(rowNum.str) > 20) continue;
+
+    const torneoItem = fila.items.find(i => i.x >= 80  && i.x <= 140 && !isTorneoLabel(i) && !isNum(i) && !isRating(i) && i.str.length > 1);
+    const campoItem  = fila.items.find(i => i.x >= 355 && i.x <= 425 && !isLabel(i) && !isNum(i) && !isRating(i) && i.str.length > 1);
+    const hcpItems   = fila.items.filter(i => i.x >= 720 && i.x <= 755 && /^\d+$/.test(i.str));
+    const stbItems   = fila.items.filter(i => i.x >= 755 && i.x <= 785 && /^\d+$/.test(i.str));
+    const penItems = fila.items.filter(i => i.x >= 630 && i.x <= 643 && /^-?\d+([,.]\d+)?$/.test(i.str) && !isRating(i));
+
+    rounds.push({
+      fecha:  pd.str,
+      torneo: torneoItem?.str ?? '',
+      campo:  campoItem?.str  ?? '',
+      hcp:    hcpItems.length ? parseInt(hcpItems[hcpItems.length - 1].str) : 0,
+      stb:    stbItems.length ? parseInt(stbItems[stbItems.length - 1].str) : 0,
+      pen:    penItems.length ? parseFloat(penItems[penItems.length - 1].str.replace(',', '.')) : 0,
+      dif: null, star: false
+    });
+    roundFilaIdx.push(fi);
+  }
+
+  // Paso 2: diferencial de ronda_i = decimal en x=[400,430] de la fila de ronda_{i+1}
+  for (let ri = 0; ri < rounds.length; ri++) {
+    const lookFi = roundFilaIdx[ri] + 1;
+    if (lookFi < filas.length) {
+      for (const it of filas[lookFi].items) {
+        if (it.x < 400 || it.x > 430 || !/^-?\d+[,.]\d+$/.test(it.str) || isRating(it)) continue;
+        const v = parseFloat(it.str.replace(',', '.'));
+        if (v >= -10 && v <= 54) { rounds[ri].dif = v; break; }
+      }
+    }
+    if (rounds[ri].dif === null) {
+      for (const it of filas[roundFilaIdx[ri]].items) {
+        if (!/^-?\d+[,.]\d+$/.test(it.str) || isRating(it)) continue;
+        const v = parseFloat(it.str.replace(',', '.'));
+        if (v >= -10 && v <= 54) { rounds[ri].dif = v; break; }
+      }
+    }
+    if (rounds[ri].dif !== null && rounds[ri].pen !== 0) {
+      rounds[ri].dif = parseFloat((rounds[ri].dif + rounds[ri].pen).toFixed(1));
+    }
+  }
+
+  const unique = rounds.filter(r => r.dif !== null);
+  const pendientes = [...mejoresDifs];
+  for (const r of unique) {
+    const idx = pendientes.findIndex(d => Math.abs(d - r.dif) < 0.05);
+    if (idx >= 0) { r.star = true; pendientes.splice(idx, 1); }
+  }
+
+  return { hcpAct, pdfFecha: unique[0]?.fecha ?? null, rondas: unique.slice(0, 20) };
+}
+
+async function actualizarActividad() {
+  const btn = document.getElementById('btnActualizar');
+  try {
+  const sel = document.getElementById('selectJugador');
+  const idx = sel ? parseInt(sel.value) : NaN;
+  if (isNaN(idx) || !JUGADORES_ACT[idx]) {
+    setStatus('⚠️ Seleccioná un jugador primero.', '#b45309');
+    setTimeout(() => setStatus(''), 4000);
+    return;
+  }
+  const jugador = JUGADORES_ACT[idx];
+  btn.disabled = true; btn.textContent = '⏳ Actualizando...';
+  try { await cargarPDFJS(); }
+  catch { setStatus('❌ No se pudo cargar pdf.js. Verificá la conexión a internet.', '#b91c1c'); btn.disabled = false; btn.textContent = '🔄 Actualizar RFEG'; return; }
+  const licM = jugador.licencia.match(/^[A-Z]{2}\d{2}(.+)$/);
+  const id   = licM ? licM[1].toLowerCase() : jugador.licencia.replace(/\D/g, '').slice(-6);
+  const pdfUrl = `https://api.rfeg.es/files/summaryhandicap/${id}.pdf`;
+  const proxyUrls = [
+    pdfUrl,
+    `https://corsproxy.io/?${encodeURIComponent(pdfUrl)}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(pdfUrl)}`,
+  ];
+  setStatus(`⏳ Descargando datos de ${jugador.nombre.split(' ')[0]}...`);
+  try {
+    const tryProxies = async () => {
+      for (const url of proxyUrls) {
+        try {
+          const resp = await fetchTimeout(url, 10000);
+          if (!resp.ok) continue;
+          const candidate = await resp.arrayBuffer();
+          if (candidate.byteLength > 1000) return candidate;
+        } catch { continue; }
+      }
+      return null;
+    };
+    let buf = await tryProxies();
+    if (!buf) { await new Promise(r => setTimeout(r, 2000)); buf = await tryProxies(); }
+    if (!buf) { await new Promise(r => setTimeout(r, 2000)); buf = await tryProxies(); }
+    if (!buf) throw new Error(`Sin datos en RFEG para ${jugador.licencia} — probá cargar el PDF manualmente.`);
+    const items = await extraerItemsPDF(buf);
+    const filas = agruparFilas(items);
+    const datos = parsearRFEG(filas);
+    console.group('RFEG · ' + jugador.nombre);
+    console.log('Items PDF:', items.length, '| Filas agrupadas:', filas.length);
+    const filasConFecha = filas.filter(f => /\d{2}\/\d{2}\/\d{4}/.test(f.text));
+    console.log('Filas con fecha:', filasConFecha.length);
+    filasConFecha.slice(0, 5).forEach((f,i) => console.log(' fila'+i+' y='+f.y+':', f.items.map(x=>x.str+'@'+x.x).join(' | ')));
+    console.log('Rondas encontradas:', datos.rondas.length);
+    datos.rondas.forEach(r => console.log(' ', r.fecha, r.torneo, '/', r.campo, 'hcp:'+r.hcp, 'stb:'+r.stb, 'dif:'+r.dif));
+    console.groupEnd();
+    if (datos.rondas.length > 0) {
+      jugador.rondas   = datos.rondas;
+      jugador.hcpAct   = datos.hcpAct ?? jugador.hcpAct;
+      jugador.pdfFecha = datos.pdfFecha ?? jugador.pdfFecha;
+      // Actualizar premiosAño en la tabla de clasificación
+      const añoActual = String(new Date().getFullYear());
+      const jugadoresClasif = cargarDatos();
+      const jClasif = jugadoresClasif.find(jc => jc.licencia.toUpperCase() === jugador.licencia.toUpperCase());
+      if (jClasif) {
+        jClasif.premiosAño = jugador.rondas.filter(r => r.fecha && r.fecha.slice(-4) === añoActual).length;
+        if (datos.hcpAct !== null) jClasif.hcpAct = datos.hcpAct;
+        guardarDatos(jugadoresClasif);
+        renderTabla();
+      }
+      renderTablaActividad();
+      marcarFichasPendientes();
+      setStatus(`✅ ${jugador.nombre.split(' ')[0]} actualizado — ${datos.rondas.length} ronda(s).`);
+    } else {
+      setStatus(`⚠️ 0 rondas para ${jugador.nombre.split(' ')[0]}. Revisá la consola (F12).`, '#b45309');
+    }
+  } catch(e) {
+    setStatus(`❌ Error: ${e.message}`, '#b91c1c');
+    console.error('RFEG error:', e);
+  }
+  btn.disabled = false; btn.textContent = '🔄 Actualizar RFEG';
+  setTimeout(() => setStatus(''), 12000);
+  } catch(e) {
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Actualizar RFEG'; }
+    const msg = /iPhone|iPad/i.test(navigator.userAgent)
+      ? '⚠ Error. En iPhone, abrí el archivo en Safari (no desde WhatsApp).'
+      : '⚠ Error inesperado: ' + e.message;
+    setStatus(msg, '#b91c1c');
+  }
+}
+
+function marcarFichasPendientes() {
+  const btn = document.getElementById('btnFichasPDF');
+  if (btn) {
+    btn.style.background = '#b45309';
+    btn.style.color = '#fff';
+    btn.style.borderColor = 'transparent';
+    btn.title = 'Hay cambios — regenerar fichas PDF';
+    btn.textContent = '📄 Fichas PDF ●';
+  }
+}
+
+function exportarFichasPDF() {
+  const año = new Date().getFullYear();
+  const jugadoresConRondas = JUGADORES_ACT.filter(j => j.rondas && j.rondas.length > 0);
+  if (jugadoresConRondas.length === 0) {
+    alert('No hay fichas de actividad cargadas. Actualizá la RFEG de al menos un jugador primero.');
+    return;
+  }
+
+  const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  let fichasHtml = '';
+  jugadoresConRondas.forEach((j, idx) => {
+    const filas = j.rondas.map(r => {
+      const penStr = (r.pen != null && r.pen !== 0) ? `<span style="color:#b45309;font-weight:600">${r.pen > 0 ? '+' : ''}${Number(r.pen).toFixed(1)}</span>` : '<span style="color:#94a3b8">0</span>';
+      const difStr = r.star
+        ? `<span style="color:#dc2626;font-weight:700">★ ${r.dif != null ? Number(r.dif).toFixed(1) : '—'}</span>`
+        : (r.dif != null ? Number(r.dif).toFixed(1) : '—');
+      return `<tr style="${r.star ? 'background:#fff5f5' : ''}">
+        <td>${esc(r.fecha)}</td>
+        <td>${esc(r.torneo)}</td>
+        <td>${esc(r.campo)}</td>
+        <td style="text-align:center">${r.hcp ?? ''}</td>
+        <td style="text-align:center">${r.stb ?? ''}</td>
+        <td style="text-align:center">${penStr}</td>
+        <td style="text-align:center">${difStr}</td>
+      </tr>`;
+    }).join('');
+
+    fichasHtml += `
+    <div class="ficha${idx < jugadoresConRondas.length - 1 ? ' salto' : ''}">
+      <div class="ficha-header">
+        <div class="ficha-nombre">${esc(j.nombre)}</div>
+        <div class="ficha-meta">Licencia: ${esc(j.licencia)} &nbsp;|&nbsp; HCP actual: ${j.hcpAct ?? '—'} &nbsp;|&nbsp; Última actualización: ${j.pdfFecha ?? '—'}</div>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Fecha</th><th>Torneo</th><th>Campo de Golf</th><th>HCP</th><th>STB</th><th>Pen.</th><th>Diferencial</th>
+        </tr></thead>
+        <tbody>${filas}</tbody>
+      </table>
+    </div>`;
+  });
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8">
+<title>Fichas de Actividad Arbolito ${año}</title>
+<style>
+  @page { margin: 14mm 12mm; size: A4; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 10.5px; color: #1e293b; background: #fff; }
+  .portada { text-align: center; padding: 60px 20px; page-break-after: always; }
+  .portada h1 { font-size: 28px; color: #14532d; margin-bottom: 10px; }
+  .portada p { color: #64748b; font-size: 13px; margin-top: 6px; }
+  .portada .total { margin-top: 30px; font-size: 15px; color: #166534; font-weight: 600; }
+  .ficha.salto { page-break-after: always; }
+  .ficha-header { background: #14532d; color: white; padding: 9px 14px; border-radius: 6px 6px 0 0; margin-top: 0; }
+  .ficha-nombre { font-size: 13px; font-weight: 700; letter-spacing: 0.3px; }
+  .ficha-meta { font-size: 9.5px; opacity: 0.8; margin-top: 3px; }
+  table { width: 100%; border-collapse: collapse; border: 1px solid #bbf7d0; border-top: none; }
+  th { background: #f0fdf4; color: #166534; padding: 5px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 2px solid #86efac; text-align: left; }
+  th:nth-child(n+4) { text-align: center; }
+  td { padding: 4px 8px; border-bottom: 1px solid #e2e8f0; font-size: 9.5px; vertical-align: middle; }
+  td:nth-child(n+4) { text-align: center; }
+  tr:last-child td { border-bottom: none; }
+  .ficha { margin-bottom: 18px; }
+  @media print {
+    .no-print { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="portada">
+  <h1>⛳ Arbolito ${año}</h1>
+  <p>Fichas de Actividad — Últimas 20 rondas por jugador</p>
+  <div class="total">${jugadoresConRondas.length} jugador${jugadoresConRondas.length !== 1 ? 'es' : ''} · Generado el ${new Date().toLocaleDateString('es-ES', {day:'2-digit',month:'long',year:'numeric'})}</div>
+</div>
+${fichasHtml}
+<script>window.onload = () => window.print();<\/script>
+
+<script>
+(function() {
+  var DB = 'https://arbolito-golf-default-rtdb.europe-west1.firebasedatabase.app/arbolito-principal';
+  var badge = document.createElement('div');
+  badge.style.cssText = 'position:fixed;bottom:14px;right:14px;background:rgba(20,83,45,0.92);color:#86efac;font-size:0.76rem;font-weight:600;padding:5px 12px;border-radius:20px;z-index:9998;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:color 0.3s;';
+  badge.textContent = '⟳ conectando...';
+  document.body.appendChild(badge);
+  function setBadge(t, c) { badge.textContent = t; badge.style.color = c || '#86efac'; }
+
+  var _guardar = window.guardarDatos;
+  var _writeTimer = null;
+
+  function pushFirebase(datos) {
+    fetch(DB + '.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jugadores: datos })
+    }).then(function(r) { r.ok ? setBadge('✓ sincronizado', '#4ade80') : setBadge('⚠ error al guardar', '#fca5a5'); })
+      .catch(function() { setBadge('⚠ sin conexión', '#fca5a5'); });
+  }
+
+  window.guardarDatos = function(datos) {
+    _guardar(datos);
+    if (_writeTimer) clearTimeout(_writeTimer);
+    _writeTimer = setTimeout(function() { pushFirebase(datos); }, 1000);
+  };
+
+  function pullFirebase(silencioso) {
+    fetch(DB + '.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || !data.jugadores || !data.jugadores.length) { setBadge('● en vivo', '#86efac'); return; }
+        var actual = JSON.stringify(cargarDatos());
+        var remoto = JSON.stringify(data.jugadores);
+        if (actual !== remoto) {
+          _guardar(data.jugadores);
+          renderTabla();
+          if (typeof sincronizarSelectActividad === 'function') sincronizarSelectActividad();
+          if (silencioso) { setBadge('↻ actualizado', '#fde68a'); setTimeout(function() { setBadge('● en vivo', '#86efac'); }, 2500); }
+        } else { setBadge('● en vivo', '#86efac'); }
+      })
+      .catch(function() { setBadge('⚠ sin conexión', '#fca5a5'); });
+  }
+
+  pullFirebase(false);
+  setInterval(function() { pullFirebase(true); }, 15000);
+})();
+</script>
+</body></html>`);
+  win.document.close();
+
+  // Resetear indicador del botón
+  const btn = document.getElementById('btnFichasPDF');
+  if (btn) {
+    btn.style.background = '#166534';
+    btn.style.color = '#fde68a';
+    btn.style.borderColor = 'rgba(253,230,138,0.4)';
+    btn.title = '';
+    btn.textContent = '📄 Fichas PDF';
+  }
+}
+
+async function cargarPDFManual(event) {
+  const file = event.target.files[0];
+  event.target.value = '';
+  if (!file) return;
+  const sel = document.getElementById('selectJugador');
+  const idx = sel ? parseInt(sel.value) : NaN;
+  if (isNaN(idx) || !JUGADORES_ACT[idx]) {
+    setStatus('⚠️ Seleccioná un jugador primero.', '#b45309');
+    setTimeout(() => setStatus(''), 4000);
+    return;
+  }
+  const jugador = JUGADORES_ACT[idx];
+  setStatus(`⏳ Procesando PDF de ${jugador.nombre.split(' ')[0]}...`);
+  try {
+    await cargarPDFJS();
+    const buf = await file.arrayBuffer();
+    const items = await extraerItemsPDF(buf);
+    const filas = agruparFilas(items);
+    const datos = parsearRFEG(filas);
+    if (datos.rondas.length > 0) {
+      jugador.rondas   = datos.rondas;
+      jugador.hcpAct   = datos.hcpAct   ?? jugador.hcpAct;
+      jugador.pdfFecha = datos.pdfFecha ?? jugador.pdfFecha;
+      renderTablaActividad();
+      setStatus(`✅ ${jugador.nombre.split(' ')[0]} actualizado — ${datos.rondas.length} ronda(s).`);
+    } else {
+      setStatus('⚠️ 0 rondas encontradas. Verificá que sea el certificado RFEG correcto.', '#b45309');
+    }
+  } catch(e) {
+    setStatus(`❌ Error al leer el PDF: ${e.message}`, '#b91c1c');
+  }
+  setTimeout(() => setStatus(''), 12000);
+}
+
+</script>
+
+<script>
+    // Títulos editables
+    try { (function() {
+      const KEY_H1  = location.pathname + '-titulo';
+      const KEY_SUB = location.pathname + '-subtitulo';
+      const h1  = document.getElementById('titulo-principal');
+      const sub = document.getElementById('titulo-subtitulo');
+      if (localStorage.getItem(KEY_H1))  h1.textContent  = localStorage.getItem(KEY_H1);
+      if (localStorage.getItem(KEY_SUB)) sub.textContent = localStorage.getItem(KEY_SUB);
+      h1.addEventListener('blur',  () => { try { localStorage.setItem(KEY_H1,  h1.textContent.trim()); } catch(e){} });
+      sub.addEventListener('blur', () => { try { localStorage.setItem(KEY_SUB, sub.textContent.trim()); } catch(e){} });
+      [h1, sub].forEach(el => el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } }));
+    })(); } catch(e) {}
+
+    // Fecha de hoy
+    const hoy = new Date();
+    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('fechaHoy').textContent =
+        'Fecha actual: ' + hoy.toLocaleDateString('es-ES', opciones);
+
+    // DATOS — se actualizan al pulsar 💾 Guardar y reemplazar el archivo
+    let _jugadores = [
+                {
+                        "nombre": "Luis AntuñAno Eguillor",
+                        "licencia": "VB01027471",
+                        "hcpIni": 3.6,
+                        "hcpAct": 2.6,
+                        "fechaMod": "26-05-2026",
+                        "premiosAño": 6
+                },
+                {
+                        "nombre": "Ramon Elosegui Bergareche",
+                        "licencia": "VB01020079",
+                        "hcpIni": 10,
+                        "hcpAct": 9.5,
+                        "fechaMod": "24-05-2026",
+                        "premiosAño": 4
+                },
+                {
+                        "nombre": "Gorka  Montero Fernandez",
+                        "licencia": "VB09400249",
+                        "hcpIni": 11,
+                        "hcpAct": 10.6,
+                        "fechaMod": "24-05-2026",
+                        "premiosAño": 5
+                },
+                {
+                        "nombre": "Gonzalo Pardo Arin",
+                        "licencia": "VB09020318",
+                        "hcpIni": -0.5,
+                        "hcpAct": -0.2,
+                        "fechaMod": "24-05-2026",
+                        "premiosAño": 1
+                },
+                {
+                        "nombre": "Andres Murua Urruticoechea",
+                        "licencia": "VB09127515",
+                        "hcpIni": 14.6,
+                        "hcpAct": 15.6,
+                        "fechaMod": "24-05-2026",
+                        "premiosAño": 2
+                },
+                {
+                        "nombre": "Fernando Arocena Garcia Tapia",
+                        "licencia": "VB03031463",
+                        "hcpIni": 13.6,
+                        "hcpAct": 14.1,
+                        "fechaMod": "24-05-2026",
+                        "premiosAño": 1
+                },
+                {
+                        "nombre": "Pablo Manuel Orbe Murua",
+                        "licencia": "VB01069770",
+                        "hcpIni": 14.3,
+                        "hcpAct": 14.8,
+                        "fechaMod": "29-05-2026",
+                        "premiosAño": 0
+                },
+                {
+                        "nombre": "Victor San Gil Noain",
+                        "licencia": "VB09320423",
+                        "hcpIni": 5.1,
+                        "hcpAct": 5.1,
+                        "fechaMod": "17-05-2026",
+                        "premiosAño": 4
+                },
+                {
+                        "nombre": "Jaime BeñAran Arocena",
+                        "licencia": "VB09020398",
+                        "hcpIni": 3,
+                        "hcpAct": 3.1,
+                        "fechaMod": "24-05-2026",
+                        "premiosAño": 1
+                },
+                {
+                        "nombre": "Alejo Cuadra Ibarguchi",
+                        "licencia": "VB090445-P",
+                        "hcpIni": 2.6,
+                        "hcpAct": 2.6,
+                        "fechaMod": "30-05-2026",
+                        "premiosAño": 2
+                },
+                {
+                        "nombre": "Fernando Aguirre FlañO",
+                        "licencia": "VB09233692",
+                        "hcpIni": 3.4,
+                        "hcpAct": 3.4,
+                        "fechaMod": "17-05-2026",
+                        "premiosAño": 3
+                },
+                {
+                        "nombre": "Eugenio Rezola Murua",
+                        "licencia": "VB01026531",
+                        "hcpIni": 11.8,
+                        "hcpAct": 12.1,
+                        "fechaMod": "04-05-2026",
+                        "premiosAño": 2
+                },
+                {
+                        "nombre": "Alejandro Muro Aristizabal",
+                        "licencia": "VB09245518",
+                        "hcpIni": 16.4,
+                        "hcpAct": 17.2,
+                        "fechaMod": "24-05-2026",
+                        "premiosAño": 5
+                },
+                {
+                        "nombre": "Juan Ignacio Orbe Murua",
+                        "licencia": "VB01069771",
+                        "hcpIni": 6.5,
+                        "hcpAct": 6.5,
+                        "fechaMod": "30-05-2026",
+                        "premiosAño": 3
+                }
+        ];
+
+    function cargarDatos() { return _jugadores; }
+    function guardarDatos(datos) { _jugadores = datos; }
+
+
+    function actualizarEnlaceRFEG() {
+        const licencia = document.getElementById('inp-licencia').value.trim();
+        const enlace = document.getElementById('enlace-rfeg');
+        if (licencia) {
+            enlace.href = `https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx?HLic=${encodeURIComponent(licencia)}`;
+        } else {
+            enlace.href = '#';
+        }
+    }
+
+    async function añadirJugador() {
+        const licencia = document.getElementById('inp-licencia').value.trim();
+        const hcpIni   = parseFloat(document.getElementById('inp-hcp-ini').value);
+
+        if (!licencia || isNaN(hcpIni)) {
+            setEstado('Rellena la licencia y el HCP de inicio de año.', 'error');
+            return;
+        }
+
+        const jugadores = cargarDatos();
+        const existe = jugadores.find(j => j.licencia.toUpperCase() === licencia.toUpperCase());
+        if (existe) {
+            setEstado(`La licencia ${licencia} ya está en la tabla.`, 'error');
+            return;
+        }
+
+        const btn = document.getElementById('btn-add');
+        btn.disabled = true;
+        setEstado('Consultando RFEG...', 'info');
+
+        try {
+            const { nombre, hcpAct, fechaMod } = await buscarEnRFEG(licencia);
+            document.getElementById('inp-nombre').value = nombre;
+            document.getElementById('inp-hcp-act').value = hcpAct;
+
+            jugadores.push({ nombre, licencia: licencia.toUpperCase(), hcpIni, hcpAct, fechaMod: fechaMod || '' });
+            guardarDatos(jugadores);
+            renderTabla();
+            ['inp-licencia','inp-nombre','inp-hcp-ini','inp-hcp-act'].forEach(id => document.getElementById(id).value = '');
+            actualizarEnlaceRFEG();
+            setEstado(`✓ ${nombre} añadido · HCP actual: ${hcpAct}`, 'ok');
+            document.getElementById('inp-licencia').focus();
+        } catch (err) {
+            setEstado('⚠ ' + err.message, 'error');
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    async function buscarEnRFEG(licencia) {
+        const rfegUrl = `https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx?HLic=${encodeURIComponent(licencia)}`;
+        const proxies = [
+            url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+            url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+            url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+        ];
+
+        let html = '';
+        for (const proxy of proxies) {
+            try {
+                const res = await fetchTimeout(proxy(rfegUrl), 10000);
+                if (!res.ok) continue;
+                const text = await res.text();
+                try { html = JSON.parse(text).contents || ''; } catch { html = text; }
+                if (html.length > 500) break;
+            } catch { continue; }
+        }
+
+        if (!html) throw new Error('No se pudo conectar con la RFEG.');
+
+        // Parsear HTML con DOMParser y buscar la fila con "Válido"
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const tds = Array.from(doc.querySelectorAll('td'));
+        const validoTd = tds.find(td => /^v[áa]lido$/i.test(td.textContent.trim()));
+
+        if (validoTd) {
+            const fila = validoTd.closest('tr');
+            if (fila) {
+                const celdas = Array.from(fila.querySelectorAll('td'))
+                    .map(td => td.textContent.trim());
+                // Estructura: [..., nombre, licencia, handicap, Válido, fecha]
+                const iValido = celdas.findIndex(c => /^v[áa]lido$/i.test(c));
+                if (iValido >= 3) {
+                    const nombre = celdas[iValido - 3]
+                        .toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                    const hcpAct = parseFloat(celdas[iValido - 1].replace(',', '.'));
+                    const fechaMod = celdas[iValido + 1] || '';
+                    if (nombre && !isNaN(hcpAct)) return { nombre, hcpAct, fechaMod };
+                }
+            }
+        }
+
+        // Fallback: buscar en texto plano
+        const texto = doc.body ? doc.body.innerText || doc.body.textContent : html;
+        const m = texto.match(/([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ ]{4,})\s+[\w-]+\s+([\d,]+)\s+V[áa]lido\s+([\d-]+)/);
+        if (m) {
+            const nombre = m[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+            const hcpAct = parseFloat(m[2].replace(',', '.'));
+            const fechaMod = m[3] || '';
+            return { nombre, hcpAct, fechaMod };
+        }
+
+        throw new Error(`No se encontró la licencia "${licencia}" en la RFEG.`);
+    }
+
+    function editarHcpIni(td, idx) {
+        if (td.querySelector('input')) return;
+        const valorActual = parseFloat(td.textContent);
+        td.innerHTML = `<input type="number" step="0.1" value="${valorActual}" />`;
+        const input = td.querySelector('input');
+        input.focus();
+        input.select();
+
+        function guardar() {
+            const nuevo = parseFloat(input.value);
+            if (!isNaN(nuevo) && nuevo !== valorActual) {
+                const jugadores = cargarDatos();
+                jugadores[idx].hcpIni = nuevo;
+                guardarDatos(jugadores);
+                renderTabla();
+            } else {
+                td.textContent = valorActual.toFixed(1);
+            }
+        }
+
+        input.addEventListener('blur', guardar);
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') input.blur();
+            if (e.key === 'Escape') { td.textContent = valorActual.toFixed(1); }
+        });
+    }
+
+    async function actualizarTodos() {
+        const btn = document.getElementById('btn-update');
+        try {
+            const jugadores = cargarDatos();
+            if (jugadores.length === 0) { setEstado('No hay jugadores en la tabla.', 'error'); return; }
+
+            btn.disabled = true;
+            const añoActual = String(new Date().getFullYear());
+            const hoy = new Date(); hoy.setHours(0,0,0,0);
+
+            let ok = 0, errores = [];
+            for (let i = 0; i < jugadores.length; i++) {
+                const j = jugadores[i];
+                btn.textContent = `↻ Actualizando ${i + 1}/${jugadores.length}...`;
+                try {
+                    const { nombre, hcpAct, fechaMod } = await buscarEnRFEG(j.licencia);
+                    jugadores[i].hcpAct = hcpAct;
+                    jugadores[i].nombre = nombre;
+                    jugadores[i].fechaMod = fechaMod || '';
+
+                    // Sincronizar JUGADORES_ACT con el hcp actual recién obtenido
+                    const jActWeb = JUGADORES_ACT.find(ja => ja.licencia.toUpperCase() === j.licencia.toUpperCase());
+                    if (jActWeb) { jActWeb.hcpAct = hcpAct; jActWeb.nombre = nombre; }
+
+                    const mfCheck = (jugadores[i].fechaMod || '').match(/(\d{2})[-\/](\d{2})[-\/](\d{4})/);
+                    const fechaModDate = mfCheck ? new Date(+mfCheck[3], +mfCheck[2]-1, +mfCheck[1]) : null;
+                    const esReciente = fechaModDate && (hoy - fechaModDate) / 86400000 < 2;
+
+                    if (esReciente) try {
+                        await cargarPDFJS();
+                        const licM = j.licencia.match(/^[A-Z]{2}\d{2}(.+)$/);
+                        const id   = licM ? licM[1].toLowerCase() : j.licencia.replace(/\D/g, '').slice(-6);
+                        const pdfUrl = `https://api.rfeg.es/files/summaryhandicap/${id}.pdf`;
+                        const proxyUrls = [
+                            pdfUrl,
+                            `https://corsproxy.io/?${encodeURIComponent(pdfUrl)}`,
+                            `https://api.allorigins.win/raw?url=${encodeURIComponent(pdfUrl)}`,
+                        ];
+                        let buf = null;
+                        for (const url of proxyUrls) {
+                            try {
+                                const resp = await fetchTimeout(url, 10000);
+                                if (!resp.ok) continue;
+                                const candidate = await resp.arrayBuffer();
+                                if (candidate.byteLength > 1000) { buf = candidate; break; }
+                            } catch { continue; }
+                        }
+                        if (buf) {
+                            const items = await extraerItemsPDF(buf);
+                            const filas = agruparFilas(items);
+                            const datos = parsearRFEG(filas);
+                            if (datos.rondas.length > 0) {
+                                const jAct = JUGADORES_ACT.find(ja => ja.licencia.toUpperCase() === j.licencia.toUpperCase());
+                                if (jAct) {
+                                    jAct.rondas   = datos.rondas;
+                                    jAct.hcpAct   = datos.hcpAct   ?? jAct.hcpAct;
+                                    jAct.pdfFecha = datos.pdfFecha ?? jAct.pdfFecha;
+                                }
+                                jugadores[i].premiosAño = datos.rondas.filter(r => r.fecha && r.fecha.slice(-4) === añoActual).length;
+                            }
+                        }
+                    } catch { /* si falla el PDF, premiosAño queda sin cambio */ }
+
+                    ok++;
+                } catch {
+                    errores.push(j.licencia);
+                }
+            }
+
+            guardarDatos(jugadores);
+            renderTabla();
+            renderTablaActividad();
+            if (ok > 0) marcarFichasPendientes();
+            btn.disabled = false;
+            btn.textContent = '↻ Actualizar RFEG';
+
+            if (errores.length === 0) {
+                setEstado(`✓ ${ok} jugador${ok !== 1 ? 'es' : ''} actualizado${ok !== 1 ? 's' : ''} correctamente.`, 'ok');
+            } else {
+                setEstado(`✓ ${ok} actualizados · ⚠ Sin datos: ${errores.join(', ')}`, 'error');
+            }
+        } catch(e) {
+            if (btn) { btn.disabled = false; btn.textContent = '↻ Actualizar RFEG'; }
+            const msg = /iPhone|iPad/i.test(navigator.userAgent)
+                ? '⚠ Error. En iPhone, abrí el archivo en Safari (no desde WhatsApp).'
+                : '⚠ Error inesperado: ' + e.message;
+            setEstado(msg, 'error');
+        }
+    }
+
+    function setEstado(msg, tipo) {
+        const el = document.getElementById('msg-estado');
+        el.textContent = msg;
+        el.style.color = tipo === 'error' ? '#ef4444' : tipo === 'ok' ? '#16a34a' : '#64748b';
+    }
+
+    function eliminarJugador(idx) {
+        const jugadores = cargarDatos();
+        if (!confirm(`¿Eliminar a ${jugadores[idx].nombre}?`)) return;
+        jugadores.splice(idx, 1);
+        guardarDatos(jugadores);
+        renderTabla();
+    }
+
+    function renderTabla() {
+        const jugadores = cargarDatos();
+
+        if (jugadores.length === 0) {
+            document.getElementById('tabla-body').innerHTML =
+                '<tr><td colspan="9" class="empty">Aún no hay jugadores. Añade el primero con el formulario.</td></tr>';
+            return;
+        }
+
+        // Calcular % incremento respecto a inicio de año y ordenar
+        const conIncremento = jugadores.map((j, originalIdx) => ({
+            ...j,
+            originalIdx,
+            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / j.hcpIni * 100).toFixed(1) : 0
+        }));
+
+        // Orden inverso al % incremento: de menor (más mejora) a mayor
+        conIncremento.sort((a, b) => a.incremento - b.incremento);
+
+        const medallas = ['🥇','🥈','🥉'];
+
+        const filas = conIncremento.map((j, pos) => {
+            const signo = j.incremento > 0 ? '+' : '';
+            const cls   = j.incremento < 0 ? 'inc-mejor'
+                        : j.incremento > 0 ? 'inc-peor'
+                        : 'inc-igual';
+
+            const posTexto = pos < 3
+                ? `<span class="medal">${medallas[pos]}</span>`
+                : `<span class="pos">${pos + 1}</span>`;
+
+            const claseTop = pos === 0 ? 'top1' : pos < 3 ? 'top6' : j.incremento < 0 ? 'topGreen' : '';
+
+            const premiosAño = j.premiosAño != null ? j.premiosAño : '—';
+            const hoy = new Date(); hoy.setHours(0,0,0,0);
+            const mf = (j.fechaMod || '').match(/(\d{2})[-\/](\d{2})[-\/](\d{4})/);
+            const fechaModDate = mf ? new Date(+mf[3], +mf[2]-1, +mf[1]) : null;
+            const difDias = fechaModDate ? (hoy - fechaModDate) / 86400000 : Infinity;
+            const esReciente = difDias < 2;
+
+            return `<tr class="${claseTop}">
+                <td>${posTexto}</td>
+                <td class="nombre">${escHtml(j.nombre)}</td>
+                <td class="licencia">${escHtml(j.licencia)}</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, ${j.originalIdx})">${j.hcpIni.toFixed(1)}</td>
+                <td class="hcp">${j.hcpAct.toFixed(1)}</td>
+                <td><span class="incremento ${cls}">${signo}${(j.hcpAct - j.hcpIni).toFixed(1)}</span></td>
+                <td><span class="incremento ${cls}">${signo}${j.incremento.toFixed(1)}%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">${premiosAño}</td>
+                <td style="font-size:0.82rem;color:${esReciente?'#dc2626':'#64748b'};font-weight:${esReciente?'700':'400'}">${j.fechaMod || '—'}</td>
+                <td><button class="btn-del" onclick="eliminarJugador(${j.originalIdx})" title="Eliminar">✕</button></td>
+            </tr>`;
+        }).join('');
+
+        document.getElementById('tabla-body').innerHTML = filas;
+        sincronizarSelectActividad();
+    }
+
+    function sincronizarSelectActividad() {
+        const jugadores = cargarDatos();
+        const sel = document.getElementById('selectJugador');
+        if (!sel) return;
+        const licActual = JUGADORES_ACT[parseInt(sel.value)]?.licencia?.toUpperCase() ?? '';
+        const licSet = new Set(jugadores.map(j => j.licencia.toUpperCase()));
+        // Eliminar jugadores que ya no están en la clasificación
+        for (let i = JUGADORES_ACT.length - 1; i >= 0; i--) {
+            if (!licSet.has(JUGADORES_ACT[i].licencia.toUpperCase())) JUGADORES_ACT.splice(i, 1);
+        }
+        // Agregar jugadores nuevos (sin tocar los existentes)
+        const licActivos = new Set(JUGADORES_ACT.map(j => j.licencia.toUpperCase()));
+        jugadores.forEach(j => {
+            if (!licActivos.has(j.licencia.toUpperCase())) {
+                JUGADORES_ACT.push({ nombre: j.nombre, licencia: j.licencia, hcpAct: j.hcpAct, pdfFecha: null, rondas: [] });
+            }
+        });
+        // Reconstruir opciones
+        sel.innerHTML = '<option value="">— Seleccionar jugador —</option>';
+        JUGADORES_ACT.forEach((j, i) => {
+            const o = document.createElement('option');
+            o.value = i; o.textContent = j.nombre;
+            sel.appendChild(o);
+        });
+        const newIdx = JUGADORES_ACT.findIndex(j => j.licencia.toUpperCase() === licActual);
+        if (newIdx >= 0) sel.value = newIdx;
+        renderTablaActividad();
+    }
+
+    let _fileHandle = null;
+
+    async function guardarJSON() {
+        const jugadores = cargarDatos();
+        if (jugadores.length === 0) { setEstado('No hay datos para guardar.', 'error'); return; }
+        const datosStr = JSON.stringify(jugadores, null, 8).replace(/^/gm, '        ').trim();
+        let html = document.documentElement.outerHTML;
+        html = html.replace(/let _jugadores = \[[\s\S]*?\];/, `let _jugadores = ${datosStr};`);
+        html = html.replace(/<title>[^<]*<\/title>/, '<title>arbolito2026 viernes clink</title>');
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        // iOS Safari no soporta showSaveFilePicker — usa descarga directa
+        if (!window.showSaveFilePicker) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'arbolito2026 viernes clink.html';
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
+            setEstado('✓ Descargado. Reemplazá el archivo original con éste.', 'ok');
+            return;
+        }
+        try {
+            if (!_fileHandle) {
+                _fileHandle = await window.showSaveFilePicker({
+                    suggestedName: 'arbolito2026 viernes clink.html',
+                    types: [{ description: 'Página HTML', accept: { 'text/html': ['.html'] } }]
+                });
+            }
+            const writable = await _fileHandle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+            setEstado('✓ Archivo guardado correctamente.', 'ok');
+        } catch (err) {
+            if (err.name !== 'AbortError') setEstado('Error al guardar: ' + err.message, 'error');
+        }
+    }
+
+    function cargarJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const datos = JSON.parse(e.target.result);
+                if (!Array.isArray(datos)) throw new Error();
+                guardarDatos(datos);
+                renderTabla();
+                setEstado(`✓ ${datos.length} jugadores cargados. Pulsa 💾 Guardar para guardar en el archivo.`, 'ok');
+            } catch {
+                setEstado('Error: el archivo no es válido.', 'error');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    function exportarExcel() {
+        const jugadores = cargarDatos();
+        if (jugadores.length === 0) { alert('No hay datos para exportar.'); return; }
+
+        const conIncremento = jugadores.map(j => ({
+            ...j,
+            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / j.hcpIni * 100).toFixed(1) : 0
+        })).sort((a, b) => a.incremento - b.incremento);
+
+        const datos = conIncremento.map((j, pos) => ({
+            'Pos.': pos + 1,
+            'Nombre': j.nombre,
+            'Nº Licencia': j.licencia,
+            'HCP 01/01/2026': j.hcpIni,
+            'HCP Actual': j.hcpAct,
+            'Diferencia': +(j.hcpAct - j.hcpIni).toFixed(1),
+            '% Incremento': j.incremento + '%'
+        }));
+
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(datos);
+
+        // Anchos de columna
+        ws['!cols'] = [
+            { wch: 5 }, { wch: 28 }, { wch: 14 }, { wch: 15 }, { wch: 13 }, { wch: 12 }
+        ];
+
+        XLSX.utils.book_append_sheet(wb, ws, 'Arbolito Orbe Murua');
+
+        const fechaStr = hoy.toISOString().split('T')[0];
+        XLSX.writeFile(wb, `Arbolito_2026_${fechaStr}.xlsx`);
+    }
+
+    function escHtml(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Añadir con Enter solo desde los campos del formulario
+    ['inp-licencia', 'inp-hcp-ini'].forEach(id => {
+        document.getElementById(id)?.addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); añadirJugador(); }
+        });
+    });
+
+    renderTabla();
+</script>
+
+
+
+<script>
+(function() {
+  var DB = 'https://arbolito-golf-default-rtdb.europe-west1.firebasedatabase.app/arbolito-principal';
+  var badge = document.createElement('div');
+  badge.style.cssText = 'position:fixed;bottom:14px;right:14px;background:rgba(20,83,45,0.92);color:#86efac;font-size:0.76rem;font-weight:600;padding:5px 12px;border-radius:20px;z-index:9998;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:color 0.3s;';
+  badge.textContent = '⟳ conectando...';
+  document.body.appendChild(badge);
+  function setBadge(t, c) { badge.textContent = t; badge.style.color = c || '#86efac'; }
+
+  var _guardar = window.guardarDatos;
+  var _writeTimer = null;
+
+  function pushFirebase(datos) {
+    fetch(DB + '.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jugadores: datos })
+    }).then(function(r) { r.ok ? setBadge('✓ sincronizado', '#4ade80') : setBadge('⚠ error al guardar', '#fca5a5'); })
+      .catch(function() { setBadge('⚠ sin conexión', '#fca5a5'); });
+  }
+
+  window.guardarDatos = function(datos) {
+    _guardar(datos);
+    if (_writeTimer) clearTimeout(_writeTimer);
+    _writeTimer = setTimeout(function() { pushFirebase(datos); }, 1000);
+  };
+
+  function pullFirebase(silencioso) {
+    fetch(DB + '.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || !data.jugadores || !data.jugadores.length) { setBadge('● en vivo', '#86efac'); return; }
+        var actual = JSON.stringify(cargarDatos());
+        var remoto = JSON.stringify(data.jugadores);
+        if (actual !== remoto) {
+          _guardar(data.jugadores);
+          renderTabla();
+          if (typeof sincronizarSelectActividad === 'function') sincronizarSelectActividad();
+          if (silencioso) { setBadge('↻ actualizado', '#fde68a'); setTimeout(function() { setBadge('● en vivo', '#86efac'); }, 2500); }
+        } else { setBadge('● en vivo', '#86efac'); }
+      })
+      .catch(function() { setBadge('⚠ sin conexión', '#fca5a5'); });
+  }
+
+  pullFirebase(false);
+  setInterval(function() { pullFirebase(true); }, 15000);
+})();
+</script>
+</body></html>
