@@ -1,0 +1,540 @@
+﻿<html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campeonato de España Alevín</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #1a4731;
+            color: #1e293b;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+
+        header {
+            text-align: center;
+            padding: 20px 0 24px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            color: #fde68a;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: #86efac;
+            margin-top: 6px;
+            font-size: 0.9rem;
+        }
+
+        .fecha-hoy {
+            text-align: center;
+            color: #bbf7d0;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        /* Formulario de alta */
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 16px;
+            max-width: 425px;
+            margin: 0 auto 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .form-card h2 {
+            font-size: 1rem;
+            color: #166534;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1.8fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .btn-rfeg {
+            padding: 9px 14px;
+            background: #f0fdf4;
+            color: #166534;
+            border: 1.5px solid #86efac;
+            border-radius: 7px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+        .btn-rfeg:hover { background: #dcfce7; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 16px;
+            color: #1e293b;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #16a34a;
+        }
+
+        .btn-add {
+            padding: 9px 20px;
+            background: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .btn-add:hover { background: #15803d; }
+
+        /* Tabla */
+        .tabla-container {
+            max-width: 1050px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            overflow-x: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .tabla-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            background: #14532d;
+            color: white;
+        }
+
+        .tabla-header h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-export {
+            padding: 7px 16px;
+            background: #fde68a;
+            color: #14532d;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+
+        .btn-export:hover { background: #fcd34d; }
+
+        .btn-update {
+            padding: 7px 16px;
+            background: #38bdf8;
+            color: #0c4a6e;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+        .btn-update:hover { background: #7dd3fc; }
+        .btn-update:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+        .btn-row-update {
+            padding: 4px 10px;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+        .btn-row-update:hover { background: #1d4ed8; }
+        .btn-row-update:disabled { background: #94a3b8; cursor: not-allowed; }
+        .btn-row-update--recent { background: #16a34a; }
+        .btn-row-update--recent:hover { background: #15803d; }
+        .btn-row-update--stale { background: #dc2626; }
+        .btn-row-update--stale:hover { background: #b91c1c; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            background: #dcfce7;
+        }
+
+        th {
+            padding: 11px 14px;
+            text-align: center;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #166534;
+            font-weight: 700;
+            border-bottom: 2px solid #86efac;
+        }
+
+        th:first-child, th:nth-child(2) { text-align: left; }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0fdf4;
+            font-size: 0.93rem;
+            text-align: center;
+        }
+
+        td:first-child, td:nth-child(2) { text-align: left; }
+
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: #f9fafb; }
+        tr:hover td { background: #d1fae5; }
+        tr.topGreen td { background: #bbf7d0; }
+        tr.topGreen:nth-child(even) td { background: #bbf7d0; }
+        tr.topGreen:hover td { background: #86efac; }
+
+        .pos {
+            font-weight: 700;
+            color: #64748b;
+            width: 30px;
+        }
+
+        .nombre { font-weight: 600; }
+
+        .licencia {
+            font-family: monospace;
+            color: #475569;
+            font-size: 0.88rem;
+        }
+
+        .hcp { font-weight: 600; }
+
+        .btn-del {
+            background: #fee2e2;
+            border: 1.5px solid #fca5a5;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            min-width: 36px;
+            min-height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-del:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .medal { font-size: 1.1rem; }
+
+        @media (max-width: 640px) {
+            body { padding: 10px; }
+
+            header h1 { font-size: 1.4rem; }
+            header p  { font-size: 0.8rem; }
+
+            .form-card { padding: 12px; }
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .form-grid > :nth-child(2) { grid-column: 1 / -1; }
+            .form-grid > :last-child   { grid-column: 1 / -1; }
+
+            .tabla-container { overflow-x: auto; }
+            .tabla-header {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 10px 12px;
+            }
+            .tabla-header > div { flex-wrap: wrap; gap: 6px; }
+            .btn-export, .btn-update { font-size: 0.78rem; padding: 6px 10px; }
+            .btn-add  { width: 100%; }
+            .btn-rfeg { width: 100%; text-align: center; }
+
+            th { padding: 8px 8px; font-size: 0.7rem; }
+            td { padding: 8px 8px; font-size: 0.85rem; }
+        }
+    </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script></head>
+<body>
+
+<header>
+    <h1 id="titulo-principal" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">⛳ Campeonato de España Alevín</h1>
+    <p id="titulo-subtitulo" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">Lista de participantes · Alevín</p>
+</header>
+
+<p class="fecha-hoy" id="fechaHoy">Fecha actual: </p>
+
+<!-- Formulario -->
+<div class="form-card">
+    <h2>➕ Añadir jugador</h2>
+    <div class="form-grid">
+        <div class="form-group">
+            <label>Nº Licencia</label>
+            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()">
+        </div>
+        <div class="form-group" style="display:none">
+            <label>HCP 01/01/2026</label>
+            <input type="number" id="inp-hcp-ini" placeholder="Ej. 18.4" step="0.1">
+        </div>
+        <div class="form-group" style="display:none">
+            <input type="text" id="inp-nombre">
+            <input type="number" id="inp-hcp-act">
+        </div>
+        <div class="form-group" style="display:flex;gap:8px;align-items:flex-end;">
+            <button class="btn-add" id="btn-add" onclick="añadirJugador()">Añadir</button>
+            <a id="enlace-rfeg" href="#" target="_blank" class="btn-rfeg" title="Consultar en RFEG">🔍 RFEG</a>
+        </div>
+    </div>
+    <p id="msg-estado" style="margin-top: 10px; font-size: 0.82rem; color: rgb(22, 163, 74); min-height: 18px;">✓ Archivo listo.</p>
+</div>
+
+<!-- Tabla -->
+<div class="tabla-container">
+    <div class="tabla-header">
+        <h2>🏆 Campeonato de España Alevín</h2>
+        <div style="display:flex;gap:8px;">
+            <button class="btn-update" id="btn-update" onclick="actualizarTodos()">↻ Actualizar RFEG</button>
+            <button class="btn-export" onclick="exportarExcel()">⬇ Exportar Excel</button>
+            <button class="btn-export" onclick="guardarJSON()" title="Guardar copia de seguridad">💾 Guardar</button>
+            <label class="btn-export" style="cursor:pointer;margin:0" title="Cargar copia de seguridad">
+                📂 Cargar<input type="file" accept=".json" onchange="cargarJSON(event)" style="display:none">
+            </label>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Pos.</th>
+                <th>Nombre</th>
+                <th>Nº Licencia</th>
+                <th>HCP Actual</th>
+                <th>Pertenece a</th>
+                <th>Fecha Nac.</th>
+                <th>Premios jugados año</th>
+                <th>Últ. Modificación</th>
+                <th>Acción</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="tabla-body"></tbody>
+    </table>
+</div>
+
+<!-- Actividad: Últimas 20 rondas -->
+<div id="seccion-actividad" style="max-width:960px;margin:28px auto 0;padding:0 0 40px;">
+  <div style="background:#14532d;color:#fde68a;font-weight:700;font-size:1.05rem;padding:14px 20px;border-radius:10px 10px 0 0;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;">
+    <span>⛳ Actividad — Últimas 20 rondas jugadas</span>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+      <select id="selectJugador" onchange="renderTablaActividad()" style="background:#166534;color:#fde68a;border:1px solid rgba(253,230,138,0.5);border-radius:6px;padding:5px 10px;font-weight:600;font-size:0.85rem;cursor:pointer;max-width:240px;"><option value="">— Seleccionar jugador —</option></select>
+      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;" disabled="">⏳ Actualizando...</button>
+      <button id="btnFichasPDF" onclick="exportarFichasPDF()" style="background: rgb(180, 83, 9); color: rgb(255, 255, 255); border: 1px solid transparent; border-radius: 6px; padding: 6px 14px; font-weight: 700; font-size: 0.88rem; cursor: pointer;" title="Hay cambios — regenerar fichas PDF">📄 Fichas PDF</button>
+    </div>
+  </div>
+  <div id="actStatus" style="display: none; padding: 8px 16px; font-size: 0.82rem; background: rgb(240, 253, 244); border-left: 3px solid rgb(22, 101, 52); color: rgb(22, 102, 52);"></div>
+  <div id="actContainer" style="overflow-x:auto;border:1px solid #bbf7d0;border-top:none;border-radius:0 0 10px 10px;"></div>
+</div>
+
+<script>
+    // Fecha de hoy
+    const hoy = new Date();
+    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('fechaHoy').textContent = 'Fecha actual: ' + hoy.toLocaleDateString('es-ES', opciones);
+
+    // DATOS — inicialmente vacío; usa el script Python para poblar desde el Excel
+    let _jugadores = [];
+
+    function cargarDatos() { return _jugadores; }
+    function guardarDatos(datos) { _jugadores = datos; }
+
+    function actualizarEnlaceRFEG() {
+        const licencia = document.getElementById('inp-licencia').value.trim();
+        const enlace = document.getElementById('enlace-rfeg');
+        if (licencia) {
+            enlace.href = `https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx?HLic=${encodeURIComponent(licencia)}`;
+        } else {
+            enlace.href = '#';
+        }
+    }
+
+    function escHtml(str) { return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function añadirJugador() {
+        const licencia = document.getElementById('inp-licencia').value.trim();
+        if (!licencia) { setEstado('Rellena la licencia.', 'error'); return; }
+        const jugadores = cargarDatos();
+        jugadores.push({ nombre: 'Nuevo jugador', licencia: licencia.toUpperCase(), hcpAct: 0.0, perteneciente: '', fechaNacimiento: '', fechaMod: '', premiosAño: 0 });
+        guardarDatos(jugadores); renderTabla();
+        setEstado('Jugador añadido.', 'ok');
+    }
+
+    function setEstado(msg, tipo) {
+        const el = document.getElementById('msg-estado');
+        el.textContent = msg;
+        el.style.color = tipo === 'error' ? '#ef4444' : tipo === 'ok' ? '#16a34a' : '#64748b';
+    }
+
+    function eliminarJugador(idx) {
+        const jugadores = cargarDatos();
+        if (!confirm(`¿Eliminar a ${jugadores[idx].nombre}?`)) return;
+        jugadores.splice(idx, 1);
+        guardarDatos(jugadores);
+        renderTabla();
+    }
+
+    function actualizarJugador(idx) {
+        alert('Función de actualización no implementada en esta copia.');
+    }
+
+    function renderTabla() {
+        const jugadores = cargarDatos();
+        if (!jugadores || jugadores.length === 0) {
+            document.getElementById('tabla-body').innerHTML = '<tr><td colspan="10" class="empty">Aún no hay jugadores. Usa el script para poblar desde el Excel.</td></tr>';
+            return;
+        }
+        const filas = jugadores.map((j, pos) => {
+            return `<tr>
+                <td><span class="pos">${pos+1}</span></td>
+                <td class="nombre">${escHtml(j.nombre || '')}</td>
+                <td class="licencia">${escHtml(j.licencia || '')}</td>
+                <td class="hcp">${j.hcpAct != null ? Number(j.hcpAct).toFixed(1) : '—'}</td>
+                <td>${escHtml(j.perteneciente || '')}</td>
+                <td>${escHtml(j.fechaNacimiento || '')}</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">${j.premiosAño ?? '—'}</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">${j.fechaMod || '—'}</td>
+                <td><button class="btn-row-update" onclick="actualizarJugador(${pos})">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(${pos})">✕</button></td>
+            </tr>`;
+        }).join('');
+        document.getElementById('tabla-body').innerHTML = filas;
+        sincronizarSelectActividad();
+    }
+
+    function sincronizarSelectActividad() {
+        const jugadores = cargarDatos();
+        const sel = document.getElementById('selectJugador');
+        if (!sel) return;
+        sel.innerHTML = '<option value="">— Seleccionar jugador —</option>';
+        jugadores.forEach((j,i) => {
+            const o = document.createElement('option'); o.value = i; o.textContent = j.nombre; sel.appendChild(o);
+        });
+        renderTablaActividad();
+    }
+
+    function renderTablaActividad() { const container = document.getElementById('actContainer'); container.innerHTML = '<div style="padding:24px;text-align:center;color:#94a3b8;font-style:italic;">Actividad no disponible en esta copia.</div>'; }
+
+    function guardarJSON() { const jugadores = cargarDatos(); const datosStr = JSON.stringify(jugadores, null, 8); const blob = new Blob([datosStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'campeonato_alevin.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); setEstado('✓ JSON descargado.', 'ok'); }
+
+    function cargarJSON(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = e => { try { const datos = JSON.parse(e.target.result); guardarDatos(datos); renderTabla(); setEstado(`✓ ${datos.length} jugadores cargados.`, 'ok'); } catch { setEstado('Error: el archivo no es válido.', 'error'); } }; reader.readAsText(file); event.target.value = ''; }
+
+    function exportarExcel() {
+        const jugadores = cargarDatos();
+        if (jugadores.length === 0) { alert('No hay datos para exportar.'); return; }
+        const datos = jugadores.map((j,pos) => ({ 'Pos.': pos+1, 'Nombre': j.nombre, 'Nº Licencia': j.licencia, 'HCP Actual': j.hcpAct, 'Pertenece a': j.perteneciente, 'Fecha Nac.': j.fechaNacimiento }));
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(datos);
+        ws['!cols'] = [{wch:5},{wch:28},{wch:14},{wch:12},{wch:20},{wch:12}];
+        XLSX.utils.book_append_sheet(wb, ws, 'Alevin');
+        const fechaStr = new Date().toISOString().split('T')[0];
+        XLSX.writeFile(wb, `Campeonato_Alevin_${fechaStr}.xlsx`);
+    }
+
+    renderTabla();
+</script>
+
+
+<script>
+(function() {
+  var DB = 'https://arbolito-golf-default-rtdb.europe-west1.firebasedatabase.app/campeonato-alevin';
+  var badge = document.createElement('div');
+  badge.style.cssText = 'position:fixed;bottom:14px;right:14px;background:rgba(20,83,45,0.92);color:#86efac;font-size:0.76rem;font-weight:600;padding:5px 12px;border-radius:20px;z-index:9998;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:color 0.3s;';
+  badge.textContent = '⟳ conectando...';
+  document.body.appendChild(badge);
+  function setBadge(t, c) { badge.textContent = t; badge.style.color = c || '#86efac'; }
+
+  var _guardar = window.guardarDatos;
+  var _writeTimer = null;
+
+  function pushFirebase(datos) {
+    fetch(DB + '.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jugadores: datos })
+    }).then(function(r) { r.ok ? setBadge('✓ sincronizado', '#4ade80') : setBadge('⚠ error al guardar', '#fca5a5'); })
+      .catch(function() { setBadge('⚠ sin conexión', '#fca5a5'); });
+  }
+
+  window.guardarDatos = function(datos) {
+    _guardar(datos);
+    if (_writeTimer) clearTimeout(_writeTimer);
+    _writeTimer = setTimeout(function() { pushFirebase(datos); }, 1000);
+  };
+
+  function pullFirebase(silencioso) {
+    fetch(DB + '.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || !data.jugadores || !data.jugadores.length) { setBadge('● en vivo', '#86efac'); return; }
+        var actual = JSON.stringify(cargarDatos());
+        var remoto = JSON.stringify(data.jugadores);
+        if (actual !== remoto) {
+          _guardar(data.jugadores);
+          renderTabla();
+          if (typeof sincronizarSelectActividad === 'function') sincronizarSelectActividad();
+          if (silencioso) { setBadge('↻ actualizado', '#fde68a'); setTimeout(function() { setBadge('● en vivo', '#86efac'); }, 2500); }
+        } else { setBadge('● en vivo', '#86efac'); }
+      })
+      .catch(function() { setBadge('⚠ sin conexión', '#fca5a5'); });
+  }
+
+  pullFirebase(false);
+  setInterval(function() { pullFirebase(true); }, 15000);
+})();
+</script>
+</body></html>
