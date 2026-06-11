@@ -458,6 +458,17 @@ function parseGolpes(raw) {
   return arr;
 }
 
+function parseClines(raw) {
+  const arr = Array(18).fill(0);
+  if (!raw) return arr;
+  if (Array.isArray(raw)) {
+    raw.forEach(function(v, i){ if (i < 18 && v != null) arr[i] = v; });
+  } else {
+    Object.keys(raw).forEach(function(k){ const i = parseInt(k); if (i >= 0 && i < 18 && raw[k] != null) arr[i] = raw[k]; });
+  }
+  return arr;
+}
+
 function calcHcpStrokes(hcp, si) {
   const h = Math.round(Math.max(0, hcp));
   return si.map(function(s){ return h <= 18 ? (s <= h ? 1 : 0) : (s <= h - 18 ? 2 : 1); });
@@ -577,14 +588,21 @@ function renderScorecard() {
     const bg = jIdx%2===0?'#fafffe':'#f7fdf9';
     const nom = escHtml((j.nombre||j.licencia||'?').split(' ').slice(0,2).join(' '));
 
+    const clHoyo  = parseClines(j.clinesHoyo);
+    const clExtra = parseClines(j.clinesExtra);
+    const outCH = clHoyo.slice(0,9).reduce(function(a,v){return a+v;},0);
+    const inCH  = clHoyo.slice(9).reduce(function(a,v){return a+v;},0);
+    const outCE = clExtra.slice(0,9).reduce(function(a,v){return a+v;},0);
+    const inCE  = clExtra.slice(9).reduce(function(a,v){return a+v;},0);
+
     rows += '<tr style="background:' + bg + ';">'
-      + '<td rowspan="3" style="padding:4px 8px;border:1px solid #d1fae5;font-weight:700;font-size:0.8rem;vertical-align:middle;background:' + bg + ';">' + nom + '<br><span style="font-weight:400;color:#64748b;font-size:0.72rem;">HCP ' + j.hcpAct + '</span></td>'
+      + '<td rowspan="5" style="padding:4px 8px;border:1px solid #d1fae5;font-weight:700;font-size:0.8rem;vertical-align:middle;background:' + bg + ';">' + nom + '<br><span style="font-weight:400;color:#64748b;font-size:0.72rem;">HCP ' + j.hcpAct + '</span></td>'
       + '<td style="padding:3px 5px;font-size:0.72rem;color:#dc2626;font-weight:600;border:1px solid #d1fae5;white-space:nowrap;">+Strokes</td>';
     strokes.slice(0,9).forEach(function(s){ rows += '<td style="text-align:center;padding:3px 2px;border:1px solid #f0f0f0;font-size:0.75rem;color:' + (s?'#dc2626':'#cbd5e1') + ';">' + (s||'·') + '</td>'; });
     rows += '<td style="border:1px solid #d1fae5;background:#f0fdf4;"></td>';
     strokes.slice(9).forEach(function(s){ rows += '<td style="text-align:center;padding:3px 2px;border:1px solid #f0f0f0;font-size:0.75rem;color:' + (s?'#dc2626':'#cbd5e1') + ';">' + (s||'·') + '</td>'; });
     rows += '<td style="border:1px solid #d1fae5;background:#f0fdf4;"></td>';
-    rows += '<td data-tot="' + jIdx + '" rowspan="3" style="text-align:center;border:1px solid #d1fae5;background:#ecfdf5;padding:4px 6px;font-weight:700;vertical-align:middle;white-space:nowrap;">'
+    rows += '<td data-tot="' + jIdx + '" rowspan="5" style="text-align:center;border:1px solid #d1fae5;background:#ecfdf5;padding:4px 6px;font-weight:700;vertical-align:middle;white-space:nowrap;">'
       + (hasScore ? '<div style="font-size:1rem;color:#1e293b;">' + (outG+inG) + '</div><div style="font-size:0.85rem;color:#166534;">' + (outP+inP) + ' pts</div>' : '<span style="color:#94a3b8;font-size:0.8rem;">—</span>')
       + '</td></tr>';
 
@@ -595,12 +613,26 @@ function renderScorecard() {
     golpes.slice(9).forEach(function(g,i){ rows += '<td data-jidx="' + jIdx + '" data-hoyo="' + (i+9) + '" onclick="editarGolpe(this)" style="text-align:center;padding:3px 2px;border:1px solid #e5e7eb;min-width:26px;cursor:pointer;background:#fffbeb;font-weight:600;">' + (g!==null?g:'') + '</td>'; });
     rows += '<td data-ing="' + jIdx + '" style="text-align:center;border:1px solid #d1fae5;background:#dbeafe;font-weight:700;font-size:0.82rem;">' + (inG||'—') + '</td></tr>';
 
-    rows += '<tr style="background:' + bg + ';border-bottom:2px solid #bbf7d0;">'
+    rows += '<tr style="background:' + bg + ';">'
       + '<td style="padding:3px 5px;font-size:0.72rem;color:#166534;font-weight:600;border:1px solid #d1fae5;white-space:nowrap;">Puntos</td>';
     puntos.slice(0,9).forEach(function(p,i){ var c=p===null?'#e5e7eb':p>=3?'#166534':p===2?'#1e293b':p===1?'#b45309':'#dc2626'; rows += '<td data-pts="' + jIdx + '-' + i + '" style="text-align:center;padding:3px 2px;border:1px solid #f0f0f0;font-weight:700;font-size:0.82rem;color:' + c + ';">' + (p!==null?p:'') + '</td>'; });
     rows += '<td data-outp="' + jIdx + '" style="text-align:center;border:1px solid #d1fae5;background:#d1fae5;font-weight:700;font-size:0.82rem;">' + (outP||'—') + '</td>';
     puntos.slice(9).forEach(function(p,i){ var c=p===null?'#e5e7eb':p>=3?'#166534':p===2?'#1e293b':p===1?'#b45309':'#dc2626'; rows += '<td data-pts="' + jIdx + '-' + (i+9) + '" style="text-align:center;padding:3px 2px;border:1px solid #f0f0f0;font-weight:700;font-size:0.82rem;color:' + c + ';">' + (p!==null?p:'') + '</td>'; });
     rows += '<td data-inp="' + jIdx + '" style="text-align:center;border:1px solid #d1fae5;background:#d1fae5;font-weight:700;font-size:0.82rem;">' + (inP||'—') + '</td></tr>';
+
+    rows += '<tr style="background:' + bg + ';">'
+      + '<td style="padding:3px 5px;font-size:0.72rem;color:#92400e;font-weight:600;border:1px solid #d1fae5;white-space:nowrap;">Clines hoyo</td>';
+    clHoyo.slice(0,9).forEach(function(v,i){ rows += '<td onclick="editarCline(this)" data-jidx="' + jIdx + '" data-hoyo="' + i + '" data-campo="clinesHoyo" style="text-align:center;padding:3px 2px;border:1px solid #fed7aa;min-width:26px;cursor:pointer;background:#fff7ed;font-weight:600;font-size:0.82rem;">' + v + '</td>'; });
+    rows += '<td style="text-align:center;border:1px solid #fed7aa;background:#fdba74;font-weight:700;font-size:0.82rem;">' + outCH + '</td>';
+    clHoyo.slice(9).forEach(function(v,i){ rows += '<td onclick="editarCline(this)" data-jidx="' + jIdx + '" data-hoyo="' + (i+9) + '" data-campo="clinesHoyo" style="text-align:center;padding:3px 2px;border:1px solid #fed7aa;min-width:26px;cursor:pointer;background:#fff7ed;font-weight:600;font-size:0.82rem;">' + v + '</td>'; });
+    rows += '<td style="text-align:center;border:1px solid #fed7aa;background:#fdba74;font-weight:700;font-size:0.82rem;">' + inCH + '</td></tr>';
+
+    rows += '<tr style="background:' + bg + ';border-bottom:2px solid #bbf7d0;">'
+      + '<td style="padding:3px 5px;font-size:0.72rem;color:#6d28d9;font-weight:600;border:1px solid #d1fae5;white-space:nowrap;">Clines extra</td>';
+    clExtra.slice(0,9).forEach(function(v,i){ rows += '<td onclick="editarCline(this)" data-jidx="' + jIdx + '" data-hoyo="' + i + '" data-campo="clinesExtra" style="text-align:center;padding:3px 2px;border:1px solid #e9d5ff;min-width:26px;cursor:pointer;background:#faf5ff;font-weight:600;font-size:0.82rem;">' + v + '</td>'; });
+    rows += '<td style="text-align:center;border:1px solid #e9d5ff;background:#c4b5fd;font-weight:700;font-size:0.82rem;">' + outCE + '</td>';
+    clExtra.slice(9).forEach(function(v,i){ rows += '<td onclick="editarCline(this)" data-jidx="' + jIdx + '" data-hoyo="' + (i+9) + '" data-campo="clinesExtra" style="text-align:center;padding:3px 2px;border:1px solid #e9d5ff;min-width:26px;cursor:pointer;background:#faf5ff;font-weight:600;font-size:0.82rem;">' + v + '</td>'; });
+    rows += '<td style="text-align:center;border:1px solid #e9d5ff;background:#c4b5fd;font-weight:700;font-size:0.82rem;">' + inCE + '</td></tr>';
   });
 
   container.innerHTML = '<table style="border-collapse:collapse;font-size:0.82rem;min-width:900px;width:100%;"><thead>' + hdr + parRow + siRow + amarillasRow + rojasRow + slopeRow + '</thead><tbody>' + rows + '</tbody></table>';
@@ -644,6 +676,49 @@ function saveScore(cell) {
   if (!jugadores[jIdx]) return;
   jugadores[jIdx].golpes = parseGolpes(jugadores[jIdx].golpes);
   jugadores[jIdx].golpes[hoyo] = (!isNaN(val) && val > 0) ? val : null;
+  guardarDatos(jugadores);
+  renderScorecard();
+}
+
+function editarCline(td) {
+  if (td.querySelector('input')) return;
+  const valorPrev = td.textContent.trim();
+  td.innerHTML = '<input type="number" min="0" max="99" value="' + valorPrev + '" style="width:28px;text-align:center;border:none;outline:1px solid #92400e;border-radius:2px;background:#fef3c7;font-size:0.82rem;font-weight:600;padding:0;-moz-appearance:textfield;appearance:textfield;">';
+  const inp = td.querySelector('input');
+  inp.focus(); inp.select();
+  let saved = false;
+  function guardar() {
+    if (saved) return; saved = true;
+    const v = parseInt(inp.value);
+    td.textContent = (!isNaN(v) && v >= 0) ? String(v) : '0';
+    saveCline(td);
+  }
+  inp.addEventListener('blur', guardar);
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter')  { e.preventDefault(); inp.blur(); return; }
+    if (e.key === 'Escape') { saved = true; td.textContent = valorPrev; return; }
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      guardar();
+      setTimeout(function() {
+        const campo = td.dataset.campo;
+        const all = Array.from(document.querySelectorAll('[data-campo="' + campo + '"]'));
+        const idx = all.indexOf(td);
+        if (idx >= 0 && idx + 1 < all.length) all[idx + 1].click();
+      }, 20);
+    }
+  });
+}
+
+function saveCline(cell) {
+  const jIdx  = parseInt(cell.dataset.jidx);
+  const hoyo  = parseInt(cell.dataset.hoyo);
+  const campo = cell.dataset.campo;
+  const val   = parseInt(cell.textContent.trim());
+  const jugadores = cargarDatos();
+  if (!jugadores[jIdx]) return;
+  jugadores[jIdx][campo] = parseClines(jugadores[jIdx][campo]);
+  jugadores[jIdx][campo][hoyo] = (!isNaN(val) && val >= 0) ? val : 0;
   guardarDatos(jugadores);
   renderScorecard();
 }
