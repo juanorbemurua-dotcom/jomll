@@ -403,6 +403,7 @@
                 <th>Nº Licencia</th>
                 <th>HCP</th>
                 <th>HCP juego</th>
+                <th>Género</th>
                 <th>Hora de juego</th>
                 <th>Partida</th>
                 <th>Puntos</th>
@@ -723,17 +724,18 @@ function resetScorecard() {
         btn.disabled = true;
         setEstado('Consultando RFEG...', 'info');
 
-        let nombre = licencia, hcpAct = 0, fechaMod = '';
+        let nombre = licencia, hcpAct = 0, fechaMod = '', genero = '';
         try {
             const datos = await buscarEnRFEG(licencia);
             nombre   = datos.nombre;
             hcpAct   = datos.hcpAct;
             fechaMod = datos.fechaMod || '';
+            genero   = datos.genero  || '';
         } catch {
             setEstado(`⚠ RFEG sin datos para ${licencia}. Jugador añadido sin HCP.`, 'error');
         }
 
-        jugadores.push({ nombre, licencia: licencia.toUpperCase(), hcpIni: hcpAct, hcpAct, fechaMod });
+        jugadores.push({ nombre, licencia: licencia.toUpperCase(), hcpIni: hcpAct, hcpAct, fechaMod, genero });
         guardarDatos(jugadores);
         renderTabla();
         document.getElementById('inp-licencia').value = '';
@@ -779,6 +781,8 @@ function resetScorecard() {
 
         const validoTd = tds.find(td => /^v[áa]lid[oa]$/i.test(td.textContent.trim()));
         if (validoTd) {
+            const validoTxt = validoTd.textContent.trim().toLowerCase();
+            const genero = /válida|valida/i.test(validoTxt) ? 'M' : 'H';
             const fila = validoTd.closest('tr');
             if (fila) {
                 const celdas = Array.from(fila.querySelectorAll('td')).map(td => td.textContent.trim());
@@ -789,7 +793,7 @@ function resetScorecard() {
                     const nombre = celdas[iValido - offset].toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
                     const hcpAct = parseFloat(celdas[iValido - 1].replace(',', '.'));
                     const fechaMod = celdas[iValido + 1] || '';
-                    if (nombre.length > 3 && !isNaN(hcpAct)) return { nombre, hcpAct, fechaMod };
+                    if (nombre.length > 3 && !isNaN(hcpAct)) return { nombre, hcpAct, fechaMod, genero };
                 }
             }
         }
@@ -852,6 +856,15 @@ function resetScorecard() {
             if (e.key === 'Enter') input.blur();
             if (e.key === 'Escape') { td.textContent = valorActual.toFixed(1); }
         });
+    }
+
+    function toggleGenero(idx, td) {
+        const jugadores = cargarDatos();
+        const ciclo = { '': 'H', 'H': 'M', 'M': 'H', '?': 'H' };
+        const actual = jugadores[idx].genero || '';
+        jugadores[idx].genero = ciclo[actual] || 'H';
+        guardarDatos(jugadores);
+        renderTabla();
     }
 
     function editarCampo(td, idx, campo) {
@@ -976,7 +989,7 @@ function resetScorecard() {
 
         if (jugadores.length === 0) {
             document.getElementById('tabla-body').innerHTML =
-                '<tr><td colspan="9" class="empty">Aún no hay jugadores. Añade el primero con el formulario.</td></tr>';
+                '<tr><td colspan="10" class="empty">Aún no hay jugadores. Añade el primero con el formulario.</td></tr>';
             return;
         }
 
@@ -1014,6 +1027,7 @@ function resetScorecard() {
                 <td class="licencia">${escHtml(j.licencia)}</td>
                 <td class="hcp">${(+(j.hcpAct||0)).toFixed(1)}</td>
                 <td style="text-align:center;font-weight:700;color:#14532d;">${j.hcpJuego}</td>
+                <td class="hcp hcp-editable" title="Clic para cambiar" onclick="toggleGenero(${j.originalIdx},this)" style="text-align:center;font-weight:700;cursor:pointer;color:${j.genero==='M'?'#be185d':j.genero==='H'?'#1d4ed8':'#94a3b8'};">${j.genero||'?'}</td>
                 <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'hora')">${escHtml(j.hora||'—')}</td>
                 <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'partida')">${escHtml(j.partida||'—')}</td>
                 <td style="${ptsStyle}">${j.totalPts > 0 ? j.totalPts : '—'}</td>
