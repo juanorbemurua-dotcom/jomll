@@ -428,8 +428,10 @@
 
 <script>
 let _courseConfig = {
-  par: [4,3,4,5,4,4,3,5,4, 4,4,3,5,4,4,3,4,5],
-  si:  [5,17,11,1,13,7,15,9,3, 6,16,12,2,14,8,18,10,4]
+  par:       [4,3,4,5,4,4,3,5,4, 4,4,3,5,4,4,3,4,5],
+  si:        [5,17,11,1,13,7,15,9,3, 6,16,12,2,14,8,18,10,4],
+  amarillas: [0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0],
+  rojas:     [0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0]
 };
 
 function calcHcpStrokes(hcp, si) {
@@ -477,6 +479,29 @@ function renderScorecard() {
   for (let i=9;i<18;i++) siRow += '<td contenteditable="true" data-si="' + i + '" onblur="saveSI(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="text-align:center;padding:3px 3px;border:1px solid #e5e7eb;cursor:text;color:#64748b;">' + si[i] + '</td>';
   siRow += '<td style="border:1px solid #e5e7eb;"></td><td style="border:1px solid #e5e7eb;"></td></tr>';
 
+  const am = _courseConfig.amarillas;
+  const ro = _courseConfig.rojas;
+  const outAm = am.slice(0,9).reduce(function(a,v){return a+v;},0);
+  const inAm  = am.slice(9).reduce(function(a,v){return a+v;},0);
+  const outRo = ro.slice(0,9).reduce(function(a,v){return a+v;},0);
+  const inRo  = ro.slice(9).reduce(function(a,v){return a+v;},0);
+  const tdAm = 'text-align:center;padding:3px 3px;border:1px solid #fef9c3;cursor:text;color:#854d0e;';
+  const tdRo = 'text-align:center;padding:3px 3px;border:1px solid #fee2e2;cursor:text;color:#991b1b;';
+
+  let amarillasRow = '<tr style="background:#fefce8;"><td colspan="2" style="padding:3px 8px;border:1px solid #fef9c3;font-weight:700;font-size:0.75rem;color:#854d0e;">🟡 Amarillas (m) <small style="font-weight:400;color:#94a3b8">(editable)</small></td>';
+  for (let i=0;i<9;i++) amarillasRow += '<td contenteditable="true" onblur="saveAmarillas(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="' + tdAm + '">' + (am[i]||'') + '</td>';
+  amarillasRow += '<td style="text-align:center;border:1px solid #fef9c3;background:#fef08a;font-weight:700;font-size:0.75rem;color:#854d0e;">' + (outAm||'') + '</td>';
+  for (let i=9;i<18;i++) amarillasRow += '<td contenteditable="true" onblur="saveAmarillas(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="' + tdAm + '">' + (am[i]||'') + '</td>';
+  amarillasRow += '<td style="text-align:center;border:1px solid #fef9c3;background:#fef08a;font-weight:700;font-size:0.75rem;color:#854d0e;">' + (inAm||'') + '</td>';
+  amarillasRow += '<td style="text-align:center;border:1px solid #fef9c3;background:#fef08a;font-weight:700;font-size:0.75rem;color:#854d0e;">' + (outAm+inAm||'') + '</td></tr>';
+
+  let rojasRow = '<tr style="background:#fff5f5;"><td colspan="2" style="padding:3px 8px;border:1px solid #fee2e2;font-weight:700;font-size:0.75rem;color:#991b1b;">🔴 Rojas (m) <small style="font-weight:400;color:#94a3b8">(editable)</small></td>';
+  for (let i=0;i<9;i++) rojasRow += '<td contenteditable="true" onblur="saveRojas(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="' + tdRo + '">' + (ro[i]||'') + '</td>';
+  rojasRow += '<td style="text-align:center;border:1px solid #fee2e2;background:#fecaca;font-weight:700;font-size:0.75rem;color:#991b1b;">' + (outRo||'') + '</td>';
+  for (let i=9;i<18;i++) rojasRow += '<td contenteditable="true" onblur="saveRojas(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="' + tdRo + '">' + (ro[i]||'') + '</td>';
+  rojasRow += '<td style="text-align:center;border:1px solid #fee2e2;background:#fecaca;font-weight:700;font-size:0.75rem;color:#991b1b;">' + (inRo||'') + '</td>';
+  rojasRow += '<td style="text-align:center;border:1px solid #fee2e2;background:#fecaca;font-weight:700;font-size:0.75rem;color:#991b1b;">' + (outRo+inRo||'') + '</td></tr>';
+
   let rows = '';
   jugadores.forEach(function(j, jIdx) {
     const strokes = calcHcpStrokes(j.hcpAct, si);
@@ -516,7 +541,7 @@ function renderScorecard() {
     rows += '<td style="text-align:center;border:1px solid #d1fae5;background:#d1fae5;font-weight:700;font-size:0.82rem;">' + (inP||'—') + '</td></tr>';
   });
 
-  container.innerHTML = '<table style="border-collapse:collapse;font-size:0.82rem;min-width:900px;width:100%;"><thead>' + hdr + parRow + siRow + '</thead><tbody>' + rows + '</tbody></table>';
+  container.innerHTML = '<table style="border-collapse:collapse;font-size:0.82rem;min-width:900px;width:100%;"><thead>' + hdr + parRow + siRow + amarillasRow + rojasRow + '</thead><tbody>' + rows + '</tbody></table>';
 }
 
 function saveScore(cell) {
@@ -551,6 +576,18 @@ function savePar(cell, idx) {
 function saveSI(cell, idx) {
   const val = parseInt(cell.textContent.trim());
   _courseConfig.si[idx] = (!isNaN(val) && val >= 1 && val <= 18) ? val : _courseConfig.si[idx];
+  renderScorecard();
+}
+
+function saveAmarillas(cell, idx) {
+  const val = parseInt(cell.textContent.trim());
+  _courseConfig.amarillas[idx] = (!isNaN(val) && val > 0) ? val : 0;
+  renderScorecard();
+}
+
+function saveRojas(cell, idx) {
+  const val = parseInt(cell.textContent.trim());
+  _courseConfig.rojas[idx] = (!isNaN(val) && val > 0) ? val : 0;
   renderScorecard();
 }
 
