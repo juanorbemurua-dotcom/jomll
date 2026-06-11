@@ -417,7 +417,13 @@
 <div id="seccion-scorecard" style="max-width:1300px;margin:28px auto 0;padding:0 0 40px;">
   <div style="background:#14532d;color:#fde68a;font-weight:700;font-size:1.05rem;padding:14px 20px;border-radius:10px 10px 0 0;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
     <span>🏌️ Scorecard — Resultados por hoyo</span>
-    <button onclick="resetScorecard()" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;padding:5px 12px;font-weight:700;font-size:0.82rem;cursor:pointer;">🗑 Resetear golpes</button>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <label style="font-size:0.82rem;font-weight:600;color:#fde68a;">Partida:</label>
+      <select id="sel-partida" onchange="renderScorecard()" style="font-size:0.82rem;padding:4px 8px;border-radius:6px;border:none;background:#f0fdf4;color:#14532d;font-weight:700;cursor:pointer;">
+        <option value="">Todas</option>
+      </select>
+      <button onclick="resetScorecard()" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;padding:5px 12px;font-weight:700;font-size:0.82rem;cursor:pointer;">🗑 Resetear golpes</button>
+    </div>
   </div>
   <div id="scorecard-container" style="overflow-x:auto;border:1px solid #bbf7d0;border-top:none;border-radius:0 0 10px 10px;background:#fff;">
     <div style="padding:20px;text-align:center;color:#94a3b8;font-style:italic;">Añadí jugadores para ver el scorecard</div>
@@ -443,14 +449,29 @@ function calcStableford(gross, par, strokes) {
   return Math.max(0, par + strokes - gross + 2);
 }
 
+function actualizarFiltroPartida() {
+  const sel = document.getElementById('sel-partida');
+  if (!sel) return;
+  const jugadores = cargarDatos();
+  const partidas = [...new Set(jugadores.map(j => j.partida || '').filter(p => p))].sort();
+  const actual = sel.value;
+  sel.innerHTML = '<option value="">Todas</option>'
+    + partidas.map(p => '<option value="' + escHtml(p) + '"' + (p === actual ? ' selected' : '') + '>' + escHtml(p) + '</option>').join('');
+}
+
 function renderScorecard() {
   const container = document.getElementById('scorecard-container');
   if (!container) return;
-  const jugadores = cargarDatos();
+  const todos = cargarDatos();
   const par = _courseConfig.par;
   const si  = _courseConfig.si;
+  actualizarFiltroPartida();
+  const filtro = (document.getElementById('sel-partida') || {}).value || '';
+  const jugadores = filtro ? todos.filter(j => (j.partida || '') === filtro) : todos;
   if (jugadores.length === 0) {
-    container.innerHTML = '<div style="padding:20px;text-align:center;color:#94a3b8;font-style:italic;">Añadí jugadores para ver el scorecard</div>';
+    container.innerHTML = '<div style="padding:20px;text-align:center;color:#94a3b8;font-style:italic;">'
+      + (filtro ? 'No hay jugadores en la partida "' + escHtml(filtro) + '".' : 'Añadí jugadores para ver el scorecard')
+      + '</div>';
     return;
   }
   const th = 'padding:5px 4px;border:1px solid #14532d;text-align:center;font-size:0.78rem;white-space:nowrap;';
@@ -502,7 +523,8 @@ function renderScorecard() {
   rojasRow += '<td style="text-align:center;border:1px solid #fee2e2;background:#fecaca;font-weight:700;font-size:0.75rem;color:#991b1b;">' + (outRo+inRo||'') + '</td></tr>';
 
   let rows = '';
-  jugadores.forEach(function(j, jIdx) {
+  jugadores.forEach(function(j) {
+    const jIdx = todos.indexOf(j);
     const strokes = calcHcpStrokes(j.hcpAct, si);
     const golpes  = j.golpes || Array(18).fill(null);
     const puntos  = golpes.map(function(g,i){ return calcStableford(g, par[i], strokes[i]); });
