@@ -407,6 +407,7 @@
                 <th>% Incremento</th>
                 <th>Premios jugados año</th>
                 <th>Últ. Modificación</th>
+                <th>HCP juego</th>
                 <th></th>
             </tr>
         </thead>
@@ -884,6 +885,7 @@ function resetScorecard() {
             const fechaModDate = mf ? new Date(+mf[3], +mf[2]-1, +mf[1]) : null;
             const difDias = fechaModDate ? (hoy - fechaModDate) / 86400000 : Infinity;
             const esReciente = difDias < 2;
+            const hcpJuego = calcHcpStrokes(j.hcpAct, _courseConfig.si).reduce((a, v) => a + v, 0);
 
             return `<tr class="${claseTop}">
                 <td>${posTexto}</td>
@@ -895,6 +897,7 @@ function resetScorecard() {
                 <td><span class="incremento ${cls}">${signo}${j.incremento.toFixed(1)}%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">${premiosAño}</td>
                 <td style="font-size:0.82rem;color:${esReciente?'#dc2626':'#64748b'};font-weight:${esReciente?'700':'400'}">${j.fechaMod || '—'}</td>
+                <td style="text-align:center;font-weight:700;color:#14532d;font-size:1rem;">${hcpJuego}</td>
                 <td><button class="btn-del" onclick="eliminarJugador(${j.originalIdx})" title="Eliminar">✕</button></td>
             </tr>`;
         }).join('');
