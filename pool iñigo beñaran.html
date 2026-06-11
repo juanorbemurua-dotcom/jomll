@@ -527,9 +527,9 @@ function renderScorecard() {
 
     rows += '<tr style="background:' + bg + ';">'
       + '<td style="padding:3px 5px;font-size:0.72rem;color:#1e40af;font-weight:600;border:1px solid #d1fae5;white-space:nowrap;">Golpes</td>';
-    golpes.slice(0,9).forEach(function(g,i){ rows += '<td style="padding:1px;border:1px solid #e5e7eb;background:#fffbeb;"><input type="number" min="1" max="15" data-jidx="' + jIdx + '" data-hoyo="' + i + '" onchange="saveScore(this)" onkeydown="scorecardKey(event,this)" value="' + (g!==null?g:'') + '" style="width:100%;min-width:24px;border:none;background:transparent;text-align:center;font-weight:600;font-size:0.82rem;padding:2px 0;"></td>'; });
+    golpes.slice(0,9).forEach(function(g,i){ rows += '<td contenteditable="true" data-jidx="' + jIdx + '" data-hoyo="' + i + '" onblur="saveScore(this)" onkeydown="scorecardKey(event,this)" style="text-align:center;padding:3px 2px;border:1px solid #e5e7eb;min-width:26px;cursor:text;background:#fffbeb;font-weight:600;">' + (g!==null?g:'') + '</td>'; });
     rows += '<td data-outg="' + jIdx + '" style="text-align:center;border:1px solid #d1fae5;background:#dbeafe;font-weight:700;font-size:0.82rem;">' + (outG||'—') + '</td>';
-    golpes.slice(9).forEach(function(g,i){ rows += '<td style="padding:1px;border:1px solid #e5e7eb;background:#fffbeb;"><input type="number" min="1" max="15" data-jidx="' + jIdx + '" data-hoyo="' + (i+9) + '" onchange="saveScore(this)" onkeydown="scorecardKey(event,this)" value="' + (g!==null?g:'') + '" style="width:100%;min-width:24px;border:none;background:transparent;text-align:center;font-weight:600;font-size:0.82rem;padding:2px 0;"></td>'; });
+    golpes.slice(9).forEach(function(g,i){ rows += '<td contenteditable="true" data-jidx="' + jIdx + '" data-hoyo="' + (i+9) + '" onblur="saveScore(this)" onkeydown="scorecardKey(event,this)" style="text-align:center;padding:3px 2px;border:1px solid #e5e7eb;min-width:26px;cursor:text;background:#fffbeb;font-weight:600;">' + (g!==null?g:'') + '</td>'; });
     rows += '<td data-ing="' + jIdx + '" style="text-align:center;border:1px solid #d1fae5;background:#dbeafe;font-weight:700;font-size:0.82rem;">' + (inG||'—') + '</td></tr>';
 
     rows += '<tr style="background:' + bg + ';border-bottom:2px solid #bbf7d0;">'
@@ -546,7 +546,7 @@ function renderScorecard() {
 function saveScore(cell) {
   const jIdx = parseInt(cell.dataset.jidx);
   const hoyo = parseInt(cell.dataset.hoyo);
-  const val  = parseInt(cell.value !== undefined ? cell.value : cell.textContent.trim());
+  const val  = parseInt(cell.textContent.trim());
   const jugadores = cargarDatos();
   if (!jugadores[jIdx]) return;
   if (!jugadores[jIdx].golpes) jugadores[jIdx].golpes = Array(18).fill(null);
@@ -586,13 +586,14 @@ function saveScore(cell) {
 }
 
 function scorecardKey(e, cell) {
-  if (e.key === 'Enter' || e.key === 'Tab') {
+  if (e.key === 'Enter')  { e.preventDefault(); cell.blur(); return; }
+  if (e.key === 'Escape') { cell.textContent = ''; cell.blur(); return; }
+  if (e.key === 'Tab') {
     e.preventDefault();
-    const all = [...document.querySelectorAll('input[data-jidx][data-hoyo]')];
+    const all = [...document.querySelectorAll('[data-jidx][data-hoyo]')];
     const idx = all.indexOf(cell);
     if (idx >= 0 && idx + 1 < all.length) all[idx + 1].focus();
   }
-  if (e.key === 'Escape') { cell.value = ''; cell.blur(); }
 }
 
 function savePar(cell, idx) {
