@@ -437,7 +437,10 @@ let _courseConfig = {
   par:       [3,4,3,3,4,4,5,4,4, 3,4,3,3,4,4,5,4,4],
   si:        [11,7,5,15,17,13,3,1,9, 12,8,6,16,18,14,4,2,10],
   amarillas: [177,318,175,143,259,342,508,387,291, 177,318,175,143,259,342,508,387,291],
-  rojas:     [159,306,147,133,218,229,424,337,288, 159,306,147,133,218,229,424,337,288]
+  rojas:     [159,306,147,133,218,229,424,337,288, 159,306,147,133,218,229,424,337,288],
+  // Slope y Course Rating (editar con datos oficiales del campo)
+  slope_h: 113, cr_h: 68,   // Hombres (amarillas) — pendiente datos reales
+  slope_m: 113, cr_m: 68    // Mujeres  (rojas)    — pendiente datos reales
 };
 
 function escHtml(str) {
@@ -458,6 +461,13 @@ function parseGolpes(raw) {
 function calcHcpStrokes(hcp, si) {
   const h = Math.round(Math.max(0, hcp));
   return si.map(function(s){ return h <= 18 ? (s <= h ? 1 : 0) : (s <= h - 18 ? 2 : 1); });
+}
+
+function calcCourseHcp(hi, genero) {
+  const par   = _courseConfig.par.reduce(function(a,v){return a+v;},0);
+  const slope = genero === 'M' ? _courseConfig.slope_m : _courseConfig.slope_h;
+  const cr    = genero === 'M' ? _courseConfig.cr_m    : _courseConfig.cr_h;
+  return Math.round(Math.max(0, hi) * slope / 113 + (cr - par));
 }
 
 function calcStableford(gross, par, strokes) {
@@ -538,10 +548,25 @@ function renderScorecard() {
   rojasRow += '<td style="text-align:center;border:1px solid #fee2e2;background:#fecaca;font-weight:700;font-size:0.75rem;color:#991b1b;">' + (inRo||'') + '</td>';
   rojasRow += '<td style="text-align:center;border:1px solid #fee2e2;background:#fecaca;font-weight:700;font-size:0.75rem;color:#991b1b;">' + (outRo+inRo||'') + '</td></tr>';
 
+  const tdSlope = 'padding:3px 6px;border:1px solid #e0e7ff;font-size:0.75rem;';
+  let slopeRow = '<tr style="background:#eef2ff;">'
+    + '<td style="padding:3px 8px;border:1px solid #e0e7ff;font-weight:700;font-size:0.75rem;color:#3730a3;">⛳ Slope / CR</td>'
+    + '<td style="' + tdSlope + 'color:#3730a3;white-space:nowrap;text-align:center;">'
+    + '♂ <b contenteditable="true" onblur="saveSlope(this,\'slope_h\')" style="cursor:text;" title="Slope hombres">' + _courseConfig.slope_h + '</b>'
+    + ' / <b contenteditable="true" onblur="saveSlope(this,\'cr_h\')" style="cursor:text;" title="CR hombres">' + _courseConfig.cr_h + '</b>'
+    + '</td>'
+    + '<td colspan="9" style="' + tdSlope + 'color:#3730a3;white-space:nowrap;">'
+    + '♀ Slope <b contenteditable="true" onblur="saveSlope(this,\'slope_m\')" style="cursor:text;" title="Slope mujeres">' + _courseConfig.slope_m + '</b>'
+    + ' / CR <b contenteditable="true" onblur="saveSlope(this,\'cr_m\')" style="cursor:text;" title="CR mujeres">' + _courseConfig.cr_m + '</b>'
+    + '</td>'
+    + '<td colspan="11" style="' + tdSlope + 'color:#64748b;font-style:italic;font-size:0.7rem;">HCP juego = round(HI × Slope/113 + (CR − Par))</td>'
+    + '</tr>';
+
   let rows = '';
   jugadores.forEach(function(j) {
     const jIdx = todos.indexOf(j);
-    const strokes = calcHcpStrokes(j.hcpAct, si);
+    const ch = calcCourseHcp(j.hcpAct || 0, j.genero || 'H');
+    const strokes = calcHcpStrokes(ch, si);
     const golpes  = parseGolpes(j.golpes);
     const puntos  = golpes.map(function(g,i){ return calcStableford(g, par[i], strokes[i]); });
     const outG = golpes.slice(0,9).reduce(function(a,v){return v?a+v:a;},0);
@@ -578,7 +603,7 @@ function renderScorecard() {
     rows += '<td data-inp="' + jIdx + '" style="text-align:center;border:1px solid #d1fae5;background:#d1fae5;font-weight:700;font-size:0.82rem;">' + (inP||'—') + '</td></tr>';
   });
 
-  container.innerHTML = '<table style="border-collapse:collapse;font-size:0.82rem;min-width:900px;width:100%;"><thead>' + hdr + parRow + siRow + amarillasRow + rojasRow + '</thead><tbody>' + rows + '</tbody></table>';
+  container.innerHTML = '<table style="border-collapse:collapse;font-size:0.82rem;min-width:900px;width:100%;"><thead>' + hdr + parRow + siRow + amarillasRow + rojasRow + slopeRow + '</thead><tbody>' + rows + '</tbody></table>';
 }
 
 function editarGolpe(td) {
@@ -632,6 +657,11 @@ function scorecardKey(e, cell) {
     const idx = all.indexOf(cell);
     if (idx >= 0 && idx + 1 < all.length) all[idx + 1].focus();
   }
+}
+
+function saveSlope(cell, campo) {
+  const v = parseFloat(cell.textContent.trim().replace(',','.'));
+  if (!isNaN(v) && v > 0) { _courseConfig[campo] = v; renderScorecard(); }
 }
 
 function savePar(cell, idx) {
@@ -998,13 +1028,14 @@ function resetScorecard() {
         const par = _courseConfig.par;
         const si  = _courseConfig.si;
         const conPuntos = jugadores.map((j, originalIdx) => {
-            const strokes = calcHcpStrokes(j.hcpAct, si);
+            const ch = calcCourseHcp(j.hcpAct || 0, j.genero || 'H');
+            const strokes = calcHcpStrokes(ch, si);
             const golpes  = parseGolpes(j.golpes);
             const totalPts = golpes.reduce((acc, g, i) => {
                 const p = calcStableford(g, par[i], strokes[i]);
                 return acc + (p !== null ? p : 0);
             }, 0);
-            const hcpJuego = strokes.reduce((a, v) => a + v, 0);
+            const hcpJuego = ch;
             return { ...j, originalIdx, totalPts, hcpJuego };
         });
 
