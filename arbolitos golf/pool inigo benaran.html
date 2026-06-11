@@ -604,37 +604,7 @@ function saveScore(cell) {
   if (!jugadores[jIdx].golpes) jugadores[jIdx].golpes = Array(18).fill(null);
   jugadores[jIdx].golpes[hoyo] = (!isNaN(val) && val > 0) ? val : null;
   guardarDatos(jugadores);
-  // Actualizar solo las celdas de puntos y totales sin reconstruir el DOM
-  const j = jugadores[jIdx];
-  const par = _courseConfig.par;
-  const si  = _courseConfig.si;
-  const strokes = calcHcpStrokes(j.hcpAct, si);
-  const golpes  = j.golpes;
-  const puntos  = golpes.map(function(g,i){ return calcStableford(g, par[i], strokes[i]); });
-  const outG = golpes.slice(0,9).reduce(function(a,v){return v?a+v:a;},0);
-  const inG  = golpes.slice(9).reduce(function(a,v){return v?a+v:a;},0);
-  const outP = puntos.slice(0,9).reduce(function(a,v){return v!==null?a+v:a;},0);
-  const inP  = puntos.slice(9).reduce(function(a,v){return v!==null?a+v:a;},0);
-  const hasScore = golpes.some(function(g){return g!==null;});
-  for (var i=0;i<18;i++) {
-    var ptCell = document.querySelector('[data-pts="' + jIdx + '-' + i + '"]');
-    if (!ptCell) continue;
-    var p = puntos[i];
-    ptCell.textContent = p!==null ? p : '';
-    ptCell.style.color = p===null?'#e5e7eb':p>=3?'#166534':p===2?'#1e293b':p===1?'#b45309':'#dc2626';
-  }
-  var og = document.querySelector('[data-outg="' + jIdx + '"]');
-  var ig = document.querySelector('[data-ing="' + jIdx + '"]');
-  var op = document.querySelector('[data-outp="' + jIdx + '"]');
-  var ip = document.querySelector('[data-inp="' + jIdx + '"]');
-  var tot = document.querySelector('[data-tot="' + jIdx + '"]');
-  if (og) og.textContent = outG||'—';
-  if (ig) ig.textContent = inG||'—';
-  if (op) op.textContent = outP||'—';
-  if (ip) ip.textContent = inP||'—';
-  if (tot) tot.innerHTML = hasScore
-    ? '<div style="font-size:1rem;color:#1e293b;">'+(outG+inG)+'</div><div style="font-size:0.85rem;color:#166534;">'+(outP+inP)+' pts</div>'
-    : '<span style="color:#94a3b8;font-size:0.8rem;">—</span>';
+  renderScorecard();
 }
 
 function scorecardKey(e, cell) {
