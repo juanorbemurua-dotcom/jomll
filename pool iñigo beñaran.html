@@ -364,29 +364,28 @@
     <h2>➕ Añadir jugador</h2>
     <div class="form-grid">
         <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="inp-nombre-manual" placeholder="Ej. Juan García López">
+        </div>
+        <div class="form-group">
             <label>Nº Licencia</label>
-            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()" fdprocessedid="nby8c3">
+            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()">
         </div>
         <div class="form-group">
             <label>HCP 01/01/2026</label>
-            <input type="number" id="inp-hcp-ini" placeholder="Ej. 18.4" step="0.1" fdprocessedid="krlln7">
+            <input type="number" id="inp-hcp-ini" placeholder="Ej. 18.4" step="0.1">
         </div>
         <div class="form-group" style="display:none">
             <input type="text" id="inp-nombre">
             <input type="number" id="inp-hcp-act">
         </div>
         <div class="form-group" style="display:flex;gap:8px;align-items:flex-end;">
-            <button class="btn-add" id="btn-add" onclick="añadirJugador()" fdprocessedid="d9wrf5">Añadir</button>
+            <button class="btn-add" id="btn-add" onclick="añadirJugador()">Añadir</button>
             <a id="enlace-rfeg" href="#" target="_blank" class="btn-rfeg" title="Consultar en RFEG">🔍 RFEG</a>
         </div>
     </div>
-    <div id="div-manual" style="display:none;margin-top:8px;">
-        <div class="form-group">
-            <label style="font-size:0.82rem;color:#fde68a;">Nombre (RFEG sin conexión)</label>
-            <input type="text" id="inp-nombre-manual" placeholder="Ej. Juan García López" style="max-width:280px;">
-        </div>
-    </div>
-    <p id="msg-estado" style="margin-top: 10px; font-size: 0.82rem; color: rgb(22, 163, 74); min-height: 18px;">✓ Archivo guardado correctamente.</p>
+    <div id="div-manual" style="display:none;"></div>
+    <p id="msg-estado" style="margin-top: 10px; font-size: 0.82rem; color: rgb(22, 163, 74); min-height: 18px;"></p>
 </div>
 
 <!-- Tabla -->
@@ -608,12 +607,13 @@ function resetScorecard() {
         }
     }
 
-    async function añadirJugador() {
+    function añadirJugador() {
+        const nombre   = (document.getElementById('inp-nombre-manual').value || '').trim();
         const licencia = document.getElementById('inp-licencia').value.trim();
         const hcpIni   = parseFloat(document.getElementById('inp-hcp-ini').value);
 
-        if (!licencia || isNaN(hcpIni)) {
-            setEstado('Rellena la licencia y el HCP de inicio de año.', 'error');
+        if (!nombre || !licencia || isNaN(hcpIni)) {
+            setEstado('Rellena nombre, licencia y HCP de inicio de año.', 'error');
             return;
         }
 
@@ -624,47 +624,13 @@ function resetScorecard() {
             return;
         }
 
-        const btn = document.getElementById('btn-add');
-        btn.disabled = true;
-
-        const elManual = document.getElementById('inp-nombre-manual');
-        const nombreManual = elManual ? elManual.value.trim() : '';
-        if (nombreManual) {
-            jugadores.push({ nombre: nombreManual, licencia: licencia.toUpperCase(), hcpIni, hcpAct: hcpIni, fechaMod: '' });
-            guardarDatos(jugadores);
-            renderTabla();
-            ['inp-licencia','inp-hcp-ini'].forEach(id => document.getElementById(id).value = '');
-            elManual.value = '';
-            const divManual = document.getElementById('div-manual');
-            if (divManual) divManual.style.display = 'none';
-            actualizarEnlaceRFEG();
-            setEstado(`✓ ${nombreManual} añadido manualmente.`, 'ok');
-            document.getElementById('inp-licencia').focus();
-            btn.disabled = false;
-            return;
-        }
-
-        setEstado('Consultando RFEG...', 'info');
-
-        try {
-            const { nombre, hcpAct, fechaMod } = await buscarEnRFEG(licencia);
-            document.getElementById('inp-nombre').value = nombre;
-            document.getElementById('inp-hcp-act').value = hcpAct;
-
-            jugadores.push({ nombre, licencia: licencia.toUpperCase(), hcpIni, hcpAct, fechaMod: fechaMod || '' });
-            guardarDatos(jugadores);
-            renderTabla();
-            ['inp-licencia','inp-nombre','inp-hcp-ini','inp-hcp-act'].forEach(id => document.getElementById(id).value = '');
-            actualizarEnlaceRFEG();
-            setEstado(`✓ ${nombre} añadido · HCP actual: ${hcpAct}`, 'ok');
-            document.getElementById('inp-licencia').focus();
-        } catch (err) {
-            const divManual = document.getElementById('div-manual');
-            if (divManual) divManual.style.display = 'block';
-            setEstado('⚠ RFEG no disponible — ingresá el nombre y volvé a hacer clic en Añadir.', 'error');
-        } finally {
-            btn.disabled = false;
-        }
+        jugadores.push({ nombre, licencia: licencia.toUpperCase(), hcpIni, hcpAct: hcpIni, fechaMod: '' });
+        guardarDatos(jugadores);
+        renderTabla();
+        ['inp-nombre-manual','inp-licencia','inp-hcp-ini'].forEach(id => document.getElementById(id).value = '');
+        actualizarEnlaceRFEG();
+        setEstado(`✓ ${nombre} añadido.`, 'ok');
+        document.getElementById('inp-nombre-manual').focus();
     }
 
     async function buscarEnRFEG(licencia) {
@@ -1016,7 +982,7 @@ function resetScorecard() {
     }
 
     // Añadir con Enter solo desde los campos del formulario
-    ['inp-licencia', 'inp-hcp-ini'].forEach(id => {
+    ['inp-nombre-manual', 'inp-licencia', 'inp-hcp-ini'].forEach(id => {
         document.getElementById(id)?.addEventListener('keydown', e => {
             if (e.key === 'Enter') { e.preventDefault(); añadirJugador(); }
         });
