@@ -443,6 +443,17 @@ function escHtml(str) {
   return str ? String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
 }
 
+function parseGolpes(raw) {
+  const arr = Array(18).fill(null);
+  if (!raw) return arr;
+  if (Array.isArray(raw)) {
+    raw.forEach(function(v, i){ if (i < 18 && v != null) arr[i] = v; });
+  } else {
+    Object.keys(raw).forEach(function(k){ const i = parseInt(k); if (i >= 0 && i < 18 && raw[k] != null) arr[i] = raw[k]; });
+  }
+  return arr;
+}
+
 function calcHcpStrokes(hcp, si) {
   const h = Math.round(Math.max(0, hcp));
   return si.map(function(s){ return h <= 18 ? (s <= h ? 1 : 0) : (s <= h - 18 ? 2 : 1); });
@@ -530,7 +541,7 @@ function renderScorecard() {
   jugadores.forEach(function(j) {
     const jIdx = todos.indexOf(j);
     const strokes = calcHcpStrokes(j.hcpAct, si);
-    const golpes  = j.golpes || Array(18).fill(null);
+    const golpes  = parseGolpes(j.golpes);
     const puntos  = golpes.map(function(g,i){ return calcStableford(g, par[i], strokes[i]); });
     const outG = golpes.slice(0,9).reduce(function(a,v){return v?a+v:a;},0);
     const inG  = golpes.slice(9).reduce(function(a,v){return v?a+v:a;},0);
@@ -605,7 +616,7 @@ function saveScore(cell) {
   const val  = parseInt(cell.textContent.trim());
   const jugadores = cargarDatos();
   if (!jugadores[jIdx]) return;
-  if (!jugadores[jIdx].golpes) jugadores[jIdx].golpes = Array(18).fill(null);
+  jugadores[jIdx].golpes = parseGolpes(jugadores[jIdx].golpes);
   jugadores[jIdx].golpes[hoyo] = (!isNaN(val) && val > 0) ? val : null;
   guardarDatos(jugadores);
   renderScorecard();
@@ -974,7 +985,7 @@ function resetScorecard() {
         const si  = _courseConfig.si;
         const conPuntos = jugadores.map((j, originalIdx) => {
             const strokes = calcHcpStrokes(j.hcpAct, si);
-            const golpes  = j.golpes || Array(18).fill(null);
+            const golpes  = parseGolpes(j.golpes);
             const totalPts = golpes.reduce((acc, g, i) => {
                 const p = calcStableford(g, par[i], strokes[i]);
                 return acc + (p !== null ? p : 0);
