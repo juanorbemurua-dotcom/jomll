@@ -404,7 +404,7 @@
                 <th>Nº Licencia</th>
                 <th>HCP</th>
                 <th>HCP juego</th>
-                <th>Hora de juego</th>
+                <th>Clines jornada</th>
                 <th>Partida</th>
                 <th>Puntos</th>
                 <th></th>
@@ -1060,7 +1060,7 @@ function resetScorecard() {
                 <td class="licencia">${escHtml(j.licencia)}</td>
                 <td class="hcp">${(+(j.hcpAct||0)).toFixed(1)}</td>
                 <td style="text-align:center;font-weight:700;color:#14532d;">${j.hcpJuego}</td>
-                <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'hora')">${escHtml(j.hora||'—')}</td>
+                <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'clinesJornada')">${escHtml(j.clinesJornada||'—')}</td>
                 <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'partida')">${escHtml(j.partida||'—')}</td>
                 <td style="${ptsStyle}">${j.totalPts > 0 ? j.totalPts : '—'}</td>
                 <td><button class="btn-del" onclick="eliminarJugador(${j.originalIdx})" title="Eliminar">✕</button></td>
