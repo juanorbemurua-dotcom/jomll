@@ -439,6 +439,10 @@ let _courseConfig = {
   rojas:     [159,306,147,133,218,229,424,337,288, 159,306,147,133,218,229,424,337,288]
 };
 
+function escHtml(str) {
+  return str ? String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
+}
+
 function calcHcpStrokes(hcp, si) {
   const h = Math.round(Math.max(0, hcp));
   return si.map(function(s){ return h <= 18 ? (s <= h ? 1 : 0) : (s <= h - 18 ? 2 : 1); });
