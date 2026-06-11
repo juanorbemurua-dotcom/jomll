@@ -588,12 +588,14 @@ function renderScorecard() {
     const bg = jIdx%2===0?'#fafffe':'#f7fdf9';
     const nom = escHtml((j.nombre||j.licencia||'?').split(' ').slice(0,2).join(' '));
 
-    const clHoyo  = parseClines(j.clinesHoyo);
-    const clExtra = parseClines(j.clinesExtra);
-    const outCH = clHoyo.slice(0,9).reduce(function(a,v){return a+v;},0);
-    const inCH  = clHoyo.slice(9).reduce(function(a,v){return a+v;},0);
-    const outCE = clExtra.slice(0,9).reduce(function(a,v){return a+v;},0);
-    const inCE  = clExtra.slice(9).reduce(function(a,v){return a+v;},0);
+    const clHoyo   = parseClines(j.clinesHoyo);
+    const clExtra  = parseClines(j.clinesExtra);
+    const clBirdie = parseClines(j.clinesBirdie);
+    const clExComb = clExtra.map(function(v, i){ return v + clBirdie[i]; });
+    const outCH  = clHoyo.slice(0,9).reduce(function(a,v){return a+v;},0);
+    const inCH   = clHoyo.slice(9).reduce(function(a,v){return a+v;},0);
+    const outCE  = clExComb.slice(0,9).reduce(function(a,v){return a+v;},0);
+    const inCE   = clExComb.slice(9).reduce(function(a,v){return a+v;},0);
 
     rows += '<tr style="background:' + bg + ';">'
       + '<td rowspan="5" style="padding:4px 8px;border:1px solid #d1fae5;font-weight:700;font-size:0.8rem;vertical-align:middle;background:' + bg + ';">' + nom + '<br><span style="font-weight:400;color:#64748b;font-size:0.72rem;">HCP ' + j.hcpAct + '</span></td>'
@@ -629,9 +631,9 @@ function renderScorecard() {
 
     rows += '<tr style="background:' + bg + ';border-bottom:2px solid #bbf7d0;">'
       + '<td style="padding:3px 5px;font-size:0.72rem;color:#6d28d9;font-weight:600;border:1px solid #d1fae5;white-space:nowrap;">Clines extra</td>';
-    clExtra.slice(0,9).forEach(function(v,i){ rows += '<td onclick="editarCline(this)" data-jidx="' + jIdx + '" data-hoyo="' + i + '" data-campo="clinesExtra" style="text-align:center;padding:3px 2px;border:1px solid #e9d5ff;min-width:26px;cursor:pointer;background:#faf5ff;font-weight:600;font-size:0.82rem;">' + v + '</td>'; });
+    clExComb.slice(0,9).forEach(function(v,i){ rows += '<td onclick="editarCline(this)" data-jidx="' + jIdx + '" data-hoyo="' + i + '" data-campo="clinesExtra" style="text-align:center;padding:3px 2px;border:1px solid #e9d5ff;min-width:26px;cursor:pointer;background:#faf5ff;font-weight:600;font-size:0.82rem;">' + v + '</td>'; });
     rows += '<td style="text-align:center;border:1px solid #e9d5ff;background:#c4b5fd;font-weight:700;font-size:0.82rem;">' + outCE + '</td>';
-    clExtra.slice(9).forEach(function(v,i){ rows += '<td onclick="editarCline(this)" data-jidx="' + jIdx + '" data-hoyo="' + (i+9) + '" data-campo="clinesExtra" style="text-align:center;padding:3px 2px;border:1px solid #e9d5ff;min-width:26px;cursor:pointer;background:#faf5ff;font-weight:600;font-size:0.82rem;">' + v + '</td>'; });
+    clExComb.slice(9).forEach(function(v,i){ rows += '<td onclick="editarCline(this)" data-jidx="' + jIdx + '" data-hoyo="' + (i+9) + '" data-campo="clinesExtra" style="text-align:center;padding:3px 2px;border:1px solid #e9d5ff;min-width:26px;cursor:pointer;background:#faf5ff;font-weight:600;font-size:0.82rem;">' + v + '</td>'; });
     rows += '<td style="text-align:center;border:1px solid #e9d5ff;background:#c4b5fd;font-weight:700;font-size:0.82rem;">' + inCE + '</td></tr>';
   });
 
@@ -686,11 +688,11 @@ function saveScore(cell) {
 
   if (delta !== 0) {
     jugadores.forEach(function(j, k) {
-      j.clinesExtra = parseClines(j.clinesExtra);
+      j.clinesBirdie = parseClines(j.clinesBirdie);
       if (k === jIdx) {
-        j.clinesExtra[hoyo] += delta;
+        j.clinesBirdie[hoyo] += delta;
       } else {
-        j.clinesExtra[hoyo] -= delta;  // resto recibe el opuesto
+        j.clinesBirdie[hoyo] -= delta;
       }
     });
   }
@@ -742,24 +744,28 @@ function saveCline(cell) {
   if (!jugadores[jIdx]) return;
 
   if (campo === 'clinesExtra') {
-    const prev = parseClines(jugadores[jIdx].clinesExtra)[hoyo];
-    // Deshacer distribución anterior si era negativo
-    if (prev < 0) {
+    // val es el valor combinado visible (birdie + manual). Extraemos solo la parte manual.
+    const birdie    = parseClines(jugadores[jIdx].clinesBirdie)[hoyo];
+    const prevManual = parseClines(jugadores[jIdx].clinesExtra)[hoyo];
+    const newManual  = val - birdie;
+
+    // Deshacer distribución manual anterior
+    if (prevManual < 0) {
       jugadores.forEach(function(j, k) {
         if (k === jIdx) return;
         j.clinesExtra = parseClines(j.clinesExtra);
-        j.clinesExtra[hoyo] -= Math.abs(prev);
+        j.clinesExtra[hoyo] -= Math.abs(prevManual);
       });
     }
-    // Guardar nuevo valor
+    // Guardar nueva parte manual
     jugadores[jIdx].clinesExtra = parseClines(jugadores[jIdx].clinesExtra);
-    jugadores[jIdx].clinesExtra[hoyo] = val;
-    // Distribuir en positivo al resto si es negativo
-    if (val < 0) {
+    jugadores[jIdx].clinesExtra[hoyo] = newManual;
+    // Distribuir si es negativo
+    if (newManual < 0) {
       jugadores.forEach(function(j, k) {
         if (k === jIdx) return;
         j.clinesExtra = parseClines(j.clinesExtra);
-        j.clinesExtra[hoyo] += Math.abs(val);
+        j.clinesExtra[hoyo] += Math.abs(newManual);
       });
     }
   } else {
@@ -1159,9 +1165,10 @@ function resetScorecard() {
                 return acc + (p !== null ? p : 0);
             }, 0);
             const hcpJuego = ch;
-            const clHoyo  = parseClines(j.clinesHoyo);
-            const clExtra = parseClines(j.clinesExtra);
-            const clinesTotal = clHoyo.reduce(function(a,v){return a+v;},0) + clExtra.reduce(function(a,v){return a+v;},0);
+            const clHoyo   = parseClines(j.clinesHoyo);
+            const clExtra  = parseClines(j.clinesExtra);
+            const clBirdie = parseClines(j.clinesBirdie);
+            const clinesTotal = clHoyo.reduce(function(a,v){return a+v;},0) + clExtra.reduce(function(a,v){return a+v;},0) + clBirdie.reduce(function(a,v){return a+v;},0);
             return { ...j, originalIdx, totalPts, hcpJuego, clinesTotal };
         });
 
