@@ -421,503 +421,155 @@
     </table>
 </div>
 
-<!-- Actividad: Últimas 20 rondas -->
-<div id="seccion-actividad" style="max-width:960px;margin:28px auto 0;padding:0 0 40px;">
-  <div style="background:#14532d;color:#fde68a;font-weight:700;font-size:1.05rem;padding:14px 20px;border-radius:10px 10px 0 0;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;">
-    <span>⛳ Actividad — Últimas 20 rondas jugadas</span>
-    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-      <select id="selectJugador" onchange="renderTablaActividad()" style="background:#166534;color:#fde68a;border:1px solid rgba(253,230,138,0.5);border-radius:6px;padding:5px 10px;font-weight:600;font-size:0.85rem;cursor:pointer;max-width:240px;" fdprocessedid="19853m"><option value="">— Seleccionar jugador —</option><option value="0">Juan Ignacio Orbe Murua</option><option value="1">Gonzalo ZuñIga Ascunce</option><option value="2">Juan Miguel Dorronsoro Dorronsoro</option><option value="3">Jose Ignacio Coronado Eceizabarrena</option><option value="4">Pedro Suquia Garmendia</option><option value="5">Juan Rezola Sansinenea</option></select>
-      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;" fdprocessedid="8aqc4">🔄 Actualizar RFEG</button>
-
-    </div>
+<!-- Scorecard de hoyos -->
+<div id="seccion-scorecard" style="max-width:1300px;margin:28px auto 0;padding:0 0 40px;">
+  <div style="background:#14532d;color:#fde68a;font-weight:700;font-size:1.05rem;padding:14px 20px;border-radius:10px 10px 0 0;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+    <span>🏌️ Scorecard — Resultados por hoyo</span>
+    <button onclick="resetScorecard()" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;padding:5px 12px;font-weight:700;font-size:0.82rem;cursor:pointer;">🗑 Resetear golpes</button>
   </div>
-  <div id="actStatus" style="display: block; padding: 8px 16px; font-size: 0.82rem; background: rgb(240, 253, 244); border-left: 3px solid rgb(22, 101, 52); color: rgb(22, 102, 52);">✅ Antonio actualizado — 20 ronda(s).</div>
-  <div id="actContainer" style="overflow-x:auto;border:1px solid #bbf7d0;border-top:none;border-radius:0 0 10px 10px;"><style>
-    .act-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
-    .act-table th { background:#166534; color:#fde68a; padding:8px 10px; text-align:center; white-space:nowrap; position:-webkit-sticky; position:sticky; top:0; }
-    .act-table td { padding:6px 10px; border-bottom:1px solid #e5e7eb; vertical-align:middle; background:#fff; }
-    .act-table tbody tr:nth-child(even) td { background:#fff; }
-    .act-hcp, .act-stb { text-align:center; font-weight:600; color:#475569; }
-    .act-fecha { white-space:nowrap; color:#64748b; font-size:0.8rem; }
-    .dif-star { color:#b91c1c; font-weight:700; background:#fee2e2; padding:2px 6px; border-radius:3px; white-space:nowrap; }
-    .dif-norm { color:#111; font-weight:700; }
-    .act-info-bar { background:#f0fdf4; border-bottom:2px solid #bbf7d0; padding:10px 16px; display:flex; gap:24px; flex-wrap:wrap; align-items:center; font-size:0.85rem; color:#166534; font-weight:600; }
-    .act-info-bar span { font-weight:400; color:#475569; }
-  </style><div style="padding:32px;text-align:center;color:#94a3b8;font-style:italic;font-size:0.95rem;">Seleccioná un jugador para ver sus últimas 20 rondas</div></div>
+  <div id="scorecard-container" style="overflow-x:auto;border:1px solid #bbf7d0;border-top:none;border-radius:0 0 10px 10px;background:#fff;">
+    <div style="padding:20px;text-align:center;color:#94a3b8;font-style:italic;">Añadí jugadores para ver el scorecard</div>
+  </div>
 </div>
 
 <script>
-function fetchTimeout(url, ms) {
-  const ctrl = new AbortController();
-  const t = setTimeout(() => ctrl.abort(), ms);
-  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(t));
+let _courseConfig = {
+  par: [4,3,4,5,4,4,3,5,4, 4,4,3,5,4,4,3,4,5],
+  si:  [5,17,11,1,13,7,15,9,3, 6,16,12,2,14,8,18,10,4]
+};
+
+function calcHcpStrokes(hcp, si) {
+  const h = Math.round(Math.max(0, hcp));
+  return si.map(function(s){ return h <= 18 ? (s <= h ? 1 : 0) : (s <= h - 18 ? 2 : 1); });
 }
 
-const JUGADORES_ACT = [
-  {
-    nombre: "Gonzalo Zuñiga Ascunce", licencia: "VB09720776", hcpAct: 11.9, pdfFecha: "08/12/2025",
-    rondas: [
-      { fecha:"08/12/2025", torneo:"Final Familiar Ligas Golf 18H 2025", campo:"Campo La Sella", hcp:15, stb:38, dif:10.2, star:true },
-      { fecha:"04/10/2025", torneo:"Final Ligas Golf Aragón, Navarra y Rioja", campo:"Los Lagos", hcp:13, stb:32, dif:15.5, star:false },
-      { fecha:"02/08/2025", torneo:"Torneo Ligas-Golf Amateur-Juvenil 2025", campo:"Gorraiz", hcp:16, stb:39, dif:10.2, star:true },
-      { fecha:"26/07/2025", torneo:"Ligas Golf", campo:"Ulzama", hcp:16, stb:34, dif:14.1, star:false },
-      { fecha:"19/07/2025", torneo:"XX Premio Esclerosis Múltiple", campo:"Basozabal", hcp:15, stb:34, dif:14.0, star:false },
-      { fecha:"24/05/2025", torneo:"I Torneo Lexus San Sebastián", campo:"Basozabal", hcp:15, stb:35, dif:13.1, star:true },
-      { fecha:"22/05/2025", torneo:"Torneo Andbank", campo:"San Sebastián", hcp:14, stb:31, dif:16.5, star:false },
-      { fecha:"17/05/2025", torneo:"Ligas Golf Juvenil/Familiar 2025", campo:"Señorío Zuasti", hcp:14, stb:29, dif:18.6, star:false },
-      { fecha:"16/05/2025", torneo:"Circuito Olympia Road Tour 2025", campo:"Basozabal", hcp:15, stb:31, dif:16.5, star:false },
-      { fecha:"12/04/2025", torneo:"Torneo Masters by Bigoutlet", campo:"Basozabal", hcp:16, stb:36, dif:13.1, star:true },
-      { fecha:"06/04/2025", torneo:"Campeonato Basozabal Senior", campo:"Basozabal", hcp:16, stb:30, dif:18.2, star:false },
-      { fecha:"01/03/2025", torneo:"Ligas Golf Aragón-Navarra-La Rioja 18", campo:"Los Lagos", hcp:14, stb:33, dif:15.5, star:false },
-      { fecha:"08/12/2024", torneo:"Final Familiar 2024 Ligas Golf (9 Hoyos)", campo:"Campo La Sella", hcp:6, stb:17, dif:15.0, star:false },
-      { fecha:"09/11/2024", torneo:"Campeonato Senior de Basozabal", campo:"Basozabal", hcp:16, stb:36, dif:13.1, star:true },
-      { fecha:"05/10/2024", torneo:"Ligas Golf", campo:"Los Lagos", hcp:15, stb:40, dif:11.0, star:true },
-      { fecha:"25/09/2024", torneo:"Torneo CM Golf", campo:"El Bosque", hcp:17, stb:41, dif:10.1, star:true },
-      { fecha:"14/09/2024", torneo:"Final Ligas Golf (18 Hoyos)", campo:"IZKI", hcp:18, stb:30, dif:18.9, star:false },
-      { fecha:"07/09/2024", torneo:"Circuito Nacional Summum Golf 2024", campo:"Basozabal", hcp:17, stb:36, dif:14.0, star:false },
-      { fecha:"01/09/2024", torneo:"Ligas Golf", campo:"Calatayud Golf", hcp:15, stb:32, dif:17.8, star:false },
-      { fecha:"28/08/2024", torneo:"9H Los Miércoles al Golf", campo:"El Bosque", hcp:9, stb:22, dif:12.6, star:true }
-    ]
-  },
-  {
-    nombre: "Juan Miguel Dorronsoro Dorronsoro", licencia: "VB14431288", hcpAct: 25.9, pdfFecha: "21/08/2025",
-    rondas: [
-      { fecha:"21/08/2025", torneo:"Santa María San Miguel XV Andalucía Golf Challenge", campo:"Santa Maria Golf", hcp:31, stb:27, dif:33.2, star:false },
-      { fecha:"07/06/2025", torneo:"XVI Torneo Grupo Cope de Comunicación", campo:"Basozabal", hcp:31, stb:27, dif:33.2, star:false },
-      { fecha:"19/07/2024", torneo:"Circuito Premium Mahou San Miguel", campo:"Basozabal", hcp:32, stb:42, dif:21.5, star:true },
-      { fecha:"06/05/2023", torneo:"Final II Liga Sushi Donosti 2022", campo:"Basozabal", hcp:32, stb:31, dif:30.7, star:false },
-      { fecha:"22/04/2023", torneo:"II Liga Sushi Donosti - 5ª Jornada", campo:"Basozabal", hcp:32, stb:32, dif:29.9, star:true },
-      { fecha:"27/08/2022", torneo:"Premio Fundación Why Not Sábado 27", campo:"Basozabal", hcp:32, stb:32, dif:29.9, star:false },
-      { fecha:"20/08/2022", torneo:"3ª Jornada Liga Sushidonosti 2022", campo:"Basozabal", hcp:32, stb:29, dif:33.2, star:false },
-      { fecha:"16/07/2022", torneo:"II Liga Sushi Donosti - 2ª Jornada", campo:"Basozabal", hcp:32, stb:36, dif:27.4, star:true },
-      { fecha:"26/06/2022", torneo:"II Liga Sushi Donosti - 1ª Jornada", campo:"Basozabal", hcp:32, stb:28, dif:33.2, star:false },
-      { fecha:"04/06/2022", torneo:"Final Liga Sushi Donosti 2021", campo:"Basozabal", hcp:32, stb:32, dif:29.9, star:false },
-      { fecha:"20/05/2022", torneo:"Circuito Olympia Road Tour 2022", campo:"Basozabal", hcp:32, stb:31, dif:30.7, star:false },
-      { fecha:"18/12/2021", torneo:"Premio Social Basozabal", campo:"Basozabal", hcp:32, stb:39, dif:24.0, star:true },
-      { fecha:"23/10/2021", torneo:"Liga Sushi Donosti - 4ª Jornada", campo:"Basozabal", hcp:32, stb:34, dif:28.2, star:true },
-      { fecha:"03/09/2021", torneo:"Circuito Mitsubishi Viernes 3 Sep", campo:"Basozabal", hcp:32, stb:32, dif:29.9, star:false },
-      { fecha:"28/08/2021", torneo:"Why Not? Sábado 28", campo:"Basozabal", hcp:32, stb:26, dif:34.9, star:false },
-      { fecha:"14/08/2021", torneo:"Liga Sushi Donosti - 2ª Jornada", campo:"Basozabal", hcp:34, stb:43, dif:23.2, star:true },
-      { fecha:"23/07/2021", torneo:"Circuito Olympia Road Tour 2021", campo:"Basozabal", hcp:34, stb:30, dif:33.2, star:false },
-      { fecha:"18/07/2021", torneo:"Liga Sushi Donosti - 1ª Jornada", campo:"Basozabal", hcp:34, stb:36, dif:28.2, star:true },
-      { fecha:"28/03/2021", torneo:"Premio Joyería Ayestarán", campo:"Basozabal", hcp:35, stb:41, dif:24.9, star:true },
-      { fecha:"20/03/2021", torneo:"Torneo Social Basozabal", campo:"Basozabal", hcp:35, stb:34, dif:29.9, star:false }
-    ]
-  },
-  {
-    nombre: "Juan Rezola Sansinenea", licencia: "VB09720914", hcpAct: 16.7, pdfFecha: "16/05/2026",
-    rondas: [
-      { fecha:"16/05/2026", torneo:"II Torneo Lexus San Sebastián", campo:"Basozabal", hcp:20, stb:25, dif:25.7, star:false },
-      { fecha:"19/07/2025", torneo:"XX Premio Esclerosis Múltiple", campo:"Basozabal", hcp:20, stb:30, dif:21.5, star:false },
-      { fecha:"07/06/2025", torneo:"XVI Torneo Grupo Cope de Comunicación", campo:"Basozabal", hcp:19, stb:33, dif:18.2, star:true },
-      { fecha:"24/05/2025", torneo:"I Torneo Lexus San Sebastián", campo:"Basozabal", hcp:19, stb:35, dif:16.5, star:true },
-      { fecha:"16/05/2025", torneo:"Circuito Olympia Road Tour 2025", campo:"Basozabal", hcp:18, stb:26, dif:23.2, star:false },
-      { fecha:"12/04/2025", torneo:"Torneo Masters by Bigoutlet", campo:"Basozabal", hcp:17, stb:30, dif:19.0, star:true },
-      { fecha:"06/04/2025", torneo:"Campeonato Basozabal Senior", campo:"Basozabal", hcp:17, stb:30, dif:19.0, star:true },
-      { fecha:"30/03/2025", torneo:"Premio Joyería Ayestarán", campo:"Basozabal", hcp:17, stb:22, dif:25.7, star:false },
-      { fecha:"01/03/2025", torneo:"Torneo Social Basozabal", campo:"Basozabal", hcp:17, stb:16, dif:30.7, star:false },
-      { fecha:"28/12/2024", torneo:"Torneo Comité de Competición", campo:"Basozabal", hcp:16, stb:21, dif:24.0, star:false },
-      { fecha:"09/11/2024", torneo:"Campeonato Senior de Basozabal", campo:"Basozabal", hcp:16, stb:24, dif:23.2, star:false },
-      { fecha:"07/09/2024", torneo:"Circuito Nacional Summum Golf 2024", campo:"Basozabal", hcp:16, stb:24, dif:23.2, star:false },
-      { fecha:"31/08/2024", torneo:"Premio Fundación Why Not 31-08-24", campo:"Basozabal", hcp:16, stb:34, dif:14.8, star:true },
-      { fecha:"24/08/2024", torneo:"Top 10 Summum Golf", campo:"Ulzama", hcp:17, stb:28, dif:19.8, star:true },
-      { fecha:"19/07/2024", torneo:"Circuito Premium Mahou San Miguel", campo:"Basozabal", hcp:16, stb:19, dif:27.4, star:false },
-      { fecha:"14/07/2024", torneo:"IV Torneo Fundación BAE", campo:"Basozabal", hcp:16, stb:21, dif:25.7, star:false },
-      { fecha:"08/06/2024", torneo:"XV Torneo Grupo Cope de Comunicación", campo:"Basozabal", hcp:16, stb:27, dif:20.7, star:false },
-      { fecha:"01/06/2024", torneo:"Torneo Barnes International", campo:"Basozabal", hcp:16, stb:27, dif:20.7, star:false },
-      { fecha:"25/05/2024", torneo:"Circuito Olympia Road Tour 2024", campo:"Basozabal", hcp:15, stb:30, dif:17.3, star:true },
-      { fecha:"04/05/2024", torneo:"XXII Premio Gipuzkoa", campo:"Basozabal", hcp:15, stb:35, dif:13.1, star:true }
-    ]
-  },
-  {
-    nombre: "Pedro Suquia Garmendia", licencia: "VB09724370", hcpAct: 11.9, pdfFecha: "07/06/2025",
-    rondas: [
-      { fecha:"07/06/2025", torneo:"XVI Torneo Grupo Cope de Comunicación", campo:"Basozabal", hcp:15, stb:28, dif:19.0, star:false },
-      { fecha:"12/04/2025", torneo:"Torneo Masters by Bigoutlet", campo:"Basozabal", hcp:14, stb:27, dif:19.0, star:false },
-      { fecha:"07/09/2024", torneo:"Circuito Nacional Summum Golf 2024", campo:"Basozabal", hcp:14, stb:34, dif:13.1, star:true },
-      { fecha:"22/07/2023", torneo:"Circuito Premium Mahou San Miguel", campo:"Basozabal", hcp:14, stb:29, dif:17.3, star:false },
-      { fecha:"03/06/2023", torneo:"Barnes Golf Challenge", campo:"Basozabal", hcp:14, stb:27, dif:19.0, star:false },
-      { fecha:"21/04/2023", torneo:"II Liga Sushi Donosti - 5ª Jornada", campo:"Basozabal", hcp:14, stb:24, dif:21.5, star:false },
-      { fecha:"22/07/2022", torneo:"Circuito Premium Mahou San Miguel", campo:"Basozabal", hcp:14, stb:30, dif:16.5, star:false },
-      { fecha:"26/06/2022", torneo:"II Liga Sushi Donosti - 1ª Jornada", campo:"Basozabal", hcp:15, stb:39, dif:9.8, star:true },
-      { fecha:"28/05/2022", torneo:"Circuito Nacional Andalucía es Golf", campo:"Basozabal", hcp:15, stb:26, dif:20.7, star:false },
-      { fecha:"20/05/2022", torneo:"Circuito Olympia Road Tour 2022", campo:"Basozabal", hcp:15, stb:27, dif:19.8, star:false },
-      { fecha:"30/04/2022", torneo:"XX Premio Gipuzkoa", campo:"Basozabal", hcp:15, stb:37, dif:11.5, star:true },
-      { fecha:"09/04/2022", torneo:"Torneo Social Masters de Augusta 2022", campo:"Basozabal", hcp:15, stb:36, dif:12.3, star:true },
-      { fecha:"15/10/2021", torneo:"Torneo de Golf Acunsa 2021", campo:"Basozabal", hcp:16, stb:37, dif:12.3, star:true },
-      { fecha:"18/09/2021", torneo:"Liga Sushi Donosti - 3ª Jornada", campo:"Basozabal", hcp:17, stb:43, dif:8.1, star:true },
-      { fecha:"14/08/2021", torneo:"Liga Sushi Donosti - 2ª Jornada", campo:"Basozabal", hcp:17, stb:36, dif:14.8, star:true },
-      { fecha:"23/07/2021", torneo:"Circuito Olympia Road Tour 2021", campo:"Basozabal", hcp:17, stb:33, dif:16.5, star:false },
-      { fecha:"18/07/2021", torneo:"Liga Sushi Donosti - 1ª Jornada", campo:"Basozabal", hcp:17, stb:36, dif:14.0, star:true },
-      { fecha:"03/07/2021", torneo:"Torneo Fundación BAE", campo:"Basozabal", hcp:15, stb:34, dif:14.0, star:false },
-      { fecha:"10/04/2021", torneo:"Torneo Social Masters Augusta", campo:"Basozabal", hcp:17, stb:32, dif:17.3, star:false },
-      { fecha:"28/03/2021", torneo:"Premio Joyería Ayestarán", campo:"Basozabal", hcp:17, stb:26, dif:22.3, star:false }
-    ]
-  },
-  {
-    nombre: "Jose Ignacio Coronado Eceizabarrena", licencia: "AM61140346", hcpAct: 15.2, pdfFecha: "07/06/2025",
-    rondas: [
-      { fecha:"07/06/2025", torneo:"XVI Torneo Grupo Cope de Comunicación", campo:"Basozabal", hcp:18, stb:21, dif:27.4, star:false },
-      { fecha:"07/09/2024", torneo:"Circuito Nacional Summum Golf 2024", campo:"Basozabal", hcp:18, stb:30, dif:19.8, star:false },
-      { fecha:"19/07/2024", torneo:"Circuito Premium Mahou San Miguel", campo:"Basozabal", hcp:18, stb:33, dif:17.3, star:true },
-      { fecha:"03/09/2023", torneo:"Summumgolf Mitsubishi 2023", campo:"Basozabal", hcp:18, stb:36, dif:14.8, star:true },
-      { fecha:"05/05/2023", torneo:"Final II Liga Sushi Donosti 2022", campo:"Basozabal", hcp:18, stb:34, dif:16.5, star:true },
-      { fecha:"21/04/2023", torneo:"II Liga Sushi Donosti - 5ª Jornada", campo:"Basozabal", hcp:18, stb:24, dif:24.9, star:false },
-      { fecha:"21/10/2022", torneo:"II Liga Sushi Donosti - 4ª Jornada", campo:"Basozabal", hcp:19, stb:39, dif:13.1, star:true },
-      { fecha:"27/08/2022", torneo:"Premio Fundación Why Not Sábado 27", campo:"Basozabal", hcp:19, stb:35, dif:16.5, star:true },
-      { fecha:"20/08/2022", torneo:"3ª Jornada Liga Sushidonosti 2022", campo:"Basozabal", hcp:19, stb:32, dif:19.8, star:false },
-      { fecha:"22/07/2022", torneo:"Circuito Premium Mahou San Miguel", campo:"Basozabal", hcp:20, stb:39, dif:14.0, star:true },
-      { fecha:"11/06/2022", torneo:"XIII Torneo Grupo Cope de Comunicación", campo:"Basozabal", hcp:20, stb:39, dif:14.0, star:true },
-      { fecha:"03/06/2022", torneo:"Final Liga Sushi Donosti 2021", campo:"Basozabal", hcp:20, stb:34, dif:18.2, star:false },
-      { fecha:"20/05/2022", torneo:"Circuito Olympia Road Tour 2022", campo:"Basozabal", hcp:20, stb:25, dif:25.7, star:false },
-      { fecha:"19/11/2021", torneo:"Liga Sushi Donosti - 5ª Jornada", campo:"Basozabal", hcp:20, stb:25, dif:25.7, star:false },
-      { fecha:"22/10/2021", torneo:"Liga Sushi Donosti - 4ª Jornada", campo:"Basozabal", hcp:20, stb:33, dif:19.0, star:false },
-      { fecha:"15/10/2021", torneo:"Torneo de Golf Acunsa 2021", campo:"Basozabal", hcp:21, stb:36, dif:17.3, star:false },
-      { fecha:"18/09/2021", torneo:"Liga Sushi Donosti - 3ª Jornada", campo:"Basozabal", hcp:21, stb:38, dif:15.7, star:true },
-      { fecha:"14/08/2021", torneo:"Liga Sushi Donosti - 2ª Jornada", campo:"Basozabal", hcp:22, stb:36, dif:19.0, star:false },
-      { fecha:"23/07/2021", torneo:"Circuito Olympia Road Tour 2021", campo:"Basozabal", hcp:21, stb:32, dif:20.7, star:false },
-      { fecha:"18/07/2021", torneo:"Liga Sushi Donosti - 1ª Jornada", campo:"Basozabal", hcp:21, stb:31, dif:21.5, star:false }
-    ]
-  },
-  {
-    nombre: "Juan Ignacio Orbe Murua", licencia: "VB01069771", hcpAct: 7.0, pdfFecha: "01/05/2026",
-    rondas: [
-      { fecha:"01/05/2026", torneo:"Campeonato Senior de Basozabal", campo:"Basozabal", hcp:9, stb:38, dif:5.6, star:true },
-      { fecha:"25/04/2026", torneo:"Premio Individual Bloke Logístico Alkain", campo:"San Sebastián", hcp:7, stb:31, dif:10.7, star:false },
-      { fecha:"05/10/2025", torneo:"Niños contra el Cáncer", campo:"Ulzama", hcp:8, stb:32, dif:9.3, star:true },
-      { fecha:"20/09/2025", torneo:"10º Torneo Restaurantes del Reyno", campo:"Señorío Zuasti", hcp:6, stb:32, dif:9.4, star:false },
-      { fecha:"05/08/2025", torneo:"XLVII Nerea - Larrea - Iñigo Echave", campo:"RGC Zarauz", hcp:7, stb:30, dif:12.2, star:false },
-      { fecha:"28/06/2025", torneo:"Torneo Barnes International", campo:"Basozabal", hcp:8, stb:35, dif:7.3, star:true },
-      { fecha:"27/06/2025", torneo:"XXI Circuito COAVN de Golf", campo:"IZKI", hcp:9, stb:25, dif:14.8, star:false },
-      { fecha:"21/06/2025", torneo:"Premio Benéfico Nagusilan", campo:"San Sebastián", hcp:7, stb:38, dif:4.9, star:true },
-      { fecha:"24/05/2025", torneo:"I Torneo Lexus San Sebastián", campo:"Basozabal", hcp:8, stb:37, dif:5.6, star:true },
-      { fecha:"22/05/2025", torneo:"Torneo Andbank", campo:"San Sebastián", hcp:7, stb:30, dif:11.5, star:false },
-      { fecha:"12/04/2025", torneo:"Torneo Masters by Bigoutlet", campo:"Basozabal", hcp:8, stb:33, dif:9.0, star:true },
-      { fecha:"06/04/2025", torneo:"Campeonato Basozabal Senior", campo:"Basozabal", hcp:8, stb:25, dif:15.7, star:false },
-      { fecha:"30/03/2025", torneo:"Premio Joyería Ayestarán", campo:"Basozabal", hcp:8, stb:28, dif:13.1, star:false },
-      { fecha:"01/03/2025", torneo:"Torneo Social Basozabal", campo:"Basozabal", hcp:7, stb:28, dif:12.3, star:false },
-      { fecha:"28/12/2024", torneo:"Torneo Comité de Competición", campo:"Basozabal", hcp:7, stb:35, dif:4.8, star:true },
-      { fecha:"30/11/2024", torneo:"Olympia Road Social", campo:"San Sebastián", hcp:6, stb:31, dif:9.1, star:true },
-      { fecha:"15/11/2024", torneo:"Torneo Arquitectos Vasco Navarro 2024", campo:"Meaztegi", hcp:4, stb:25, dif:13.2, star:false },
-      { fecha:"12/10/2024", torneo:"Premio Individual RGCSS Liga", campo:"San Sebastián", hcp:6, stb:25, dif:14.9, star:false },
-      { fecha:"30/08/2024", torneo:"Premio Fundación Why Not 30-08-24", campo:"Basozabal", hcp:7, stb:31, dif:9.8, star:false },
-      { fecha:"03/08/2024", torneo:"XIV Premio Why Not Social", campo:"San Sebastián", hcp:6, stb:28, dif:12.4, star:false }
-    ]
-  }
-];
-
-function renderTablaActividad() {
-  const sel = document.getElementById('selectJugador');
-  const idx = sel ? parseInt(sel.value) : NaN;
-  const container = document.getElementById('actContainer');
-  const styles = `<style>
-    .act-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
-    .act-table th { background:#166534; color:#fde68a; padding:8px 10px; text-align:center; white-space:nowrap; position:-webkit-sticky; position:sticky; top:0; }
-    .act-table td { padding:6px 10px; border-bottom:1px solid #e5e7eb; vertical-align:middle; background:#fff; }
-    .act-table tbody tr:nth-child(even) td { background:#fff; }
-    .act-hcp, .act-stb { text-align:center; font-weight:600; color:#475569; }
-    .act-fecha { white-space:nowrap; color:#64748b; font-size:0.8rem; }
-    .dif-star { color:#b91c1c; font-weight:700; background:#fee2e2; padding:2px 6px; border-radius:3px; white-space:nowrap; }
-    .dif-norm { color:#111; font-weight:700; }
-    .act-info-bar { background:#f0fdf4; border-bottom:2px solid #bbf7d0; padding:10px 16px; display:flex; gap:24px; flex-wrap:wrap; align-items:center; font-size:0.85rem; color:#166534; font-weight:600; }
-    .act-info-bar span { font-weight:400; color:#475569; }
-  </style>`;
-  if (isNaN(idx) || !JUGADORES_ACT[idx]) {
-    container.innerHTML = styles + `<div style="padding:32px;text-align:center;color:#94a3b8;font-style:italic;font-size:0.95rem;">Seleccioná un jugador para ver sus últimas 20 rondas</div>`;
-    return;
-  }
-  const j = JUGADORES_ACT[idx];
-  const infoBar = `<div class="act-info-bar">
-    <div>Jugador: <span>${j.nombre}</span></div>
-    <div>Licencia: <span>${j.licencia}</span></div>
-    <div>HCP actual: <span>${j.hcpAct}</span></div>
-    ${j.pdfFecha ? `<div>Actualizado: <span>${j.pdfFecha}</span></div>` : ''}
-  </div>`;
-  if (j.rondas.length === 0) {
-    container.innerHTML = styles + infoBar + `<div style="padding:24px;text-align:center;color:#94a3b8;font-style:italic;">Sin datos — pulsa 🔄 Actualizar RFEG</div>`;
-    return;
-  }
-  const idx8 = new Set([...j.rondas.map((r,i)=>({d:r.dif,i}))].sort((a,b)=>a.d-b.d).slice(0,8).map(x=>x.i));
-  const filas = j.rondas.map((r, i) => {
-    const star = idx8.has(i);
-    return `<tr${star ? ' style="background:#fff5f5"' : ''}>
-      <td class="act-fecha"${star ? ' style="background:#fff5f5"' : ''}>${r.fecha}</td>
-      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis${star?';background:#fff5f5':''}" title="${r.torneo}">${r.torneo}</td>
-      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis${star?';background:#fff5f5':''}" title="${r.campo}">${r.campo}</td>
-      <td class="act-hcp"${star?' style="background:#fff5f5"':''}>${r.hcp}</td>
-      <td class="act-stb"${star?' style="background:#fff5f5"':''}>${r.stb}</td>
-      <td style="text-align:center${star?';background:#fff5f5':''}">${r.pen !== 0 ? `<span style="color:#b45309;font-weight:600">${r.pen > 0 ? '+' : ''}${r.pen.toFixed(1)}</span>` : '<span style="color:#94a3b8">0</span>'}</td>
-      <td style="text-align:center${star?';background:#fff5f5':''}">${star?`<span class="dif-star">★ ${r.dif.toFixed(1)}</span>`:`<span class="dif-norm">${r.dif.toFixed(1)}</span>`}</td>
-    </tr>`;
-  }).join('');
-  container.innerHTML = styles + infoBar + `<table class="act-table">
-    <thead><tr>
-      <th>Fecha</th><th>Torneo</th><th>Campo de Golf</th><th>HCP</th><th>STB</th><th>Pen.</th><th>Diferencial</th>
-    </tr></thead>
-    <tbody>${filas}</tbody>
-  </table>`;
+function calcStableford(gross, par, strokes) {
+  if (!gross || gross <= 0) return null;
+  return Math.max(0, par + strokes - gross + 2);
 }
 
-(function() {
-  const sel = document.getElementById('selectJugador');
-  if (sel) JUGADORES_ACT.forEach((j, i) => {
-    const o = document.createElement('option');
-    o.value = i; o.textContent = j.nombre;
-    sel.appendChild(o);
+function renderScorecard() {
+  const container = document.getElementById('scorecard-container');
+  if (!container) return;
+  const jugadores = cargarDatos();
+  const par = _courseConfig.par;
+  const si  = _courseConfig.si;
+  if (jugadores.length === 0) {
+    container.innerHTML = '<div style="padding:20px;text-align:center;color:#94a3b8;font-style:italic;">Añadí jugadores para ver el scorecard</div>';
+    return;
+  }
+  const th = 'padding:5px 4px;border:1px solid #14532d;text-align:center;font-size:0.78rem;white-space:nowrap;';
+  const outS = 'background:#0f4023;';
+  let hdr = '<tr style="background:#166534;color:#fde68a;">'
+    + '<th style="' + th + 'text-align:left;min-width:90px;">Jugador</th>'
+    + '<th style="' + th + 'min-width:50px;"></th>';
+  for (let i=1;i<=9;i++) hdr += '<th style="' + th + 'min-width:26px;">' + i + '</th>';
+  hdr += '<th style="' + th + outS + '">OUT</th>';
+  for (let i=10;i<=18;i++) hdr += '<th style="' + th + 'min-width:26px;">' + i + '</th>';
+  hdr += '<th style="' + th + outS + '">IN</th><th style="' + th + outS + 'min-width:46px;">TOT</th></tr>';
+
+  const outPar = par.slice(0,9).reduce(function(a,v){return a+v;},0);
+  const inPar  = par.slice(9).reduce(function(a,v){return a+v;},0);
+  let parRow = '<tr style="background:#f0fdf4;"><td colspan="2" style="padding:3px 8px;border:1px solid #d1fae5;font-weight:700;font-size:0.75rem;color:#166534;">Par <small style="font-weight:400;color:#94a3b8">(editable)</small></td>';
+  for (let i=0;i<9;i++) parRow += '<td contenteditable="true" data-par="' + i + '" onblur="savePar(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="text-align:center;padding:3px 3px;border:1px solid #d1fae5;cursor:text;">' + par[i] + '</td>';
+  parRow += '<td style="text-align:center;padding:3px 3px;border:1px solid #d1fae5;background:#dcfce7;font-weight:700;">' + outPar + '</td>';
+  for (let i=9;i<18;i++) parRow += '<td contenteditable="true" data-par="' + i + '" onblur="savePar(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="text-align:center;padding:3px 3px;border:1px solid #d1fae5;cursor:text;">' + par[i] + '</td>';
+  parRow += '<td style="text-align:center;padding:3px 3px;border:1px solid #d1fae5;background:#dcfce7;font-weight:700;">' + inPar + '</td>'
+    + '<td style="text-align:center;padding:3px 3px;border:1px solid #d1fae5;background:#dcfce7;font-weight:700;">' + (outPar+inPar) + '</td></tr>';
+
+  let siRow = '<tr style="background:#f8fafc;"><td colspan="2" style="padding:3px 8px;border:1px solid #e5e7eb;font-weight:700;font-size:0.75rem;color:#64748b;">SI <small style="font-weight:400;color:#94a3b8">(editable)</small></td>';
+  for (let i=0;i<9;i++) siRow += '<td contenteditable="true" data-si="' + i + '" onblur="saveSI(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="text-align:center;padding:3px 3px;border:1px solid #e5e7eb;cursor:text;color:#64748b;">' + si[i] + '</td>';
+  siRow += '<td style="border:1px solid #e5e7eb;"></td>';
+  for (let i=9;i<18;i++) siRow += '<td contenteditable="true" data-si="' + i + '" onblur="saveSI(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="text-align:center;padding:3px 3px;border:1px solid #e5e7eb;cursor:text;color:#64748b;">' + si[i] + '</td>';
+  siRow += '<td style="border:1px solid #e5e7eb;"></td><td style="border:1px solid #e5e7eb;"></td></tr>';
+
+  let rows = '';
+  jugadores.forEach(function(j, jIdx) {
+    const strokes = calcHcpStrokes(j.hcpAct, si);
+    const golpes  = j.golpes || Array(18).fill(null);
+    const puntos  = golpes.map(function(g,i){ return calcStableford(g, par[i], strokes[i]); });
+    const outG = golpes.slice(0,9).reduce(function(a,v){return v?a+v:a;},0);
+    const inG  = golpes.slice(9).reduce(function(a,v){return v?a+v:a;},0);
+    const outP = puntos.slice(0,9).reduce(function(a,v){return v!==null?a+v:a;},0);
+    const inP  = puntos.slice(9).reduce(function(a,v){return v!==null?a+v:a;},0);
+    const hasScore = golpes.some(function(g){return g!==null;});
+    const bg = jIdx%2===0?'#fafffe':'#f7fdf9';
+    const nom = escHtml(j.nombre.split(' ').slice(0,2).join(' '));
+
+    rows += '<tr style="background:' + bg + ';">'
+      + '<td rowspan="3" style="padding:4px 8px;border:1px solid #d1fae5;font-weight:700;font-size:0.8rem;vertical-align:middle;background:' + bg + ';">' + nom + '<br><span style="font-weight:400;color:#64748b;font-size:0.72rem;">HCP ' + j.hcpAct + '</span></td>'
+      + '<td style="padding:3px 5px;font-size:0.72rem;color:#dc2626;font-weight:600;border:1px solid #d1fae5;white-space:nowrap;">+Strokes</td>';
+    strokes.slice(0,9).forEach(function(s){ rows += '<td style="text-align:center;padding:3px 2px;border:1px solid #f0f0f0;font-size:0.75rem;color:' + (s?'#dc2626':'#cbd5e1') + ';">' + (s||'·') + '</td>'; });
+    rows += '<td style="border:1px solid #d1fae5;background:#f0fdf4;"></td>';
+    strokes.slice(9).forEach(function(s){ rows += '<td style="text-align:center;padding:3px 2px;border:1px solid #f0f0f0;font-size:0.75rem;color:' + (s?'#dc2626':'#cbd5e1') + ';">' + (s||'·') + '</td>'; });
+    rows += '<td style="border:1px solid #d1fae5;background:#f0fdf4;"></td>';
+    rows += '<td rowspan="3" style="text-align:center;border:1px solid #d1fae5;background:#ecfdf5;padding:4px 6px;font-weight:700;vertical-align:middle;white-space:nowrap;">'
+      + (hasScore ? '<div style="font-size:1rem;color:#1e293b;">' + (outG+inG) + '</div><div style="font-size:0.85rem;color:#166534;">' + (outP+inP) + ' pts</div>' : '<span style="color:#94a3b8;font-size:0.8rem;">—</span>')
+      + '</td></tr>';
+
+    rows += '<tr style="background:' + bg + ';">'
+      + '<td style="padding:3px 5px;font-size:0.72rem;color:#1e40af;font-weight:600;border:1px solid #d1fae5;white-space:nowrap;">Golpes</td>';
+    golpes.slice(0,9).forEach(function(g,i){ rows += '<td contenteditable="true" data-jidx="' + jIdx + '" data-hoyo="' + i + '" onblur="saveScore(this)" onkeydown="scorecardKey(event,this)" style="text-align:center;padding:3px 2px;border:1px solid #e5e7eb;min-width:26px;cursor:text;background:#fffbeb;font-weight:600;">' + (g!==null?g:'') + '</td>'; });
+    rows += '<td style="text-align:center;border:1px solid #d1fae5;background:#dbeafe;font-weight:700;font-size:0.82rem;">' + (outG||'—') + '</td>';
+    golpes.slice(9).forEach(function(g,i){ rows += '<td contenteditable="true" data-jidx="' + jIdx + '" data-hoyo="' + (i+9) + '" onblur="saveScore(this)" onkeydown="scorecardKey(event,this)" style="text-align:center;padding:3px 2px;border:1px solid #e5e7eb;min-width:26px;cursor:text;background:#fffbeb;font-weight:600;">' + (g!==null?g:'') + '</td>'; });
+    rows += '<td style="text-align:center;border:1px solid #d1fae5;background:#dbeafe;font-weight:700;font-size:0.82rem;">' + (inG||'—') + '</td></tr>';
+
+    rows += '<tr style="background:' + bg + ';border-bottom:2px solid #bbf7d0;">'
+      + '<td style="padding:3px 5px;font-size:0.72rem;color:#166534;font-weight:600;border:1px solid #d1fae5;white-space:nowrap;">Puntos</td>';
+    puntos.slice(0,9).forEach(function(p){ var c=p===null?'#e5e7eb':p>=3?'#166534':p===2?'#1e293b':p===1?'#b45309':'#dc2626'; rows += '<td style="text-align:center;padding:3px 2px;border:1px solid #f0f0f0;font-weight:700;font-size:0.82rem;color:' + c + ';">' + (p!==null?p:'') + '</td>'; });
+    rows += '<td style="text-align:center;border:1px solid #d1fae5;background:#d1fae5;font-weight:700;font-size:0.82rem;">' + (outP||'—') + '</td>';
+    puntos.slice(9).forEach(function(p){ var c=p===null?'#e5e7eb':p>=3?'#166534':p===2?'#1e293b':p===1?'#b45309':'#dc2626'; rows += '<td style="text-align:center;padding:3px 2px;border:1px solid #f0f0f0;font-weight:700;font-size:0.82rem;color:' + c + ';">' + (p!==null?p:'') + '</td>'; });
+    rows += '<td style="text-align:center;border:1px solid #d1fae5;background:#d1fae5;font-weight:700;font-size:0.82rem;">' + (inP||'—') + '</td></tr>';
   });
-  renderTablaActividad();
-})();
 
-// ── Actualización desde RFEG ──────────────────────────────────────────────
-
-function setStatus(msg, color) {
-  const el = document.getElementById('actStatus');
-  el.textContent = msg;
-  el.style.borderLeftColor = color || '#166534';
-  el.style.color = color || '#166634';
-  el.style.display = msg ? 'block' : 'none';
+  container.innerHTML = '<table style="border-collapse:collapse;font-size:0.82rem;min-width:900px;width:100%;"><thead>' + hdr + parRow + siRow + '</thead><tbody>' + rows + '</tbody></table>';
 }
 
-async function cargarPDFJS() {
-  if (window.pdfjsLib) return;
-  await new Promise((res, rej) => {
-    const s = document.createElement('script');
-    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
-    s.onload = res; s.onerror = rej;
-    document.head.appendChild(s);
-  });
-  window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+function saveScore(cell) {
+  const jIdx = parseInt(cell.dataset.jidx);
+  const hoyo = parseInt(cell.dataset.hoyo);
+  const val  = parseInt(cell.textContent.trim());
+  const jugadores = cargarDatos();
+  if (!jugadores[jIdx]) return;
+  if (!jugadores[jIdx].golpes) jugadores[jIdx].golpes = Array(18).fill(null);
+  jugadores[jIdx].golpes[hoyo] = (!isNaN(val) && val > 0) ? val : null;
+  guardarDatos(jugadores);
+  renderScorecard();
 }
 
-async function extraerItemsPDF(arrayBuffer) {
-  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-  const items = [];
-  for (let p = 1; p <= pdf.numPages; p++) {
-    const page  = await pdf.getPage(p);
-    const vp    = page.getViewport({ scale: 1 });
-    const cont  = await page.getTextContent();
-    for (const it of cont.items) {
-      if (!it.str.trim()) continue;
-      items.push({ str: it.str.trim(), x: Math.round(it.transform[4]), y: Math.round(vp.height - it.transform[5]) });
-    }
-  }
-  return items;
-}
-
-function agruparFilas(items, tol = 4) {
-  const filas = [];
-  for (const it of items) {
-    const f = filas.find(r => Math.abs(r.y - it.y) <= tol);
-    if (f) f.items.push(it);
-    else filas.push({ y: it.y, items: [it] });
-  }
-  filas.sort((a, b) => a.y - b.y);
-  filas.forEach(f => { f.items.sort((a, b) => a.x - b.x); f.text = f.items.map(i => i.str).join(' '); });
-  return filas;
-}
-
-function parsearRFEG(filas) {
-  // HCP actual
-  let hcpAct = null;
-  const hcpFila = filas.find(f => /[Íi]ndice.*h[áa]ndic|WHS/i.test(f.text));
-  if (hcpFila) {
-    const m = hcpFila.text.match(/(\d+[,\.]\d+)/);
-    if (m) hcpAct = parseFloat(m[1].replace(',', '.'));
-  }
-
-  // Mejores 8 diferenciales (para star)
-  const mejIdx = filas.findIndex(f => /mejor.*dif|dif.*utiliz/i.test(f.text));
-  const mejoresDifs = [];
-  if (mejIdx >= 0) {
-    for (let i = mejIdx; i < Math.min(mejIdx + 15, filas.length) && mejoresDifs.length < 8; i++) {
-      filas[i].items.filter(it => /^-?\d+[,\.]\d+$/.test(it.str))
-                    .forEach(it => mejoresDifs.push(parseFloat(it.str.replace(',', '.'))));
-    }
-  }
-
-  const dateReg = /^(\d{2}\/\d{2}\/\d{4})$/;
-  const pdfLabel = /\b(FECHA|TORNEO|NIVEL|JUGADO|RESULTADO|BRUTO|DIFERENCIAL|HANDICAP|STABLEFORD|AJUSTADO|PENALIZ|LIMITAC|PROMEDIO|ASC|SLOPE|INDIVIDUALES|MEJOR|EXTRAORDINARIO|VALOR|PAR|JUEGO|CAMPO)\b/i;
-  const isNum  = i => /^-?\d+[,\.]?\d*$/.test(i.str);
-  const isRating = i => /\d+[\/\.]\d+[\/\.]\d+/.test(i.str);
-  const isLabel  = i => pdfLabel.test(i.str) || dateReg.test(i.str);
-  const isTorneoLabel = i => /^(FECHA|TORNEO|NIVEL|JUGADO|RESULTADO|BRUTO|DIFERENCIAL|HANDICAP|STABLEFORD|AJUSTADO|PENALIZ|LIMITAC|PROMEDIO|ASC|SLOPE|INDIVIDUALES|MEJOR|EXTRAORDINARIO|VALOR|PAR|JUEGO|CAMPO|MANUAL|TOPE)$/i.test(i.str) || dateReg.test(i.str);
-
-  const rounds = [], roundFilaIdx = [];
-  for (let fi = 0; fi < filas.length; fi++) {
-    const fila = filas[fi];
-    const pd = fila.items.find(i => dateReg.test(i.str) && i.x >= 55 && i.x <= 80);
-    if (!pd) continue;
-    const rowNum = fila.items.find(i => /^\d{1,2}$/.test(i.str) && i.x >= 40 && i.x <= 56);
-    if (!rowNum || parseInt(rowNum.str) < 1 || parseInt(rowNum.str) > 20) continue;
-
-    const torneoItem = fila.items.find(i => i.x >= 80  && i.x <= 140 && !isTorneoLabel(i) && !isNum(i) && !isRating(i) && i.str.length > 1);
-    const campoItem  = fila.items.find(i => i.x >= 355 && i.x <= 425 && !isLabel(i) && !isNum(i) && !isRating(i) && i.str.length > 1);
-    const hcpItems   = fila.items.filter(i => i.x >= 720 && i.x <= 755 && /^\d+$/.test(i.str));
-    const stbItems   = fila.items.filter(i => i.x >= 755 && i.x <= 785 && /^\d+$/.test(i.str));
-    const penItems = fila.items.filter(i => i.x >= 630 && i.x <= 643 && /^-?\d+([,.]\d+)?$/.test(i.str) && !isRating(i));
-
-    rounds.push({
-      fecha:  pd.str,
-      torneo: torneoItem?.str ?? '',
-      campo:  campoItem?.str  ?? '',
-      hcp:    hcpItems.length ? parseInt(hcpItems[hcpItems.length - 1].str) : 0,
-      stb:    stbItems.length ? parseInt(stbItems[stbItems.length - 1].str) : 0,
-      pen:    penItems.length ? parseFloat(penItems[penItems.length - 1].str.replace(',', '.')) : 0,
-      dif: null, star: false
-    });
-    roundFilaIdx.push(fi);
-  }
-
-  for (let ri = 0; ri < rounds.length; ri++) {
-    const lookFi = roundFilaIdx[ri] + 1;
-    if (lookFi < filas.length) {
-      for (const it of filas[lookFi].items) {
-        if (it.x < 400 || it.x > 430 || !/^-?\d+[,.]\d+$/.test(it.str) || isRating(it)) continue;
-        const v = parseFloat(it.str.replace(',', '.'));
-        if (v >= -10 && v <= 54) { rounds[ri].dif = v; break; }
-      }
-    }
-    if (rounds[ri].dif === null) {
-      for (const it of filas[roundFilaIdx[ri]].items) {
-        if (!/^-?\d+[,.]\d+$/.test(it.str) || isRating(it)) continue;
-        const v = parseFloat(it.str.replace(',', '.'));
-        if (v >= -10 && v <= 54) { rounds[ri].dif = v; break; }
-      }
-    }
-    if (rounds[ri].dif !== null && rounds[ri].pen !== 0) {
-      rounds[ri].dif = parseFloat((rounds[ri].dif + rounds[ri].pen).toFixed(1));
-    }
-  }
-
-  const unique = rounds.filter(r => r.dif !== null);
-  const pendientes = [...mejoresDifs];
-  for (const r of unique) {
-    const idx = pendientes.findIndex(d => Math.abs(d - r.dif) < 0.05);
-    if (idx >= 0) { r.star = true; pendientes.splice(idx, 1); }
-  }
-
-  return { hcpAct, pdfFecha: unique[0]?.fecha ?? null, rondas: unique.slice(0, 20) };
-}
-
-async function actualizarActividad() {
-  const btn = document.getElementById('btnActualizar');
-  try {
-  const sel = document.getElementById('selectJugador');
-  const idx = sel ? parseInt(sel.value) : NaN;
-  if (isNaN(idx) || !JUGADORES_ACT[idx]) {
-    setStatus('⚠️ Seleccioná un jugador primero.', '#b45309');
-    setTimeout(() => setStatus(''), 4000);
-    return;
-  }
-  const jugador = JUGADORES_ACT[idx];
-  btn.disabled = true; btn.textContent = '⏳ Actualizando...';
-  try { await cargarPDFJS(); }
-  catch { setStatus('❌ No se pudo cargar pdf.js. Verificá la conexión a internet.', '#b91c1c'); btn.disabled = false; btn.textContent = '🔄 Actualizar RFEG'; return; }
-  const licM = jugador.licencia.match(/^[A-Z]{2}\d{2}(.+)$/);
-  const id   = licM ? licM[1].toLowerCase() : jugador.licencia.replace(/\D/g, '').slice(-6);
-  const pdfUrl = `https://api.rfeg.es/files/summaryhandicap/${id}.pdf`;
-  const proxyUrls = [
-    pdfUrl,
-    `https://corsproxy.io/?${encodeURIComponent(pdfUrl)}`,
-    `https://api.allorigins.win/raw?url=${encodeURIComponent(pdfUrl)}`,
-  ];
-  setStatus(`⏳ Descargando datos de ${jugador.nombre.split(' ')[0]}...`);
-  try {
-    const tryProxies = async () => {
-      for (const url of proxyUrls) {
-        try {
-          const resp = await fetchTimeout(url, 10000);
-          if (!resp.ok) continue;
-          const candidate = await resp.arrayBuffer();
-          if (candidate.byteLength > 1000) return candidate;
-        } catch { continue; }
-      }
-      return null;
-    };
-    let buf = await tryProxies();
-    if (!buf) { await new Promise(r => setTimeout(r, 2000)); buf = await tryProxies(); }
-    if (!buf) { await new Promise(r => setTimeout(r, 2000)); buf = await tryProxies(); }
-    if (!buf) throw new Error(`Sin datos en RFEG para ${jugador.licencia} — probá cargar el PDF manualmente.`);
-    const items = await extraerItemsPDF(buf);
-    const filas = agruparFilas(items);
-    const datos = parsearRFEG(filas);
-    // DEBUG — abrir F12 → Consola para ver el desglose
-    console.group('RFEG · ' + jugador.nombre);
-    console.log('Items PDF:', items.length, '| Filas agrupadas:', filas.length);
-    const filasConFecha = filas.filter(f => /\d{2}\/\d{2}\/\d{4}/.test(f.text));
-    console.log('Filas con fecha:', filasConFecha.length);
-    filasConFecha.slice(0, 5).forEach((f,i) => console.log(' fila'+i+' y='+f.y+':', f.items.map(x=>x.str+'@'+x.x).join(' | ')));
-    console.log('Rondas encontradas:', datos.rondas.length);
-    datos.rondas.forEach(r => console.log(' ', r.fecha, r.torneo, '/', r.campo, 'hcp:'+r.hcp, 'stb:'+r.stb, 'dif:'+r.dif));
-    console.groupEnd();
-    if (datos.rondas.length > 0) {
-      jugador.rondas   = datos.rondas;
-      jugador.hcpAct   = datos.hcpAct ?? jugador.hcpAct;
-      jugador.pdfFecha = datos.pdfFecha ?? jugador.pdfFecha;
-      const añoActual = String(new Date().getFullYear());
-      const jugadoresClasif = cargarDatos();
-      const jClasif = jugadoresClasif.find(jc => jc.licencia.toUpperCase() === jugador.licencia.toUpperCase());
-      if (jClasif) {
-        jClasif.premiosAño = jugador.rondas.filter(r => r.fecha && r.fecha.slice(-4) === añoActual).length;
-        if (datos.hcpAct !== null) jClasif.hcpAct = datos.hcpAct;
-        guardarDatos(jugadoresClasif);
-        renderTabla();
-      }
-      renderTablaActividad();
-      setStatus(`✅ ${jugador.nombre.split(' ')[0]} actualizado — ${datos.rondas.length} ronda(s).`);
-    } else {
-      setStatus(`⚠️ 0 rondas para ${jugador.nombre.split(' ')[0]}. Revisá la consola (F12).`, '#b45309');
-    }
-  } catch(e) {
-    setStatus(`❌ Error: ${e.message}`, '#b91c1c');
-    console.error('RFEG error:', e);
-  }
-  btn.disabled = false; btn.textContent = '🔄 Actualizar RFEG';
-  setTimeout(() => setStatus(''), 12000);
-  } catch(e) {
-    if (btn) { btn.disabled = false; btn.textContent = '🔄 Actualizar RFEG'; }
-    const msg = /iPhone|iPad/i.test(navigator.userAgent)
-      ? '⚠ Error. En iPhone, abrí el archivo en Safari (no desde WhatsApp).'
-      : '⚠ Error inesperado: ' + e.message;
-    setStatus(msg, '#b91c1c');
+function scorecardKey(e, cell) {
+  if (e.key === 'Enter')  { e.preventDefault(); cell.blur(); return; }
+  if (e.key === 'Escape') { cell.textContent = ''; cell.blur(); return; }
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const all = [...document.querySelectorAll('[data-jidx][data-hoyo]')];
+    const idx = all.indexOf(cell);
+    if (idx >= 0 && idx + 1 < all.length) all[idx + 1].focus();
   }
 }
 
-async function cargarPDFManual(event) {
-  const file = event.target.files[0];
-  event.target.value = '';
-  if (!file) return;
-  const sel = document.getElementById('selectJugador');
-  const idx = sel ? parseInt(sel.value) : NaN;
-  if (isNaN(idx) || !JUGADORES_ACT[idx]) {
-    setStatus('⚠️ Seleccioná un jugador primero.', '#b45309');
-    setTimeout(() => setStatus(''), 4000);
-    return;
-  }
-  const jugador = JUGADORES_ACT[idx];
-  setStatus(`⏳ Procesando PDF de ${jugador.nombre.split(' ')[0]}...`);
-  try {
-    await cargarPDFJS();
-    const buf = await file.arrayBuffer();
-    const items = await extraerItemsPDF(buf);
-    const filas = agruparFilas(items);
-    const datos = parsearRFEG(filas);
-    if (datos.rondas.length > 0) {
-      jugador.rondas   = datos.rondas;
-      jugador.hcpAct   = datos.hcpAct   ?? jugador.hcpAct;
-      jugador.pdfFecha = datos.pdfFecha ?? jugador.pdfFecha;
-      renderTablaActividad();
-      setStatus(`✅ ${jugador.nombre.split(' ')[0]} actualizado — ${datos.rondas.length} ronda(s).`);
-    } else {
-      setStatus('⚠️ 0 rondas encontradas. Verificá que sea el certificado RFEG correcto.', '#b45309');
-    }
-  } catch(e) {
-    setStatus(`❌ Error al leer el PDF: ${e.message}`, '#b91c1c');
-  }
-  setTimeout(() => setStatus(''), 12000);
+function savePar(cell, idx) {
+  const val = parseInt(cell.textContent.trim());
+  _courseConfig.par[idx] = (!isNaN(val) && val >= 3 && val <= 6) ? val : _courseConfig.par[idx];
+  renderScorecard();
+}
+
+function saveSI(cell, idx) {
+  const val = parseInt(cell.textContent.trim());
+  _courseConfig.si[idx] = (!isNaN(val) && val >= 1 && val <= 18) ? val : _courseConfig.si[idx];
+  renderScorecard();
+}
+
+function resetScorecard() {
+  if (!confirm('¿Resetear todos los golpes del scorecard?')) return;
+  const jugadores = cargarDatos();
+  jugadores.forEach(function(j){ j.golpes = Array(18).fill(null); });
+  guardarDatos(jugadores);
+  renderScorecard();
 }
 </script>
+
+
 
 <script>
     // Títulos editables
@@ -1140,9 +792,7 @@ async function cargarPDFManual(event) {
                     jugadores[i].nombre = nombre;
                     jugadores[i].fechaMod = fechaMod || '';
 
-                    // Sincronizar JUGADORES_ACT con el hcp actual recién obtenido
-                    const jActWeb = JUGADORES_ACT.find(ja => ja.licencia.toUpperCase() === j.licencia.toUpperCase());
-                    if (jActWeb) { jActWeb.hcpAct = hcpAct; jActWeb.nombre = nombre; }
+
 
                     const mfCheck = (jugadores[i].fechaMod || '').match(/(\d{2})[-\/](\d{2})[-\/](\d{4})/);
                     const fechaModDate = mfCheck ? new Date(+mfCheck[3], +mfCheck[2]-1, +mfCheck[1]) : null;
@@ -1172,12 +822,7 @@ async function cargarPDFManual(event) {
                             const filas = agruparFilas(items);
                             const datos = parsearRFEG(filas);
                             if (datos.rondas.length > 0) {
-                                const jAct = JUGADORES_ACT.find(ja => ja.licencia.toUpperCase() === j.licencia.toUpperCase());
-                                if (jAct) {
-                                    jAct.rondas   = datos.rondas;
-                                    jAct.hcpAct   = datos.hcpAct   ?? jAct.hcpAct;
-                                    jAct.pdfFecha = datos.pdfFecha ?? jAct.pdfFecha;
-                                }
+
                                 jugadores[i].premiosAño = datos.rondas.filter(r => r.fecha && r.fecha.slice(-4) === añoActual).length;
                             }
                         }
@@ -1191,7 +836,7 @@ async function cargarPDFManual(event) {
 
             guardarDatos(jugadores);
             renderTabla();
-            renderTablaActividad();
+
             btn.disabled = false;
             btn.textContent = '↻ Actualizar RFEG';
 
@@ -1277,36 +922,7 @@ async function cargarPDFManual(event) {
         }).join('');
 
         document.getElementById('tabla-body').innerHTML = filas;
-        sincronizarSelectActividad();
-    }
-
-    function sincronizarSelectActividad() {
-        const jugadores = cargarDatos();
-        const sel = document.getElementById('selectJugador');
-        if (!sel) return;
-        const licActual = JUGADORES_ACT[parseInt(sel.value)]?.licencia?.toUpperCase() ?? '';
-        const licSet = new Set(jugadores.map(j => j.licencia.toUpperCase()));
-        // Eliminar jugadores que ya no están en la clasificación
-        for (let i = JUGADORES_ACT.length - 1; i >= 0; i--) {
-            if (!licSet.has(JUGADORES_ACT[i].licencia.toUpperCase())) JUGADORES_ACT.splice(i, 1);
-        }
-        // Agregar jugadores nuevos (sin tocar los existentes)
-        const licActivos = new Set(JUGADORES_ACT.map(j => j.licencia.toUpperCase()));
-        jugadores.forEach(j => {
-            if (!licActivos.has(j.licencia.toUpperCase())) {
-                JUGADORES_ACT.push({ nombre: j.nombre, licencia: j.licencia, hcpAct: j.hcpAct, pdfFecha: null, rondas: [] });
-            }
-        });
-        // Reconstruir opciones
-        sel.innerHTML = '<option value="">— Seleccionar jugador —</option>';
-        JUGADORES_ACT.forEach((j, i) => {
-            const o = document.createElement('option');
-            o.value = i; o.textContent = j.nombre;
-            sel.appendChild(o);
-        });
-        const newIdx = JUGADORES_ACT.findIndex(j => j.licencia.toUpperCase() === licActual);
-        if (newIdx >= 0) sel.value = newIdx;
-        renderTablaActividad();
+        renderScorecard();
     }
 
     let _fileHandle = null;
@@ -1449,7 +1065,7 @@ async function cargarPDFManual(event) {
         if (actual !== remoto) {
           _guardar(data.jugadores);
           renderTabla();
-          if (typeof sincronizarSelectActividad === 'function') sincronizarSelectActividad();
+          renderScorecard();
           if (silencioso) { setBadge('↻ actualizado', '#fde68a'); setTimeout(function() { setBadge('● en vivo', '#86efac'); }, 2500); }
         } else { setBadge('● en vivo', '#86efac'); }
       })
