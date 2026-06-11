@@ -1,0 +1,1223 @@
+﻿<html lang="es"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>viernes clink</title>
+    <script>if(!location.search)location.replace(location.pathname+'?v=20260611');</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #1a4731;
+            color: #1e293b;
+            min-height: 100vh;
+            padding: 24px;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0 24px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            color: #fde68a;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            letter-spacing: 1px;
+        }
+
+        header p {
+            color: #86efac;
+            margin-top: 6px;
+            font-size: 0.9rem;
+        }
+
+        .fecha-hoy {
+            text-align: center;
+            color: #bbf7d0;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+
+        /* Formulario de alta */
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            padding: 14px 16px;
+            max-width: 425px;
+            margin: 0 auto 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .form-card h2 {
+            font-size: 1rem;
+            color: #166534;
+            margin-bottom: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1.8fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .btn-rfeg {
+            padding: 9px 14px;
+            background: #f0fdf4;
+            color: #166534;
+            border: 1.5px solid #86efac;
+            border-radius: 7px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+        .btn-rfeg:hover { background: #dcfce7; }
+
+        .form-group label {
+            display: block;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 4px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid #d1d5db;
+            border-radius: 7px;
+            font-size: 16px;
+            color: #1e293b;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #16a34a;
+        }
+
+        .btn-add {
+            padding: 9px 20px;
+            background: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .btn-add:hover { background: #15803d; }
+
+        /* Tabla */
+        .tabla-container {
+            max-width: 1050px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            overflow-x: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .tabla-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            background: #14532d;
+            color: white;
+        }
+
+        .tabla-header h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-export {
+            padding: 7px 16px;
+            background: #fde68a;
+            color: #14532d;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+
+        .btn-export:hover { background: #fcd34d; }
+
+        .btn-update {
+            padding: 7px 16px;
+            background: #38bdf8;
+            color: #0c4a6e;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: background 0.2s;
+        }
+        .btn-update:hover { background: #7dd3fc; }
+        .btn-update:disabled { background: #334155; color: #64748b; cursor: not-allowed; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            background: #dcfce7;
+        }
+
+        th {
+            padding: 11px 14px;
+            text-align: center;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #166534;
+            font-weight: 700;
+            border-bottom: 2px solid #86efac;
+        }
+
+        th:first-child, th:nth-child(2) { text-align: left; }
+
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #f0fdf4;
+            font-size: 0.93rem;
+            text-align: center;
+        }
+
+        td:first-child, td:nth-child(2) { text-align: left; }
+
+        tr:last-child td { border-bottom: none; }
+        tr:nth-child(even) td { background: #f9fafb; }
+        tr:hover td { background: #d1fae5; }
+        tr.top6 td { background: #4ade80; }
+        tr.top6:nth-child(even) td { background: #4ade80; }
+        tr.top6:hover td { background: #22c55e; }
+        tr.top1 td { background: #fde68a; }
+        tr.top1:nth-child(even) td { background: #fde68a; }
+        tr.top1:hover td { background: #fcd34d; }
+        tr.topGreen td { background: #bbf7d0; }
+        tr.topGreen:nth-child(even) td { background: #bbf7d0; }
+        tr.topGreen:hover td { background: #86efac; }
+
+        .pos {
+            font-weight: 700;
+            color: #64748b;
+            width: 30px;
+        }
+
+        .nombre { font-weight: 600; }
+
+        .licencia {
+            font-family: monospace;
+            color: #475569;
+            font-size: 0.88rem;
+        }
+
+        .hcp { font-weight: 600; }
+        .hcp-editable { cursor: pointer; }
+        .hcp-editable:hover { background: #fef9c3 !important; }
+        .hcp-editable input {
+            width: 70px;
+            padding: 2px 6px;
+            border: 2px solid #16a34a;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            outline: none;
+        }
+
+        .incremento {
+            font-weight: 700;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            padding: 3px 10px;
+        }
+
+        .inc-mejor   { color: #15803d; background: #dcfce7; }
+        .inc-peor    { color: #b91c1c; background: #fee2e2; }
+        .inc-igual   { color: #64748b; background: #f1f5f9; }
+
+        .btn-del {
+            background: #fee2e2;
+            border: 1.5px solid #fca5a5;
+            color: #dc2626;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            min-width: 36px;
+            min-height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .btn-del:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .medal { font-size: 1.1rem; }
+
+        @media (max-width: 640px) {
+            body { padding: 10px; }
+
+            header h1 { font-size: 1.4rem; }
+            header p  { font-size: 0.8rem; }
+
+            .form-card { padding: 12px; }
+            .form-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .form-grid > :nth-child(2) { grid-column: 1 / -1; }
+            .form-grid > :last-child   { grid-column: 1 / -1; }
+
+            .tabla-container { overflow-x: auto; }
+            .tabla-header {
+                flex-wrap: wrap;
+                gap: 8px;
+                padding: 10px 12px;
+            }
+            .tabla-header > div { flex-wrap: wrap; gap: 6px; }
+            .btn-export, .btn-update { font-size: 0.78rem; padding: 6px 10px; }
+            .btn-add  { width: 100%; }
+            .btn-rfeg { width: 100%; text-align: center; }
+
+            th { padding: 8px 8px; font-size: 0.7rem; }
+            td { padding: 8px 8px; font-size: 0.85rem; }
+
+            #seccion-actividad > div:first-child {
+                flex-direction: column;
+                align-items: flex-start !important;
+                gap: 8px !important;
+                padding: 10px 12px !important;
+            }
+            #seccion-actividad > div:first-child > div {
+                width: 100%;
+                flex-wrap: wrap;
+                gap: 6px !important;
+            }
+            #selectJugador { max-width: 100% !important; width: 100%; }
+            #btnActualizar  { width: 100%; }
+            #lblCargarPDF   { width: 100%; text-align: center; display: block; }
+            #actContainer   { overflow-x: auto; }
+            .act-info-bar   { gap: 10px; font-size: 0.8rem; padding: 8px 12px; }
+        }
+    </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script></head>
+<body>
+
+<div id="webview-banner" style="display:none;background:#fef3c7;border-bottom:2px solid #f59e0b;padding:12px 16px;text-align:center;font-size:0.9rem;color:#92400e;">
+  ⚠️ <strong>Estás abriendo el archivo desde WhatsApp.</strong><br>
+  Para actualizar los datos de la RFEG, abrí el archivo en <strong>Safari</strong>:<br>
+  Pulsá el ícono <strong>compartir ↑</strong> → <strong>"Abrir en Safari"</strong>
+</div>
+<script>
+(function() {
+  var isIOS = /iPhone|iPad/i.test(navigator.userAgent);
+  var isFile = location.protocol === 'file:';
+  var isWhatsApp = /WhatsApp/i.test(navigator.userAgent);
+  if (isIOS && isFile && isWhatsApp) {
+    document.getElementById('webview-banner').style.display = 'block';
+  } else if (isIOS && isFile) {
+    fetch('https://corsproxy.io/?ping', { signal: (function(){ var c=new AbortController(); setTimeout(function(){c.abort();},3000); return c.signal; }()) })
+      .catch(function() { document.getElementById('webview-banner').style.display = 'block'; });
+  }
+})();
+</script>
+
+<header>
+    <h1 id="titulo-principal" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">⛳ Viernes Clink</h1>
+    <p id="titulo-subtitulo" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">Seguimiento de Handicap · Temporada 2026</p>
+</header>
+
+<p class="fecha-hoy" id="fechaHoy">Fecha actual: miércoles, 10 de junio de 2026</p>
+
+<!-- Formulario -->
+<div class="form-card">
+    <h2>➕ Añadir jugador</h2>
+    <div class="form-grid">
+        <div class="form-group">
+            <label>Nº Licencia</label>
+            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()">
+        </div>
+        <div class="form-group" style="display:none">
+            <input type="text" id="inp-nombre">
+            <input type="number" id="inp-hcp-act">
+            <input type="text" id="inp-nombre-manual">
+            <input type="number" id="inp-hcp-ini">
+        </div>
+        <div class="form-group" style="display:flex;gap:8px;align-items:flex-end;">
+            <button class="btn-add" id="btn-add" onclick="añadirJugador()">Añadir</button>
+            <a id="enlace-rfeg" href="#" target="_blank" class="btn-rfeg" title="Consultar en RFEG">🔍 RFEG</a>
+        </div>
+    </div>
+    <div id="div-manual" style="display:none;"></div>
+    <p id="msg-estado" style="margin-top: 10px; font-size: 0.82rem; color: rgb(22, 163, 74); min-height: 18px;"></p>
+</div>
+
+<!-- Tabla -->
+<div class="tabla-container">
+    <div class="tabla-header">
+        <h2>🏆 Clasificación Stableford</h2>
+        <div style="display:flex;gap:8px;">
+            <button class="btn-update" id="btn-update" onclick="actualizarTodos()" fdprocessedid="7yhue4">↻ Actualizar RFEG</button>
+            <button class="btn-export" onclick="exportarExcel()" fdprocessedid="f9ra8e">⬇ Exportar Excel</button>
+            <button class="btn-export" onclick="guardarJSON()" title="Guardar copia de seguridad" fdprocessedid="oljau9">💾 Guardar</button>
+            <label class="btn-export" style="cursor:pointer;margin:0" title="Cargar copia de seguridad">
+                📂 Cargar<input type="file" accept=".json" onchange="cargarJSON(event)" style="display:none">
+            </label>
+        </div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Pos.</th>
+                <th>Nombre</th>
+                <th>Género</th>
+                <th>Nº Licencia</th>
+                <th>HCP</th>
+                <th>HCP juego</th>
+                <th>Hora de juego</th>
+                <th>Partida</th>
+                <th>Puntos</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="tabla-body"></tbody>
+    </table>
+</div>
+
+<!-- Scorecard de hoyos -->
+<div id="seccion-scorecard" style="max-width:1300px;margin:28px auto 0;padding:0 0 40px;">
+  <div style="background:#14532d;color:#fde68a;font-weight:700;font-size:1.05rem;padding:14px 20px;border-radius:10px 10px 0 0;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+    <span>🏌️ Scorecard — Resultados por hoyo</span>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <label style="font-size:0.82rem;font-weight:600;color:#fde68a;">Partida:</label>
+      <select id="sel-partida" onchange="renderScorecard()" style="font-size:0.82rem;padding:4px 8px;border-radius:6px;border:none;background:#f0fdf4;color:#14532d;font-weight:700;cursor:pointer;">
+        <option value="">Todas</option>
+      </select>
+      <button onclick="resetScorecard()" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;padding:5px 12px;font-weight:700;font-size:0.82rem;cursor:pointer;">🗑 Resetear golpes</button>
+    </div>
+  </div>
+  <div id="scorecard-container" style="overflow-x:auto;border:1px solid #bbf7d0;border-top:none;border-radius:0 0 10px 10px;background:#fff;">
+    <div style="padding:20px;text-align:center;color:#94a3b8;font-style:italic;">Añadí jugadores para ver el scorecard</div>
+  </div>
+</div>
+
+<script>
+let _courseConfig = {
+  // Real Golf Club de Zarauz — 9 hoyos jugado dos veces (par 68)
+  par:       [3,4,3,3,4,4,5,4,4, 3,4,3,3,4,4,5,4,4],
+  si:        [11,7,5,15,17,13,3,1,9, 12,8,6,16,18,14,4,2,10],
+  amarillas: [177,318,175,143,259,342,508,387,291, 177,318,175,143,259,342,508,387,291],
+  rojas:     [159,306,147,133,218,229,424,337,288, 159,306,147,133,218,229,424,337,288],
+  // Slope y Course Rating (editar con datos oficiales del campo)
+  slope_h: 113, cr_h: 68,   // Hombres (amarillas) — pendiente datos reales
+  slope_m: 113, cr_m: 68    // Mujeres  (rojas)    — pendiente datos reales
+};
+
+function escHtml(str) {
+  return str ? String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
+}
+
+function parseGolpes(raw) {
+  const arr = Array(18).fill(null);
+  if (!raw) return arr;
+  if (Array.isArray(raw)) {
+    raw.forEach(function(v, i){ if (i < 18 && v != null) arr[i] = v; });
+  } else {
+    Object.keys(raw).forEach(function(k){ const i = parseInt(k); if (i >= 0 && i < 18 && raw[k] != null) arr[i] = raw[k]; });
+  }
+  return arr;
+}
+
+function calcHcpStrokes(hcp, si) {
+  const h = Math.round(Math.max(0, hcp));
+  return si.map(function(s){ return h <= 18 ? (s <= h ? 1 : 0) : (s <= h - 18 ? 2 : 1); });
+}
+
+function calcCourseHcp(hi, genero) {
+  const par   = _courseConfig.par.reduce(function(a,v){return a+v;},0);
+  const slope = genero === 'M' ? _courseConfig.slope_m : _courseConfig.slope_h;
+  const cr    = genero === 'M' ? _courseConfig.cr_m    : _courseConfig.cr_h;
+  return Math.round(Math.max(0, hi) * slope / 113 + (cr - par));
+}
+
+function calcStableford(gross, par, strokes) {
+  if (!gross || gross <= 0) return null;
+  return Math.max(0, par + strokes - gross + 2);
+}
+
+function actualizarFiltroPartida() {
+  const sel = document.getElementById('sel-partida');
+  if (!sel) return;
+  const jugadores = cargarDatos();
+  const partidas = [...new Set(jugadores.map(j => j.partida || '').filter(p => p))].sort();
+  const actual = sel.value;
+  sel.innerHTML = '<option value="">Todas</option>'
+    + partidas.map(p => '<option value="' + escHtml(p) + '"' + (p === actual ? ' selected' : '') + '>' + escHtml(p) + '</option>').join('');
+}
+
+function renderScorecard() {
+  const container = document.getElementById('scorecard-container');
+  if (!container) return;
+  const todos = cargarDatos();
+  const par = _courseConfig.par;
+  const si  = _courseConfig.si;
+  actualizarFiltroPartida();
+  const filtro = (document.getElementById('sel-partida') || {}).value || '';
+  const jugadores = filtro ? todos.filter(j => (j.partida || '') === filtro) : todos;
+  if (jugadores.length === 0) {
+    container.innerHTML = '<div style="padding:20px;text-align:center;color:#94a3b8;font-style:italic;">'
+      + (filtro ? 'No hay jugadores en la partida "' + escHtml(filtro) + '".' : 'Añadí jugadores para ver el scorecard')
+      + '</div>';
+    return;
+  }
+  const th = 'padding:5px 4px;border:1px solid #14532d;text-align:center;font-size:0.78rem;white-space:nowrap;';
+  const outS = 'background:#0f4023;';
+  let hdr = '<tr style="background:#166534;color:#fde68a;">'
+    + '<th style="' + th + 'text-align:left;min-width:90px;">Jugador</th>'
+    + '<th style="' + th + 'min-width:50px;">Hoyo</th>';
+  for (let i=1;i<=9;i++) hdr += '<th style="' + th + 'min-width:26px;color:#fff;">' + i + '</th>';
+  hdr += '<th style="' + th + outS + '">OUT</th>';
+  for (let i=10;i<=18;i++) hdr += '<th style="' + th + 'min-width:26px;color:#fff;">' + i + '</th>';
+  hdr += '<th style="' + th + outS + '">IN</th><th style="' + th + outS + 'min-width:46px;">TOT</th></tr>';
+
+  const outPar = par.slice(0,9).reduce(function(a,v){return a+v;},0);
+  const inPar  = par.slice(9).reduce(function(a,v){return a+v;},0);
+  let parRow = '<tr style="background:#f0fdf4;"><td colspan="2" style="padding:3px 8px;border:1px solid #d1fae5;font-weight:700;font-size:0.75rem;color:#166534;">Par <small style="font-weight:400;color:#94a3b8">(editable)</small></td>';
+  for (let i=0;i<9;i++) parRow += '<td contenteditable="true" data-par="' + i + '" onblur="savePar(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="text-align:center;padding:3px 3px;border:1px solid #d1fae5;cursor:text;">' + par[i] + '</td>';
+  parRow += '<td style="text-align:center;padding:3px 3px;border:1px solid #d1fae5;background:#dcfce7;font-weight:700;">' + outPar + '</td>';
+  for (let i=9;i<18;i++) parRow += '<td contenteditable="true" data-par="' + i + '" onblur="savePar(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="text-align:center;padding:3px 3px;border:1px solid #d1fae5;cursor:text;">' + par[i] + '</td>';
+  parRow += '<td style="text-align:center;padding:3px 3px;border:1px solid #d1fae5;background:#dcfce7;font-weight:700;">' + inPar + '</td>'
+    + '<td style="text-align:center;padding:3px 3px;border:1px solid #d1fae5;background:#dcfce7;font-weight:700;">' + (outPar+inPar) + '</td></tr>';
+
+  let siRow = '<tr style="background:#f8fafc;"><td colspan="2" style="padding:3px 8px;border:1px solid #e5e7eb;font-weight:700;font-size:0.75rem;color:#64748b;">SI <small style="font-weight:400;color:#94a3b8">(editable)</small></td>';
+  for (let i=0;i<9;i++) siRow += '<td contenteditable="true" data-si="' + i + '" onblur="saveSI(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="text-align:center;padding:3px 3px;border:1px solid #e5e7eb;cursor:text;color:#64748b;">' + si[i] + '</td>';
+  siRow += '<td style="border:1px solid #e5e7eb;"></td>';
+  for (let i=9;i<18;i++) siRow += '<td contenteditable="true" data-si="' + i + '" onblur="saveSI(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="text-align:center;padding:3px 3px;border:1px solid #e5e7eb;cursor:text;color:#64748b;">' + si[i] + '</td>';
+  siRow += '<td style="border:1px solid #e5e7eb;"></td><td style="border:1px solid #e5e7eb;"></td></tr>';
+
+  const am = _courseConfig.amarillas;
+  const ro = _courseConfig.rojas;
+  const outAm = am.slice(0,9).reduce(function(a,v){return a+v;},0);
+  const inAm  = am.slice(9).reduce(function(a,v){return a+v;},0);
+  const outRo = ro.slice(0,9).reduce(function(a,v){return a+v;},0);
+  const inRo  = ro.slice(9).reduce(function(a,v){return a+v;},0);
+  const tdAm = 'text-align:center;padding:3px 3px;border:1px solid #fef9c3;cursor:text;color:#854d0e;';
+  const tdRo = 'text-align:center;padding:3px 3px;border:1px solid #fee2e2;cursor:text;color:#991b1b;';
+
+  let amarillasRow = '<tr style="background:#fefce8;"><td colspan="2" style="padding:3px 8px;border:1px solid #fef9c3;font-weight:700;font-size:0.75rem;color:#854d0e;">🟡 Amarillas (m) <small style="font-weight:400;color:#94a3b8">(editable)</small></td>';
+  for (let i=0;i<9;i++) amarillasRow += '<td contenteditable="true" onblur="saveAmarillas(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="' + tdAm + '">' + (am[i]||'') + '</td>';
+  amarillasRow += '<td style="text-align:center;border:1px solid #fef9c3;background:#fef08a;font-weight:700;font-size:0.75rem;color:#854d0e;">' + (outAm||'') + '</td>';
+  for (let i=9;i<18;i++) amarillasRow += '<td contenteditable="true" onblur="saveAmarillas(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="' + tdAm + '">' + (am[i]||'') + '</td>';
+  amarillasRow += '<td style="text-align:center;border:1px solid #fef9c3;background:#fef08a;font-weight:700;font-size:0.75rem;color:#854d0e;">' + (inAm||'') + '</td>';
+  amarillasRow += '<td style="text-align:center;border:1px solid #fef9c3;background:#fef08a;font-weight:700;font-size:0.75rem;color:#854d0e;">' + (outAm+inAm||'') + '</td></tr>';
+
+  let rojasRow = '<tr style="background:#fff5f5;"><td colspan="2" style="padding:3px 8px;border:1px solid #fee2e2;font-weight:700;font-size:0.75rem;color:#991b1b;">🔴 Rojas (m) <small style="font-weight:400;color:#94a3b8">(editable)</small></td>';
+  for (let i=0;i<9;i++) rojasRow += '<td contenteditable="true" onblur="saveRojas(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="' + tdRo + '">' + (ro[i]||'') + '</td>';
+  rojasRow += '<td style="text-align:center;border:1px solid #fee2e2;background:#fecaca;font-weight:700;font-size:0.75rem;color:#991b1b;">' + (outRo||'') + '</td>';
+  for (let i=9;i<18;i++) rojasRow += '<td contenteditable="true" onblur="saveRojas(this,' + i + ')" onkeydown="if(event.key===\'Enter\'){event.preventDefault();this.blur()}" style="' + tdRo + '">' + (ro[i]||'') + '</td>';
+  rojasRow += '<td style="text-align:center;border:1px solid #fee2e2;background:#fecaca;font-weight:700;font-size:0.75rem;color:#991b1b;">' + (inRo||'') + '</td>';
+  rojasRow += '<td style="text-align:center;border:1px solid #fee2e2;background:#fecaca;font-weight:700;font-size:0.75rem;color:#991b1b;">' + (outRo+inRo||'') + '</td></tr>';
+
+  const tdSlope = 'padding:3px 6px;border:1px solid #e0e7ff;font-size:0.75rem;';
+  let slopeRow = '<tr style="background:#eef2ff;">'
+    + '<td style="padding:3px 8px;border:1px solid #e0e7ff;font-weight:700;font-size:0.75rem;color:#3730a3;">⛳ Slope / CR</td>'
+    + '<td style="' + tdSlope + 'color:#3730a3;white-space:nowrap;text-align:center;">'
+    + '♂ <b contenteditable="true" onblur="saveSlope(this,\'slope_h\')" style="cursor:text;" title="Slope hombres">' + _courseConfig.slope_h + '</b>'
+    + ' / <b contenteditable="true" onblur="saveSlope(this,\'cr_h\')" style="cursor:text;" title="CR hombres">' + _courseConfig.cr_h + '</b>'
+    + '</td>'
+    + '<td colspan="9" style="' + tdSlope + 'color:#3730a3;white-space:nowrap;">'
+    + '♀ Slope <b contenteditable="true" onblur="saveSlope(this,\'slope_m\')" style="cursor:text;" title="Slope mujeres">' + _courseConfig.slope_m + '</b>'
+    + ' / CR <b contenteditable="true" onblur="saveSlope(this,\'cr_m\')" style="cursor:text;" title="CR mujeres">' + _courseConfig.cr_m + '</b>'
+    + '</td>'
+    + '<td colspan="11" style="' + tdSlope + 'color:#64748b;font-style:italic;font-size:0.7rem;">HCP juego = round(HI × Slope/113 + (CR − Par))</td>'
+    + '</tr>';
+
+  let rows = '';
+  jugadores.forEach(function(j) {
+    const jIdx = todos.indexOf(j);
+    const ch = calcCourseHcp(j.hcpAct || 0, j.genero || 'H');
+    const strokes = calcHcpStrokes(ch, si);
+    const golpes  = parseGolpes(j.golpes);
+    const puntos  = golpes.map(function(g,i){ return calcStableford(g, par[i], strokes[i]); });
+    const outG = golpes.slice(0,9).reduce(function(a,v){return v?a+v:a;},0);
+    const inG  = golpes.slice(9).reduce(function(a,v){return v?a+v:a;},0);
+    const outP = puntos.slice(0,9).reduce(function(a,v){return v!==null?a+v:a;},0);
+    const inP  = puntos.slice(9).reduce(function(a,v){return v!==null?a+v:a;},0);
+    const hasScore = golpes.some(function(g){return g!==null;});
+    const bg = jIdx%2===0?'#fafffe':'#f7fdf9';
+    const nom = escHtml((j.nombre||j.licencia||'?').split(' ').slice(0,2).join(' '));
+
+    rows += '<tr style="background:' + bg + ';">'
+      + '<td rowspan="3" style="padding:4px 8px;border:1px solid #d1fae5;font-weight:700;font-size:0.8rem;vertical-align:middle;background:' + bg + ';">' + nom + '<br><span style="font-weight:400;color:#64748b;font-size:0.72rem;">HCP ' + j.hcpAct + '</span></td>'
+      + '<td style="padding:3px 5px;font-size:0.72rem;color:#dc2626;font-weight:600;border:1px solid #d1fae5;white-space:nowrap;">+Strokes</td>';
+    strokes.slice(0,9).forEach(function(s){ rows += '<td style="text-align:center;padding:3px 2px;border:1px solid #f0f0f0;font-size:0.75rem;color:' + (s?'#dc2626':'#cbd5e1') + ';">' + (s||'·') + '</td>'; });
+    rows += '<td style="border:1px solid #d1fae5;background:#f0fdf4;"></td>';
+    strokes.slice(9).forEach(function(s){ rows += '<td style="text-align:center;padding:3px 2px;border:1px solid #f0f0f0;font-size:0.75rem;color:' + (s?'#dc2626':'#cbd5e1') + ';">' + (s||'·') + '</td>'; });
+    rows += '<td style="border:1px solid #d1fae5;background:#f0fdf4;"></td>';
+    rows += '<td data-tot="' + jIdx + '" rowspan="3" style="text-align:center;border:1px solid #d1fae5;background:#ecfdf5;padding:4px 6px;font-weight:700;vertical-align:middle;white-space:nowrap;">'
+      + (hasScore ? '<div style="font-size:1rem;color:#1e293b;">' + (outG+inG) + '</div><div style="font-size:0.85rem;color:#166534;">' + (outP+inP) + ' pts</div>' : '<span style="color:#94a3b8;font-size:0.8rem;">—</span>')
+      + '</td></tr>';
+
+    rows += '<tr style="background:' + bg + ';">'
+      + '<td style="padding:3px 5px;font-size:0.72rem;color:#1e40af;font-weight:600;border:1px solid #d1fae5;white-space:nowrap;">Golpes</td>';
+    golpes.slice(0,9).forEach(function(g,i){ rows += '<td data-jidx="' + jIdx + '" data-hoyo="' + i + '" onclick="editarGolpe(this)" style="text-align:center;padding:3px 2px;border:1px solid #e5e7eb;min-width:26px;cursor:pointer;background:#fffbeb;font-weight:600;">' + (g!==null?g:'') + '</td>'; });
+    rows += '<td data-outg="' + jIdx + '" style="text-align:center;border:1px solid #d1fae5;background:#dbeafe;font-weight:700;font-size:0.82rem;">' + (outG||'—') + '</td>';
+    golpes.slice(9).forEach(function(g,i){ rows += '<td data-jidx="' + jIdx + '" data-hoyo="' + (i+9) + '" onclick="editarGolpe(this)" style="text-align:center;padding:3px 2px;border:1px solid #e5e7eb;min-width:26px;cursor:pointer;background:#fffbeb;font-weight:600;">' + (g!==null?g:'') + '</td>'; });
+    rows += '<td data-ing="' + jIdx + '" style="text-align:center;border:1px solid #d1fae5;background:#dbeafe;font-weight:700;font-size:0.82rem;">' + (inG||'—') + '</td></tr>';
+
+    rows += '<tr style="background:' + bg + ';border-bottom:2px solid #bbf7d0;">'
+      + '<td style="padding:3px 5px;font-size:0.72rem;color:#166534;font-weight:600;border:1px solid #d1fae5;white-space:nowrap;">Puntos</td>';
+    puntos.slice(0,9).forEach(function(p,i){ var c=p===null?'#e5e7eb':p>=3?'#166534':p===2?'#1e293b':p===1?'#b45309':'#dc2626'; rows += '<td data-pts="' + jIdx + '-' + i + '" style="text-align:center;padding:3px 2px;border:1px solid #f0f0f0;font-weight:700;font-size:0.82rem;color:' + c + ';">' + (p!==null?p:'') + '</td>'; });
+    rows += '<td data-outp="' + jIdx + '" style="text-align:center;border:1px solid #d1fae5;background:#d1fae5;font-weight:700;font-size:0.82rem;">' + (outP||'—') + '</td>';
+    puntos.slice(9).forEach(function(p,i){ var c=p===null?'#e5e7eb':p>=3?'#166534':p===2?'#1e293b':p===1?'#b45309':'#dc2626'; rows += '<td data-pts="' + jIdx + '-' + (i+9) + '" style="text-align:center;padding:3px 2px;border:1px solid #f0f0f0;font-weight:700;font-size:0.82rem;color:' + c + ';">' + (p!==null?p:'') + '</td>'; });
+    rows += '<td data-inp="' + jIdx + '" style="text-align:center;border:1px solid #d1fae5;background:#d1fae5;font-weight:700;font-size:0.82rem;">' + (inP||'—') + '</td></tr>';
+  });
+
+  container.innerHTML = '<table style="border-collapse:collapse;font-size:0.82rem;min-width:900px;width:100%;"><thead>' + hdr + parRow + siRow + amarillasRow + rojasRow + slopeRow + '</thead><tbody>' + rows + '</tbody></table>';
+}
+
+function editarGolpe(td) {
+  if (td.querySelector('input')) return;
+  const valorPrev = td.textContent.trim();
+  td.innerHTML = '<input type="number" min="1" max="15" value="' + (valorPrev||'') + '" style="width:28px;text-align:center;border:none;outline:1px solid #14532d;border-radius:2px;background:#fefce8;font-size:0.82rem;font-weight:600;padding:0;-moz-appearance:textfield;appearance:textfield;">';
+  const inp = td.querySelector('input');
+  inp.focus();
+  if (valorPrev) inp.select();
+  let saved = false;
+  function guardar() {
+    if (saved) return; saved = true;
+    const v = parseInt(inp.value);
+    td.textContent = (!isNaN(v) && v > 0) ? String(v) : '';
+    saveScore(td);
+  }
+  inp.addEventListener('blur', guardar);
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter')  { e.preventDefault(); inp.blur(); return; }
+    if (e.key === 'Escape') { saved = true; td.textContent = valorPrev; return; }
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      guardar();
+      setTimeout(function() {
+        const all = Array.from(document.querySelectorAll('[data-jidx][data-hoyo]'));
+        const idx = all.indexOf(td);
+        if (idx >= 0 && idx + 1 < all.length) all[idx + 1].click();
+      }, 20);
+    }
+  });
+}
+
+function saveScore(cell) {
+  const jIdx = parseInt(cell.dataset.jidx);
+  const hoyo = parseInt(cell.dataset.hoyo);
+  const val  = parseInt(cell.textContent.trim());
+  const jugadores = cargarDatos();
+  if (!jugadores[jIdx]) return;
+  jugadores[jIdx].golpes = parseGolpes(jugadores[jIdx].golpes);
+  jugadores[jIdx].golpes[hoyo] = (!isNaN(val) && val > 0) ? val : null;
+  guardarDatos(jugadores);
+  renderScorecard();
+}
+
+function scorecardKey(e, cell) {
+  if (e.key === 'Enter')  { e.preventDefault(); cell.blur(); return; }
+  if (e.key === 'Escape') { cell.textContent = ''; cell.blur(); return; }
+  if (e.key === 'Tab') {
+    e.preventDefault();
+    const all = [...document.querySelectorAll('[data-jidx][data-hoyo]')];
+    const idx = all.indexOf(cell);
+    if (idx >= 0 && idx + 1 < all.length) all[idx + 1].focus();
+  }
+}
+
+function saveSlope(cell, campo) {
+  const v = parseFloat(cell.textContent.trim().replace(',','.'));
+  if (!isNaN(v) && v > 0) { _courseConfig[campo] = v; renderScorecard(); }
+}
+
+function savePar(cell, idx) {
+  const val = parseInt(cell.textContent.trim());
+  _courseConfig.par[idx] = (!isNaN(val) && val >= 3 && val <= 6) ? val : _courseConfig.par[idx];
+  renderScorecard();
+}
+
+function saveSI(cell, idx) {
+  const val = parseInt(cell.textContent.trim());
+  _courseConfig.si[idx] = (!isNaN(val) && val >= 1 && val <= 18) ? val : _courseConfig.si[idx];
+  renderScorecard();
+}
+
+function saveAmarillas(cell, idx) {
+  const val = parseInt(cell.textContent.trim());
+  _courseConfig.amarillas[idx] = (!isNaN(val) && val > 0) ? val : 0;
+  renderScorecard();
+}
+
+function saveRojas(cell, idx) {
+  const val = parseInt(cell.textContent.trim());
+  _courseConfig.rojas[idx] = (!isNaN(val) && val > 0) ? val : 0;
+  renderScorecard();
+}
+
+function resetScorecard() {
+  if (!confirm('¿Resetear todos los golpes del scorecard?')) return;
+  const jugadores = cargarDatos();
+  jugadores.forEach(function(j){ j.golpes = Array(18).fill(null); });
+  guardarDatos(jugadores);
+  renderScorecard();
+}
+</script>
+
+
+
+<script>
+    // Títulos editables
+    try { (function() {
+      const KEY_H1  = location.pathname + '-titulo';
+      const KEY_SUB = location.pathname + '-subtitulo';
+      const h1  = document.getElementById('titulo-principal');
+      const sub = document.getElementById('titulo-subtitulo');
+      if (localStorage.getItem(KEY_H1))  h1.textContent  = localStorage.getItem(KEY_H1);
+      if (localStorage.getItem(KEY_SUB)) sub.textContent = localStorage.getItem(KEY_SUB);
+      h1.addEventListener('blur',  () => { try { localStorage.setItem(KEY_H1,  h1.textContent.trim()); } catch(e){} });
+      sub.addEventListener('blur', () => { try { localStorage.setItem(KEY_SUB, sub.textContent.trim()); } catch(e){} });
+      [h1, sub].forEach(el => el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } }));
+    })(); } catch(e) {}
+
+    // Fecha de hoy
+    const hoy = new Date();
+    const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('fechaHoy').textContent =
+        'Fecha actual: ' + hoy.toLocaleDateString('es-ES', opciones);
+
+    // DATOS — se actualizan al pulsar 💾 Guardar y reemplazar el archivo
+    let _jugadores = [];
+
+    function cargarDatos() { return _jugadores; }
+    function guardarDatos(datos) { _jugadores = datos; }
+
+
+    function actualizarEnlaceRFEG() {
+        const licencia = document.getElementById('inp-licencia').value.trim();
+        const enlace = document.getElementById('enlace-rfeg');
+        if (licencia) {
+            enlace.href = `https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx?HLic=${encodeURIComponent(licencia)}`;
+        } else {
+            enlace.href = '#';
+        }
+    }
+
+    async function añadirJugador() {
+        const licencia = document.getElementById('inp-licencia').value.trim();
+        if (!licencia) {
+            setEstado('Ingresá el número de licencia.', 'error');
+            return;
+        }
+
+        const jugadores = cargarDatos();
+        const existe = jugadores.find(j => j.licencia.toUpperCase() === licencia.toUpperCase());
+        if (existe) {
+            setEstado(`La licencia ${licencia} ya está en la tabla.`, 'error');
+            return;
+        }
+
+        const btn = document.getElementById('btn-add');
+        btn.disabled = true;
+        setEstado('Consultando RFEG...', 'info');
+
+        let nombre = licencia, hcpAct = 0, fechaMod = '', genero = '';
+        try {
+            const datos = await buscarEnRFEG(licencia);
+            nombre   = datos.nombre;
+            hcpAct   = datos.hcpAct;
+            fechaMod = datos.fechaMod || '';
+            genero   = datos.genero  || '';
+        } catch {
+            setEstado(`⚠ RFEG sin datos para ${licencia}. Jugador añadido sin HCP.`, 'error');
+        }
+
+        jugadores.push({ nombre, licencia: licencia.toUpperCase(), hcpIni: hcpAct, hcpAct, fechaMod, genero });
+        guardarDatos(jugadores);
+        renderTabla();
+        document.getElementById('inp-licencia').value = '';
+        actualizarEnlaceRFEG();
+        if (hcpAct) setEstado(`✓ ${nombre} añadido · HCP ${hcpAct}`, 'ok');
+        document.getElementById('inp-licencia').focus();
+        btn.disabled = false;
+    }
+
+    function fetchTimeout(url, ms) {
+        const ctrl = new AbortController();
+        const id = setTimeout(() => ctrl.abort(), ms);
+        return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(id));
+    }
+
+    async function buscarEnRFEG(licencia) {
+        const rfegUrl = `https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx?HLic=${encodeURIComponent(licencia)}`;
+        const proxies = [
+            url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
+            url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+            url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+            url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+            url => `https://thingproxy.freeboard.io/fetch/${url}`,
+        ];
+
+        let html = '';
+        for (const proxy of proxies) {
+            try {
+                const res = await fetchTimeout(proxy(rfegUrl), 12000);
+                if (!res.ok) continue;
+                const text = await res.text();
+                try { html = JSON.parse(text).contents || ''; } catch { html = text; }
+                if (html.length > 500) break;
+            } catch { continue; }
+            html = '';
+        }
+
+        if (!html) throw new Error('No se pudo conectar con la RFEG.');
+
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const tds = Array.from(doc.querySelectorAll('td'));
+        console.log(`[RFEG ${licencia}] celdas:`, tds.map(td => td.textContent.trim()).filter(t => t));
+
+        const validoTd = tds.find(td => /^v[áa]lid[oa]$/i.test(td.textContent.trim()));
+        if (validoTd) {
+            const validoTxt = validoTd.textContent.trim().toLowerCase();
+            const genero = /válida|valida/i.test(validoTxt) ? 'M' : 'H';
+            const fila = validoTd.closest('tr');
+            if (fila) {
+                const celdas = Array.from(fila.querySelectorAll('td')).map(td => td.textContent.trim());
+                console.log(`[RFEG ${licencia}] fila válido:`, celdas);
+                const iValido = celdas.findIndex(c => /^v[áa]lid[oa]$/i.test(c));
+                for (const offset of [3, 2, 4]) {
+                    if (iValido < offset) continue;
+                    const nombre = celdas[iValido - offset].toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                    const hcpAct = parseFloat(celdas[iValido - 1].replace(',', '.'));
+                    const fechaMod = celdas[iValido + 1] || '';
+                    if (nombre.length > 3 && !isNaN(hcpAct)) return { nombre, hcpAct, fechaMod, genero };
+                }
+            }
+        }
+
+        const texto = doc.body ? doc.body.innerText || doc.body.textContent : html;
+        const licNum = licencia.replace(/\D/g, '');
+        const mLic = texto.match(new RegExp(`([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ, ]{4,})\\s+${licNum}\\D*(\\d+[,.]\\d+)`));
+        if (mLic) {
+            const nombre = mLic[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+            const hcpAct = parseFloat(mLic[2].replace(',', '.'));
+            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
+        }
+
+        const m = texto.match(/([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ ]{4,})\s+[\w-]+\s+([\d,]+)\s+V[áa]lid/i);
+        if (m) {
+            const nombre = m[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+            const hcpAct = parseFloat(m[2].replace(',', '.'));
+            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
+        }
+
+        throw new Error(`No se encontró "${licencia}" en la RFEG.`);
+    }
+
+    async function buscarEnRFEGConReintentos(licencia, maxReintentos = 5, onIntento = null) {
+        let ultimoError;
+        for (let intento = 1; intento <= maxReintentos; intento++) {
+            try {
+                if (onIntento) onIntento(intento);
+                return await buscarEnRFEG(licencia);
+            } catch(e) {
+                ultimoError = e;
+                if (intento < maxReintentos) await new Promise(r => setTimeout(r, 1500));
+            }
+        }
+        throw ultimoError;
+    }
+
+    function editarHcpIni(td, idx) {
+        if (td.querySelector('input')) return;
+        const valorActual = parseFloat(td.textContent);
+        td.innerHTML = `<input type="number" step="0.1" value="${valorActual}" />`;
+        const input = td.querySelector('input');
+        input.focus();
+        input.select();
+
+        function guardar() {
+            const nuevo = parseFloat(input.value);
+            if (!isNaN(nuevo) && nuevo !== valorActual) {
+                const jugadores = cargarDatos();
+                jugadores[idx].hcpIni = nuevo;
+                guardarDatos(jugadores);
+                renderTabla();
+            } else {
+                td.textContent = valorActual.toFixed(1);
+            }
+        }
+
+        input.addEventListener('blur', guardar);
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') input.blur();
+            if (e.key === 'Escape') { td.textContent = valorActual.toFixed(1); }
+        });
+    }
+
+    function toggleGenero(idx, td) {
+        const jugadores = cargarDatos();
+        const ciclo = { '': 'H', 'H': 'M', 'M': 'H', '?': 'H' };
+        const actual = jugadores[idx].genero || '';
+        jugadores[idx].genero = ciclo[actual] || 'H';
+        guardarDatos(jugadores);
+        renderTabla();
+    }
+
+    function editarCampo(td, idx, campo) {
+        if (td.querySelector('input')) return;
+        const jugadores = cargarDatos();
+        const valorActual = jugadores[idx][campo] || '';
+        td.innerHTML = `<input type="text" value="${escHtml(valorActual)}" style="width:80px;font-size:0.82rem;padding:2px 4px;" />`;
+        const input = td.querySelector('input');
+        input.focus(); input.select();
+
+        function guardar() {
+            const nuevo = input.value.trim();
+            jugadores[idx][campo] = nuevo;
+            guardarDatos(jugadores);
+            renderTabla();
+        }
+        input.addEventListener('blur', guardar);
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') input.blur();
+            if (e.key === 'Escape') { td.textContent = valorActual || '—'; }
+        });
+    }
+
+    async function actualizarTodos() {
+        const btn = document.getElementById('btn-update');
+        try {
+            const jugadores = cargarDatos();
+            if (jugadores.length === 0) { setEstado('No hay jugadores en la tabla.', 'error'); return; }
+
+            btn.disabled = true;
+            const añoActual = String(new Date().getFullYear());
+            const hoy = new Date(); hoy.setHours(0,0,0,0);
+
+            let ok = 0, errores = [];
+            for (let i = 0; i < jugadores.length; i++) {
+                const j = jugadores[i];
+                btn.textContent = `↻ Actualizando ${i + 1}/${jugadores.length}...`;
+                try {
+                    const { nombre, hcpAct, fechaMod, genero } = await buscarEnRFEGConReintentos(j.licencia, 5, (intento) => { btn.textContent = `↻ Actualizando ${i + 1}/${jugadores.length}${intento > 1 ? ` (reint. ${intento}/5)` : ""}...`; });
+                    jugadores[i].hcpAct = hcpAct;
+                    jugadores[i].nombre = nombre;
+                    jugadores[i].fechaMod = fechaMod || '';
+                    if (genero) jugadores[i].genero = genero;
+
+
+
+                    const mfCheck = (jugadores[i].fechaMod || '').match(/(\d{2})[-\/](\d{2})[-\/](\d{4})/);
+                    const fechaModDate = mfCheck ? new Date(+mfCheck[3], +mfCheck[2]-1, +mfCheck[1]) : null;
+                    const esReciente = fechaModDate && (hoy - fechaModDate) / 86400000 < 2;
+
+                    if (esReciente) try {
+                        await cargarPDFJS();
+                        const licM = j.licencia.match(/^[A-Z]{2}\d{2}(.+)$/);
+                        const id   = licM ? licM[1].toLowerCase() : j.licencia.replace(/\D/g, '').slice(-6);
+                        const pdfUrl = `https://api.rfeg.es/files/summaryhandicap/${id}.pdf`;
+                        const proxyUrls = [
+                            pdfUrl,
+                            `https://corsproxy.io/?${encodeURIComponent(pdfUrl)}`,
+                            `https://api.allorigins.win/raw?url=${encodeURIComponent(pdfUrl)}`,
+                        ];
+                        let buf = null;
+                        for (const url of proxyUrls) {
+                            try {
+                                const resp = await fetchTimeout(url, 10000);
+                                if (!resp.ok) continue;
+                                const candidate = await resp.arrayBuffer();
+                                if (candidate.byteLength > 1000) { buf = candidate; break; }
+                            } catch { continue; }
+                        }
+                        if (buf) {
+                            const items = await extraerItemsPDF(buf);
+                            const filas = agruparFilas(items);
+                            const datos = parsearRFEG(filas);
+                            if (datos.rondas.length > 0) {
+
+                                jugadores[i].premiosAño = datos.rondas.filter(r => r.fecha && r.fecha.slice(-4) === añoActual).length;
+                            }
+                        }
+                    } catch { /* si falla el PDF, premiosAño queda sin cambio */ }
+
+                    ok++;
+                } catch {
+                    errores.push(j.licencia);
+                }
+            }
+
+            guardarDatos(jugadores);
+            renderTabla();
+
+            btn.disabled = false;
+            btn.textContent = '↻ Actualizar RFEG';
+
+            if (errores.length === 0) {
+                setEstado(`✓ ${ok} jugador${ok !== 1 ? 'es' : ''} actualizado${ok !== 1 ? 's' : ''} correctamente.`, 'ok');
+            } else {
+                setEstado(`✓ ${ok} actualizados · ⚠ Sin datos: ${errores.join(', ')}`, 'error');
+            }
+        } catch(e) {
+            if (btn) { btn.disabled = false; btn.textContent = '↻ Actualizar RFEG'; }
+            const msg = /iPhone|iPad/i.test(navigator.userAgent)
+                ? '⚠ Error. En iPhone, abrí el archivo en Safari (no desde WhatsApp).'
+                : '⚠ Error inesperado: ' + e.message;
+            setEstado(msg, 'error');
+        }
+    }
+
+    function setEstado(msg, tipo) {
+        const el = document.getElementById('msg-estado');
+        el.textContent = msg;
+        el.style.color = tipo === 'error' ? '#ef4444' : tipo === 'ok' ? '#16a34a' : '#64748b';
+    }
+
+    function eliminarJugador(idx) {
+        const jugadores = cargarDatos();
+        if (!confirm(`¿Eliminar a ${jugadores[idx].nombre}?`)) return;
+        jugadores.splice(idx, 1);
+        guardarDatos(jugadores);
+        renderTabla();
+    }
+
+    function renderTabla() {
+        const jugadores = cargarDatos();
+
+        if (jugadores.length === 0) {
+            document.getElementById('tabla-body').innerHTML =
+                '<tr><td colspan="10" class="empty">Aún no hay jugadores. Añade el primero con el formulario.</td></tr>';
+            return;
+        }
+
+        // Calcular puntos Stableford totales de cada jugador y ordenar de mayor a menor
+        const par = _courseConfig.par;
+        const si  = _courseConfig.si;
+        const conPuntos = jugadores.map((j, originalIdx) => {
+            const ch = calcCourseHcp(j.hcpAct || 0, j.genero || 'H');
+            const strokes = calcHcpStrokes(ch, si);
+            const golpes  = parseGolpes(j.golpes);
+            const totalPts = golpes.reduce((acc, g, i) => {
+                const p = calcStableford(g, par[i], strokes[i]);
+                return acc + (p !== null ? p : 0);
+            }, 0);
+            const hcpJuego = ch;
+            return { ...j, originalIdx, totalPts, hcpJuego };
+        });
+
+        conPuntos.sort((a, b) => b.totalPts - a.totalPts);
+
+        const medallas = ['🥇','🥈','🥉'];
+
+        const filas = conPuntos.map((j, pos) => {
+            const posTexto = pos < 3
+                ? `<span class="medal">${medallas[pos]}</span>`
+                : `<span class="pos">${pos + 1}</span>`;
+
+            const claseTop = pos === 0 ? 'top1' : pos < 3 ? 'top6' : '';
+            const ptsStyle = j.totalPts > 0
+                ? 'text-align:center;font-weight:800;font-size:1.15rem;color:#14532d;'
+                : 'text-align:center;font-weight:400;color:#94a3b8;';
+
+            return `<tr class="${claseTop}">
+                <td>${posTexto}</td>
+                <td class="nombre">${escHtml(j.nombre)}</td>
+                <td class="hcp hcp-editable" title="Clic para cambiar" onclick="toggleGenero(${j.originalIdx},this)" style="text-align:center;font-weight:700;cursor:pointer;color:${j.genero==='M'?'#be185d':j.genero==='H'?'#1d4ed8':'#94a3b8'};">${j.genero||'?'}</td>
+                <td class="licencia">${escHtml(j.licencia)}</td>
+                <td class="hcp">${(+(j.hcpAct||0)).toFixed(1)}</td>
+                <td style="text-align:center;font-weight:700;color:#14532d;">${j.hcpJuego}</td>
+                <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'hora')">${escHtml(j.hora||'—')}</td>
+                <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'partida')">${escHtml(j.partida||'—')}</td>
+                <td style="${ptsStyle}">${j.totalPts > 0 ? j.totalPts : '—'}</td>
+                <td><button class="btn-del" onclick="eliminarJugador(${j.originalIdx})" title="Eliminar">✕</button></td>
+            </tr>`;
+        }).join('');
+
+        document.getElementById('tabla-body').innerHTML = filas;
+        try { renderScorecard(); } catch(e) { console.error('renderScorecard:', e); }
+    }
+
+    let _fileHandle = null;
+
+    async function guardarJSON() {
+        const jugadores = cargarDatos();
+        if (jugadores.length === 0) { setEstado('No hay datos para guardar.', 'error'); return; }
+        const datosStr = JSON.stringify(jugadores, null, 8).replace(/^/gm, '        ').trim();
+        let html = document.documentElement.outerHTML;
+        html = html.replace(/let _jugadores = \[[\s\S]*?\];/, `let _jugadores = ${datosStr};`);
+        const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        if (!window.showSaveFilePicker) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = 'arbolito mallorca.html';
+            document.body.appendChild(a); a.click();
+            document.body.removeChild(a); URL.revokeObjectURL(url);
+            setEstado('✓ Descargado. Reemplazá el archivo original con éste.', 'ok');
+            return;
+        }
+        try {
+            if (!_fileHandle) {
+                _fileHandle = await window.showSaveFilePicker({
+                    suggestedName: 'arbolito mallorca.html',
+                    types: [{ description: 'Página HTML', accept: { 'text/html': ['.html'] } }]
+                });
+            }
+            const writable = await _fileHandle.createWritable();
+            await writable.write(blob);
+            await writable.close();
+            setEstado('✓ Archivo guardado correctamente.', 'ok');
+        } catch (err) {
+            if (err.name !== 'AbortError') setEstado('Error al guardar: ' + err.message, 'error');
+        }
+    }
+
+    function cargarJSON(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            try {
+                const datos = JSON.parse(e.target.result);
+                if (!Array.isArray(datos)) throw new Error();
+                guardarDatos(datos);
+                renderTabla();
+                setEstado(`✓ ${datos.length} jugadores cargados. Pulsa 💾 Guardar para guardar en el archivo.`, 'ok');
+            } catch {
+                setEstado('Error: el archivo no es válido.', 'error');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = '';
+    }
+
+    function exportarExcel() {
+        const jugadores = cargarDatos();
+        if (jugadores.length === 0) { alert('No hay datos para exportar.'); return; }
+
+        const conIncremento = jugadores.map(j => ({
+            ...j,
+            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / Math.abs(j.hcpIni) * 100).toFixed(1) : 0
+        })).sort((a, b) => a.incremento - b.incremento);
+
+        const datos = conIncremento.map((j, pos) => ({
+            'Pos.': pos + 1,
+            'Nombre': j.nombre,
+            'Nº Licencia': j.licencia,
+            'HCP 01/01/2026': j.hcpIni,
+            'HCP Actual': j.hcpAct,
+            'Diferencia': +(j.hcpAct - j.hcpIni).toFixed(1),
+            '% Incremento': j.incremento + '%'
+        }));
+
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.json_to_sheet(datos);
+
+        // Anchos de columna
+        ws['!cols'] = [
+            { wch: 5 }, { wch: 28 }, { wch: 14 }, { wch: 15 }, { wch: 13 }, { wch: 12 }
+        ];
+
+        XLSX.utils.book_append_sheet(wb, ws, 'Arbolito Orbe Murua');
+
+        const fechaStr = hoy.toISOString().split('T')[0];
+        XLSX.writeFile(wb, `Arbolito_2026_${fechaStr}.xlsx`);
+    }
+
+    function escHtml(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Añadir con Enter solo desde los campos del formulario
+    document.getElementById('inp-licencia')?.addEventListener('keydown', e => {
+        if (e.key === 'Enter') { e.preventDefault(); añadirJugador(); }
+    });
+
+    renderTabla();
+</script>
+
+
+
+<script>
+(function() {
+  var DB = 'https://arbolito-golf-default-rtdb.europe-west1.firebasedatabase.app/viernes-clink';
+  var badge = document.createElement('div');
+  badge.style.cssText = 'position:fixed;bottom:14px;right:14px;background:rgba(20,83,45,0.92);color:#86efac;font-size:0.76rem;font-weight:600;padding:5px 12px;border-radius:20px;z-index:9998;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:color 0.3s;';
+  badge.textContent = '⟳ conectando...';
+  document.body.appendChild(badge);
+  function setBadge(t, c) { badge.textContent = t; badge.style.color = c || '#86efac'; }
+
+  var _guardar = window.guardarDatos;
+  var _writeTimer = null;
+
+  function pushFirebase(datos) {
+    fetch(DB + '.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ jugadores: datos })
+    }).then(function(r) { r.ok ? setBadge('✓ sincronizado', '#4ade80') : setBadge('⚠ error al guardar', '#fca5a5'); })
+      .catch(function() { setBadge('⚠ sin conexión', '#fca5a5'); });
+  }
+
+  window.guardarDatos = function(datos) {
+    _guardar(datos);
+    if (_writeTimer) clearTimeout(_writeTimer);
+    _writeTimer = setTimeout(function() { pushFirebase(datos); _writeTimer = null; }, 1000);
+  };
+
+  function pullFirebase(silencioso) {
+    if (_writeTimer) { setBadge('↑ guardando...', '#fde68a'); return; }
+    fetch(DB + '.json')
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (!data || !data.jugadores || !data.jugadores.length) { setBadge('● en vivo', '#86efac'); return; }
+        var actual = JSON.stringify(cargarDatos());
+        var remoto = JSON.stringify(data.jugadores);
+        if (actual !== remoto) {
+          _guardar(data.jugadores);
+          try { renderTabla(); } catch(e) { console.error('renderTabla:', e); }
+          try { renderScorecard(); } catch(e) { console.error('renderScorecard:', e); }
+          if (silencioso) { setBadge('↻ actualizado', '#fde68a'); setTimeout(function() { setBadge('● en vivo', '#86efac'); }, 2500); }
+        } else { setBadge('● en vivo', '#86efac'); }
+      })
+      .catch(function() { setBadge('⚠ sin conexión', '#fca5a5'); });
+  }
+
+  pullFirebase(false);
+  setInterval(function() { pullFirebase(true); }, 15000);
+})();
+</script><div style="position: fixed; bottom: 14px; right: 14px; background: rgba(20, 83, 45, 0.92); color: rgb(74, 222, 128); font-size: 0.76rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; z-index: 9998; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 8px; transition: color 0.3s;">✓ sincronizado</div>
+</body></html>
