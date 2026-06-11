@@ -400,10 +400,10 @@
             <tr>
                 <th>Pos.</th>
                 <th>Nombre</th>
+                <th>Género</th>
                 <th>Nº Licencia</th>
                 <th>HCP</th>
                 <th>HCP juego</th>
-                <th>Género</th>
                 <th>Hora de juego</th>
                 <th>Partida</th>
                 <th>Puntos</th>
@@ -1024,10 +1024,10 @@ function resetScorecard() {
             return `<tr class="${claseTop}">
                 <td>${posTexto}</td>
                 <td class="nombre">${escHtml(j.nombre)}</td>
+                <td class="hcp hcp-editable" title="Clic para cambiar" onclick="toggleGenero(${j.originalIdx},this)" style="text-align:center;font-weight:700;cursor:pointer;color:${j.genero==='M'?'#be185d':j.genero==='H'?'#1d4ed8':'#94a3b8'};">${j.genero||'?'}</td>
                 <td class="licencia">${escHtml(j.licencia)}</td>
                 <td class="hcp">${(+(j.hcpAct||0)).toFixed(1)}</td>
                 <td style="text-align:center;font-weight:700;color:#14532d;">${j.hcpJuego}</td>
-                <td class="hcp hcp-editable" title="Clic para cambiar" onclick="toggleGenero(${j.originalIdx},this)" style="text-align:center;font-weight:700;cursor:pointer;color:${j.genero==='M'?'#be185d':j.genero==='H'?'#1d4ed8':'#94a3b8'};">${j.genero||'?'}</td>
                 <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'hora')">${escHtml(j.hora||'—')}</td>
                 <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'partida')">${escHtml(j.partida||'—')}</td>
                 <td style="${ptsStyle}">${j.totalPts > 0 ? j.totalPts : '—'}</td>
