@@ -716,12 +716,36 @@ function saveCline(cell) {
   const jIdx  = parseInt(cell.dataset.jidx);
   const hoyo  = parseInt(cell.dataset.hoyo);
   const campo = cell.dataset.campo;
-  const val   = parseInt(cell.textContent.trim());
+  const val   = !isNaN(parseInt(cell.textContent.trim())) ? parseInt(cell.textContent.trim()) : 0;
   const jugadores = cargarDatos();
   if (!jugadores[jIdx]) return;
-  jugadores[jIdx][campo] = parseClines(jugadores[jIdx][campo]);
-  const esExtra = campo === 'clinesExtra';
-  jugadores[jIdx][campo][hoyo] = (!isNaN(val) && (esExtra || val >= 0)) ? val : 0;
+
+  if (campo === 'clinesExtra') {
+    const prev = parseClines(jugadores[jIdx].clinesExtra)[hoyo];
+    // Deshacer distribución anterior si era negativo
+    if (prev < 0) {
+      jugadores.forEach(function(j, k) {
+        if (k === jIdx) return;
+        j.clinesExtra = parseClines(j.clinesExtra);
+        j.clinesExtra[hoyo] -= Math.abs(prev);
+      });
+    }
+    // Guardar nuevo valor
+    jugadores[jIdx].clinesExtra = parseClines(jugadores[jIdx].clinesExtra);
+    jugadores[jIdx].clinesExtra[hoyo] = val;
+    // Distribuir en positivo al resto si es negativo
+    if (val < 0) {
+      jugadores.forEach(function(j, k) {
+        if (k === jIdx) return;
+        j.clinesExtra = parseClines(j.clinesExtra);
+        j.clinesExtra[hoyo] += Math.abs(val);
+      });
+    }
+  } else {
+    jugadores[jIdx][campo] = parseClines(jugadores[jIdx][campo]);
+    jugadores[jIdx][campo][hoyo] = val >= 0 ? val : 0;
+  }
+
   guardarDatos(jugadores);
   renderScorecard();
 }
