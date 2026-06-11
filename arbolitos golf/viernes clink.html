@@ -683,14 +683,16 @@ function saveScore(cell) {
 function editarCline(td) {
   if (td.querySelector('input')) return;
   const valorPrev = td.textContent.trim();
-  td.innerHTML = '<input type="number" min="0" max="99" value="' + valorPrev + '" style="width:28px;text-align:center;border:none;outline:1px solid #92400e;border-radius:2px;background:#fef3c7;font-size:0.82rem;font-weight:600;padding:0;-moz-appearance:textfield;appearance:textfield;">';
+  const esExtra = td.dataset.campo === 'clinesExtra';
+  td.innerHTML = '<input type="number" min="' + (esExtra ? '-99' : '0') + '" max="99" value="' + valorPrev + '" style="width:32px;text-align:center;border:none;outline:1px solid #92400e;border-radius:2px;background:#fef3c7;font-size:0.82rem;font-weight:600;padding:0;-moz-appearance:textfield;appearance:textfield;">';
   const inp = td.querySelector('input');
   inp.focus(); inp.select();
   let saved = false;
   function guardar() {
     if (saved) return; saved = true;
     const v = parseInt(inp.value);
-    td.textContent = (!isNaN(v) && v >= 0) ? String(v) : '0';
+    const esExtra = td.dataset.campo === 'clinesExtra';
+    td.textContent = (!isNaN(v) && (esExtra || v >= 0)) ? String(v) : '0';
     saveCline(td);
   }
   inp.addEventListener('blur', guardar);
@@ -718,7 +720,8 @@ function saveCline(cell) {
   const jugadores = cargarDatos();
   if (!jugadores[jIdx]) return;
   jugadores[jIdx][campo] = parseClines(jugadores[jIdx][campo]);
-  jugadores[jIdx][campo][hoyo] = (!isNaN(val) && val >= 0) ? val : 0;
+  const esExtra = campo === 'clinesExtra';
+  jugadores[jIdx][campo][hoyo] = (!isNaN(val) && (esExtra || val >= 0)) ? val : 0;
   guardarDatos(jugadores);
   renderScorecard();
 }
