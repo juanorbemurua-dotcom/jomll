@@ -401,13 +401,9 @@
                 <th>Pos.</th>
                 <th>Nombre</th>
                 <th>Nº Licencia</th>
-                <th>HCP 01/01/26</th>
-                <th>HCP Hoy</th>
-                <th>Diferencia</th>
-                <th>% Incremento</th>
-                <th>Premios jugados año</th>
-                <th>Últ. Modificación</th>
+                <th>HCP</th>
                 <th>HCP juego</th>
+                <th>Puntos</th>
                 <th></th>
             </tr>
         </thead>
@@ -894,48 +890,41 @@ function resetScorecard() {
             return;
         }
 
-        // Calcular % incremento respecto a inicio de año y ordenar
-        const conIncremento = jugadores.map((j, originalIdx) => ({
-            ...j,
-            originalIdx,
-            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / Math.abs(j.hcpIni) * 100).toFixed(1) : 0
-        }));
+        // Calcular puntos Stableford totales de cada jugador y ordenar de mayor a menor
+        const par = _courseConfig.par;
+        const si  = _courseConfig.si;
+        const conPuntos = jugadores.map((j, originalIdx) => {
+            const strokes = calcHcpStrokes(j.hcpAct, si);
+            const golpes  = j.golpes || Array(18).fill(null);
+            const totalPts = golpes.reduce((acc, g, i) => {
+                const p = calcStableford(g, par[i], strokes[i]);
+                return acc + (p !== null ? p : 0);
+            }, 0);
+            const hcpJuego = strokes.reduce((a, v) => a + v, 0);
+            return { ...j, originalIdx, totalPts, hcpJuego };
+        });
 
-        // Orden inverso al % incremento: de menor (más mejora) a mayor
-        conIncremento.sort((a, b) => a.incremento - b.incremento);
+        conPuntos.sort((a, b) => b.totalPts - a.totalPts);
 
         const medallas = ['🥇','🥈','🥉'];
 
-        const filas = conIncremento.map((j, pos) => {
-            const signo = j.incremento > 0 ? '+' : '';
-            const cls   = j.incremento < 0 ? 'inc-mejor'
-                        : j.incremento > 0 ? 'inc-peor'
-                        : 'inc-igual';
-
+        const filas = conPuntos.map((j, pos) => {
             const posTexto = pos < 3
                 ? `<span class="medal">${medallas[pos]}</span>`
                 : `<span class="pos">${pos + 1}</span>`;
 
-            const claseTop = pos === 0 ? 'top1' : pos < 3 ? 'top6' : j.incremento < 0 ? 'topGreen' : '';
-            const premiosAño = j.premiosAño != null ? j.premiosAño : '—';
-            const hoy = new Date(); hoy.setHours(0,0,0,0);
-            const mf = (j.fechaMod || '').match(/(\d{2})[-\/](\d{2})[-\/](\d{4})/);
-            const fechaModDate = mf ? new Date(+mf[3], +mf[2]-1, +mf[1]) : null;
-            const difDias = fechaModDate ? (hoy - fechaModDate) / 86400000 : Infinity;
-            const esReciente = difDias < 2;
-            const hcpJuego = calcHcpStrokes(j.hcpAct, _courseConfig.si).reduce((a, v) => a + v, 0);
+            const claseTop = pos === 0 ? 'top1' : pos < 3 ? 'top6' : '';
+            const ptsStyle = j.totalPts > 0
+                ? 'text-align:center;font-weight:800;font-size:1.15rem;color:#14532d;'
+                : 'text-align:center;font-weight:400;color:#94a3b8;';
 
             return `<tr class="${claseTop}">
                 <td>${posTexto}</td>
                 <td class="nombre">${escHtml(j.nombre)}</td>
                 <td class="licencia">${escHtml(j.licencia)}</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, ${j.originalIdx})">${j.hcpIni.toFixed(1)}</td>
                 <td class="hcp">${j.hcpAct.toFixed(1)}</td>
-                <td><span class="incremento ${cls}">${signo}${(j.hcpAct - j.hcpIni).toFixed(1)}</span></td>
-                <td><span class="incremento ${cls}">${signo}${j.incremento.toFixed(1)}%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">${premiosAño}</td>
-                <td style="font-size:0.82rem;color:${esReciente?'#dc2626':'#64748b'};font-weight:${esReciente?'700':'400'}">${j.fechaMod || '—'}</td>
-                <td style="text-align:center;font-weight:700;color:#14532d;font-size:1rem;">${hcpJuego}</td>
+                <td style="text-align:center;font-weight:700;color:#14532d;">${j.hcpJuego}</td>
+                <td style="${ptsStyle}">${j.totalPts > 0 ? j.totalPts : '—'}</td>
                 <td><button class="btn-del" onclick="eliminarJugador(${j.originalIdx})" title="Eliminar">✕</button></td>
             </tr>`;
         }).join('');
