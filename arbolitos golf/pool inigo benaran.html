@@ -538,7 +538,7 @@ function renderScorecard() {
     const inP  = puntos.slice(9).reduce(function(a,v){return v!==null?a+v:a;},0);
     const hasScore = golpes.some(function(g){return g!==null;});
     const bg = jIdx%2===0?'#fafffe':'#f7fdf9';
-    const nom = escHtml(j.nombre.split(' ').slice(0,2).join(' '));
+    const nom = escHtml((j.nombre||j.licencia||'?').split(' ').slice(0,2).join(' '));
 
     rows += '<tr style="background:' + bg + ';">'
       + '<td rowspan="3" style="padding:4px 8px;border:1px solid #d1fae5;font-weight:700;font-size:0.8rem;vertical-align:middle;background:' + bg + ';">' + nom + '<br><span style="font-weight:400;color:#64748b;font-size:0.72rem;">HCP ' + j.hcpAct + '</span></td>'
@@ -1001,7 +1001,7 @@ function resetScorecard() {
                 <td>${posTexto}</td>
                 <td class="nombre">${escHtml(j.nombre)}</td>
                 <td class="licencia">${escHtml(j.licencia)}</td>
-                <td class="hcp">${j.hcpAct.toFixed(1)}</td>
+                <td class="hcp">${(+(j.hcpAct||0)).toFixed(1)}</td>
                 <td style="text-align:center;font-weight:700;color:#14532d;">${j.hcpJuego}</td>
                 <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'hora')">${escHtml(j.hora||'—')}</td>
                 <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'partida')">${escHtml(j.partida||'—')}</td>
@@ -1011,7 +1011,7 @@ function resetScorecard() {
         }).join('');
 
         document.getElementById('tabla-body').innerHTML = filas;
-        renderScorecard();
+        try { renderScorecard(); } catch(e) { console.error('renderScorecard:', e); }
     }
 
     let _fileHandle = null;
@@ -1151,8 +1151,8 @@ function resetScorecard() {
         var remoto = JSON.stringify(data.jugadores);
         if (actual !== remoto) {
           _guardar(data.jugadores);
-          renderTabla();
-          renderScorecard();
+          try { renderTabla(); } catch(e) { console.error('renderTabla:', e); }
+          try { renderScorecard(); } catch(e) { console.error('renderScorecard:', e); }
           if (silencioso) { setBadge('↻ actualizado', '#fde68a'); setTimeout(function() { setBadge('● en vivo', '#86efac'); }, 2500); }
         } else { setBadge('● en vivo', '#86efac'); }
       })
