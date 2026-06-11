@@ -403,6 +403,8 @@
                 <th>Nº Licencia</th>
                 <th>HCP</th>
                 <th>HCP juego</th>
+                <th>Hora de juego</th>
+                <th>Partida</th>
                 <th>Puntos</th>
                 <th></th>
             </tr>
@@ -785,6 +787,27 @@ function resetScorecard() {
         });
     }
 
+    function editarCampo(td, idx, campo) {
+        if (td.querySelector('input')) return;
+        const jugadores = cargarDatos();
+        const valorActual = jugadores[idx][campo] || '';
+        td.innerHTML = `<input type="text" value="${escHtml(valorActual)}" style="width:80px;font-size:0.82rem;padding:2px 4px;" />`;
+        const input = td.querySelector('input');
+        input.focus(); input.select();
+
+        function guardar() {
+            const nuevo = input.value.trim();
+            jugadores[idx][campo] = nuevo;
+            guardarDatos(jugadores);
+            renderTabla();
+        }
+        input.addEventListener('blur', guardar);
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') input.blur();
+            if (e.key === 'Escape') { td.textContent = valorActual || '—'; }
+        });
+    }
+
     async function actualizarTodos() {
         const btn = document.getElementById('btn-update');
         try {
@@ -924,6 +947,8 @@ function resetScorecard() {
                 <td class="licencia">${escHtml(j.licencia)}</td>
                 <td class="hcp">${j.hcpAct.toFixed(1)}</td>
                 <td style="text-align:center;font-weight:700;color:#14532d;">${j.hcpJuego}</td>
+                <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'hora')">${escHtml(j.hora||'—')}</td>
+                <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'partida')">${escHtml(j.partida||'—')}</td>
                 <td style="${ptsStyle}">${j.totalPts > 0 ? j.totalPts : '—'}</td>
                 <td><button class="btn-del" onclick="eliminarJugador(${j.originalIdx})" title="Eliminar">✕</button></td>
             </tr>`;
