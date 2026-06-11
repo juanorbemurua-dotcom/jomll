@@ -424,6 +424,7 @@
         <option value="">Todas</option>
       </select>
       <button onclick="resetScorecard()" style="background:#fee2e2;color:#dc2626;border:1px solid #fca5a5;border-radius:6px;padding:5px 12px;font-weight:700;font-size:0.82rem;cursor:pointer;">🗑 Resetear golpes</button>
+      <button onclick="resetClinesExtra()" style="background:#ede9fe;color:#6d28d9;border:1px solid #c4b5fd;border-radius:6px;padding:5px 12px;font-weight:700;font-size:0.82rem;cursor:pointer;">↺ Resetear clines extra</button>
     </div>
   </div>
   <div id="scorecard-container" style="overflow-x:auto;border:1px solid #bbf7d0;border-top:none;border-radius:0 0 10px 10px;background:#fff;">
@@ -821,6 +822,17 @@ function resetScorecard() {
   if (!confirm('¿Resetear todos los golpes del scorecard?')) return;
   const jugadores = cargarDatos();
   jugadores.forEach(function(j){ j.golpes = Array(18).fill(null); });
+  guardarDatos(jugadores);
+  renderScorecard();
+}
+
+function resetClinesExtra() {
+  if (!confirm('¿Poner a cero todos los clines extra?')) return;
+  const jugadores = cargarDatos();
+  jugadores.forEach(function(j){
+    j.clinesExtra  = Array(18).fill(0);
+    j.clinesBirdie = Array(18).fill(0);
+  });
   guardarDatos(jugadores);
   renderScorecard();
 }
