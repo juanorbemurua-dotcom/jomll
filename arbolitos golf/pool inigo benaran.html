@@ -903,10 +903,11 @@ function resetScorecard() {
                 const j = jugadores[i];
                 btn.textContent = `↻ Actualizando ${i + 1}/${jugadores.length}...`;
                 try {
-                    const { nombre, hcpAct, fechaMod } = await buscarEnRFEGConReintentos(j.licencia, 5, (intento) => { btn.textContent = `↻ Actualizando ${i + 1}/${jugadores.length}${intento > 1 ? ` (reint. ${intento}/5)` : ""}...`; });
+                    const { nombre, hcpAct, fechaMod, genero } = await buscarEnRFEGConReintentos(j.licencia, 5, (intento) => { btn.textContent = `↻ Actualizando ${i + 1}/${jugadores.length}${intento > 1 ? ` (reint. ${intento}/5)` : ""}...`; });
                     jugadores[i].hcpAct = hcpAct;
                     jugadores[i].nombre = nombre;
                     jugadores[i].fechaMod = fechaMod || '';
+                    if (genero) jugadores[i].genero = genero;
 
 
 
