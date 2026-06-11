@@ -674,8 +674,29 @@ function saveScore(cell) {
   const val  = parseInt(cell.textContent.trim());
   const jugadores = cargarDatos();
   if (!jugadores[jIdx]) return;
+
+  const par = _courseConfig.par[hoyo];
+  const prevGolpe = parseGolpes(jugadores[jIdx].golpes)[hoyo];
+  const newGolpe  = (!isNaN(val) && val > 0) ? val : null;
+
+  // Delta de efecto birdie: -1 para el jugador, +1 para el resto (o al revés al deshacer)
+  const prevEfecto = (prevGolpe !== null && prevGolpe < par) ? -1 : 0;
+  const newEfecto  = (newGolpe  !== null && newGolpe  < par) ? -1 : 0;
+  const delta = newEfecto - prevEfecto;  // puede ser -1, 0 o +1
+
+  if (delta !== 0) {
+    jugadores.forEach(function(j, k) {
+      j.clinesExtra = parseClines(j.clinesExtra);
+      if (k === jIdx) {
+        j.clinesExtra[hoyo] += delta;
+      } else {
+        j.clinesExtra[hoyo] -= delta;  // resto recibe el opuesto
+      }
+    });
+  }
+
   jugadores[jIdx].golpes = parseGolpes(jugadores[jIdx].golpes);
-  jugadores[jIdx].golpes[hoyo] = (!isNaN(val) && val > 0) ? val : null;
+  jugadores[jIdx].golpes[hoyo] = newGolpe;
   guardarDatos(jugadores);
   renderScorecard();
 }
