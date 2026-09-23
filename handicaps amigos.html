@@ -504,8 +504,8 @@ function renderTablaActividad() {
       <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis${star?';background:#fff5f5':''}" title="${r.campo}">${r.campo}</td>
       <td class="act-hcp"${star?' style="background:#fff5f5"':''}>${r.hcp}</td>
       <td class="act-stb"${star?' style="background:#fff5f5"':''}>${r.stb}</td>
-      <td style="text-align:center${star?';background:#fff5f5':''}">${r.pen !== 0 ? `<span style="color:#b45309;font-weight:600">${r.pen > 0 ? '+' : ''}${r.pen.toFixed(1)}</span>` : '<span style="color:#94a3b8">0</span>'}</td>
-      <td style="text-align:center${star?';background:#fff5f5':''}">${star?`<span class="dif-star">★ ${r.dif.toFixed(1)}</span>`:`<span class="dif-norm">${r.dif.toFixed(1)}</span>`}</td>
+      <td style="text-align:center${star?';background:#fff5f5':''}">${(r.pen != null && r.pen !== 0) ? `<span style="color:#b45309;font-weight:600">${r.pen > 0 ? '+' : ''}${Number(r.pen).toFixed(1)}</span>` : '<span style="color:#94a3b8">0</span>'}</td>
+      <td style="text-align:center${star?';background:#fff5f5':''}">${r.dif != null ? (star?`<span class="dif-star">★ ${Number(r.dif).toFixed(1)}</span>`:`<span class="dif-norm">${Number(r.dif).toFixed(1)}</span>`) : '—'}</td>
     </tr>`;
   }).join('');
   container.innerHTML = styles + infoBar + `<table class="act-table">
@@ -557,7 +557,10 @@ async function extraerItemsPDF(arrayBuffer) {
     const cont  = await page.getTextContent();
     for (const it of cont.items) {
       if (!it.str.trim()) continue;
-      items.push({ str: it.str.trim(), x: Math.round(it.transform[4]), y: Math.round(vp.height - it.transform[5]) });
+      // 'page' es clave para parsearRFEG: el PDF de resumen RFEG tiene 7 paginas con
+      // tablas DISTINTAS (rondas, ajustes, diferenciales, mejores 8...) que NO se pueden
+      // mezclar por coordenada Y sola -- ver nota en parsearRFEG.
+      items.push({ str: it.str.trim(), x: Math.round(it.transform[4]), y: Math.round(vp.height - it.transform[5]), page: p });
     }
   }
   return items;
@@ -575,93 +578,110 @@ function agruparFilas(items, tol = 4) {
   return filas;
 }
 
-function parsearRFEG(filas) {
-  // HCP actual
+function parsearRFEG(items) {
+  // El PDF de resumen de handicap de la RFEG tiene 7 paginas, cada una una tabla
+  // DISTINTA del mismo calculo SMH (rondas / resultado bruto / nivel de juego / ajustes
+  // vacios / diferenciales+penalizacion / mejores 8 diferenciales / pasos finales).
+  // Version anterior (hasta 23/09/2026): mezclaba los items de TODAS las paginas en una
+  // sola lista y los agrupaba solo por coordenada Y, asumiendo que "la fila de la ronda
+  // N+1" siempre contenia el diferencial de la ronda N -- funcionaba por coincidencia de
+  // alineado vertical entre paginas, pero: (a) TORNEO/CAMPO se cortaban a la primera
+  // palabra si el nombre tenia mas de una (ej. "SAN SEBASTIAN" -> "SAN"), porque se
+  // tomaba un unico item por `.find()` en vez de juntar todos los de esa columna; (b) el
+  // rango x=[400,430] usado como "diferencial" en realidad cae en la columna "NIVEL
+  // JUGADO" de la pagina de ajustes, NO en la columna "DIFERENCIAL" real (x~700-720) --
+  // son iguales solo cuando el jugador no tiene ajustes/penalizaciones en esa ronda, asi
+  // que para rondas CON ajuste el numero mostrado podia ser el valor sin ajustar. Fix:
+  // identificar cada pagina por sus propios encabezados y leer cada columna de la pagina
+  // que corresponde, sin mezclar coordenadas Y entre paginas.
+  const dateReg = /^\d{2}\/\d{2}\/\d{4}$/;
+
+  const porPagina = {};
+  for (const it of items) { (porPagina[it.page] = porPagina[it.page] || []).push(it); }
+  const paginas = Object.keys(porPagina).map(Number);
+  const tieneExacto = (arr, s) => arr.some(it => it.str === s);
+  const tieneSub    = (arr, s) => arr.some(it => it.str.includes(s));
+
+  // Pagina de rondas: la que tiene las columnas VUELTA y MODALIDAD (fecha/torneo/campo/hcp/stb)
+  const pgRondas  = paginas.find(p => tieneExacto(porPagina[p], 'VUELTA') && tieneExacto(porPagina[p], 'MODALIDAD'));
+  // Pagina de diferenciales: tiene PENALIZACIÓN (o similar) Y la columna DIFERENCIAL
+  const pgDif     = paginas.find(p => tieneSub(porPagina[p], 'PENALIZACI') && tieneExacto(porPagina[p], 'DIFERENCIAL'));
+  // Pagina de "mejores 8": tiene DIFERENCIAL pero NO PENALIZACIÓN (tabla mas chica, solo 8 filas)
+  const pgMejores = paginas.find(p => tieneExacto(porPagina[p], 'DIFERENCIAL') && !tieneSub(porPagina[p], 'PENALIZACI'));
+
+  // HCP actual: se busca "NUEVO HÁNDICAP: X.X" en la última página (paso final del cálculo)
   let hcpAct = null;
-  const hcpFila = filas.find(f => /[Íi]ndice.*h[áa]ndic|WHS/i.test(f.text));
-  if (hcpFila) {
-    const m = hcpFila.text.match(/(\d+[,\.]\d+)/);
+  if (paginas.length) {
+    const ultima = porPagina[Math.max(...paginas)] || [];
+    const ordenada = [...ultima].sort((a, b) => a.y - b.y || a.x - b.x);
+    const texto = ordenada.map(it => it.str).join(' ');
+    const m = texto.match(/NUEVO\s*H.NDICAP:?\s*(\d+[,.]\d+)/i);
     if (m) hcpAct = parseFloat(m[1].replace(',', '.'));
   }
 
-  // Mejores 8 diferenciales (para star)
-  const mejIdx = filas.findIndex(f => /mejor.*dif|dif.*utiliz/i.test(f.text));
-  const mejoresDifs = [];
-  if (mejIdx >= 0) {
-    for (let i = mejIdx; i < Math.min(mejIdx + 15, filas.length) && mejoresDifs.length < 8; i++) {
-      filas[i].items.filter(it => /^-?\d+[,\.]\d+$/.test(it.str))
-                    .forEach(it => mejoresDifs.push(parseFloat(it.str.replace(',', '.'))));
+  // Paso 1: fecha/torneo/campo/hcp/stb -- desde la página de rondas únicamente
+  const rounds = [];
+  if (pgRondas != null) {
+    const filas = agruparFilas(porPagina[pgRondas]);
+    for (const fila of filas) {
+      const it = fila.items;
+      const fechaIt  = it.find(i => dateReg.test(i.str) && i.x >= 55 && i.x <= 80);
+      const rowNumIt = it.find(i => /^\d{1,2}$/.test(i.str) && i.x >= 40 && i.x <= 56);
+      if (!fechaIt || !rowNumIt) continue;
+
+      // Torneo/campo: se juntan TODOS los items dentro del rango de la columna (no solo
+      // el primero) para no cortar nombres de mas de una palabra.
+      const torneo = it.filter(i => i.x >= 95  && i.x <= 345).map(i => i.str).join(' ');
+      const campo  = it.filter(i => i.x >= 355 && i.x <= 520).map(i => i.str).join(' ');
+      const hcpItems = it.filter(i => i.x >= 720 && i.x <= 755 && /^\d+$/.test(i.str));
+      const stbItems = it.filter(i => i.x >= 755 && i.x <= 785 && /^\d+$/.test(i.str));
+
+      rounds.push({
+        fecha: fechaIt.str, torneo, campo,
+        hcp: hcpItems.length ? parseInt(hcpItems[hcpItems.length - 1].str) : 0,
+        stb: stbItems.length ? parseInt(stbItems[stbItems.length - 1].str) : 0,
+        dif: null, pen: 0, star: false
+      });
     }
   }
 
-  // Columnas fijas del PDF RFEG (verificadas con datos reales):
-  // x≈63: fecha primaria | x≈108: torneo | x≈371: campo | x≈731: hcp | x≈763: stb
-  // El diferencial de la ronda N aparece en x≈411 de la fila de la ronda N+1
-  const dateReg = /^(\d{2}\/\d{2}\/\d{4})$/;
-  const pdfLabel = /\b(FECHA|TORNEO|NIVEL|JUGADO|RESULTADO|BRUTO|DIFERENCIAL|HANDICAP|STABLEFORD|AJUSTADO|PENALIZ|LIMITAC|PROMEDIO|ASC|SLOPE|INDIVIDUALES|MEJOR|EXTRAORDINARIO|VALOR|PAR|JUEGO|CAMPO)\b/i;
-  const isNum  = i => /^-?\d+[,\.]?\d*$/.test(i.str);
-  const isRating = i => /\d+[\/\.]\d+[\/\.]\d+/.test(i.str);
-  const isLabel  = i => pdfLabel.test(i.str) || dateReg.test(i.str);
-  // Para torneo: solo rechazar etiquetas exactas (no parciales) para no filtrar "I Torneo XXX"
-  const isTorneoLabel = i => /^(FECHA|TORNEO|NIVEL|JUGADO|RESULTADO|BRUTO|DIFERENCIAL|HANDICAP|STABLEFORD|AJUSTADO|PENALIZ|LIMITAC|PROMEDIO|ASC|SLOPE|INDIVIDUALES|MEJOR|EXTRAORDINARIO|VALOR|PAR|JUEGO|CAMPO|MANUAL|TOPE)$/i.test(i.str) || dateReg.test(i.str);
-
-  // Paso 1: rondas por fecha primaria (solo x entre 55 y 80)
-  // Además requiere número de fila (entero 1-20) en x≈48 — identifica filas reales de la tabla
-  const rounds = [], roundFilaIdx = [];
-  for (let fi = 0; fi < filas.length; fi++) {
-    const fila = filas[fi];
-    const pd = fila.items.find(i => dateReg.test(i.str) && i.x >= 55 && i.x <= 80);
-    if (!pd) continue;
-    const rowNum = fila.items.find(i => /^\d{1,2}$/.test(i.str) && i.x >= 40 && i.x <= 56);
-    if (!rowNum || parseInt(rowNum.str) < 1 || parseInt(rowNum.str) > 20) continue;
-
-    const torneoItem = fila.items.find(i => i.x >= 80  && i.x <= 140 && !isTorneoLabel(i) && !isNum(i) && !isRating(i) && i.str.length > 1);
-    const campoItem  = fila.items.find(i => i.x >= 355 && i.x <= 425 && !isLabel(i) && !isNum(i) && !isRating(i) && i.str.length > 1);
-    const hcpItems   = fila.items.filter(i => i.x >= 720 && i.x <= 755 && /^\d+$/.test(i.str));
-    const stbItems   = fila.items.filter(i => i.x >= 755 && i.x <= 785 && /^\d+$/.test(i.str));
-    const penItems = fila.items.filter(i => i.x >= 630 && i.x <= 643 && /^-?\d+([,.]\d+)?$/.test(i.str) && !isRating(i));
-
-    rounds.push({
-      fecha:  pd.str,
-      torneo: torneoItem?.str ?? '',
-      campo:  campoItem?.str  ?? '',
-      hcp:    hcpItems.length ? parseInt(hcpItems[hcpItems.length - 1].str) : 0,
-      stb:    stbItems.length ? parseInt(stbItems[stbItems.length - 1].str) : 0,
-      pen:    penItems.length ? parseFloat(penItems[penItems.length - 1].str.replace(',', '.')) : 0,
-      dif: null, star: false
-    });
-    roundFilaIdx.push(fi);
+  // Paso 2: diferencial real (columna DIFERENCIAL, no "Nivel Jugado") por FECHA --
+  // emparejar por fecha en vez de por posicion de fila es lo que evita el problema de
+  // alineado entre paginas.
+  const difPorFecha = {};
+  const penPorFecha = {};
+  if (pgDif != null) {
+    const filas = agruparFilas(porPagina[pgDif]);
+    for (const fila of filas) {
+      const fechaIt = fila.items.find(i => dateReg.test(i.str));
+      if (!fechaIt) continue;
+      const difItems = fila.items.filter(i => i.x >= 695 && i.x <= 730 && /^-?\d+[,.]\d+$/.test(i.str));
+      if (difItems.length) difPorFecha[fechaIt.str] = parseFloat(difItems[difItems.length - 1].str.replace(',', '.'));
+      // Columna PENALIZACIÓN (entre MANUAL y DIFERENCIAL) -- solo para mostrar el
+      // ajuste en la ficha, el diferencial ya viene ajustado desde difPorFecha arriba.
+      const penItems = fila.items.filter(i => i.x >= 615 && i.x <= 690 && /^-?\d+[,.]\d+$/.test(i.str));
+      if (penItems.length) penPorFecha[fechaIt.str] = parseFloat(penItems[penItems.length - 1].str.replace(',', '.'));
+    }
   }
 
-  // Paso 2: diferencial de ronda_i = decimal en x=[400,430] de la fila de ronda_{i+1}
-  for (let ri = 0; ri < rounds.length; ri++) {
-    const lookFi = roundFilaIdx[ri] + 1;
-    if (lookFi < filas.length) {
-      for (const it of filas[lookFi].items) {
-        if (it.x < 400 || it.x > 430 || !/^-?\d+[,.]\d+$/.test(it.str) || isRating(it)) continue;
-        const v = parseFloat(it.str.replace(',', '.'));
-        if (v >= -10 && v <= 54) { rounds[ri].dif = v; break; }
-      }
+  // Paso 3: mejores 8 diferenciales (para el marcador ★) -- por fecha, esa página solo
+  // lista esas 8 rondas (no todas las 20), en otro orden.
+  const fechasMejores = new Set();
+  if (pgMejores != null) {
+    const filas = agruparFilas(porPagina[pgMejores]);
+    for (const fila of filas) {
+      const fechaIt = fila.items.find(i => dateReg.test(i.str));
+      if (fechaIt) fechasMejores.add(fechaIt.str);
     }
-    if (rounds[ri].dif === null) {
-      for (const it of filas[roundFilaIdx[ri]].items) {
-        if (!/^-?\d+[,.]\d+$/.test(it.str) || isRating(it)) continue;
-        const v = parseFloat(it.str.replace(',', '.'));
-        if (v >= -10 && v <= 54) { rounds[ri].dif = v; break; }
-      }
-    }
-    if (rounds[ri].dif !== null && rounds[ri].pen !== 0) {
-      rounds[ri].dif = parseFloat((rounds[ri].dif + rounds[ri].pen).toFixed(1));
-    }
+  }
+
+  for (const r of rounds) {
+    if (difPorFecha[r.fecha] !== undefined) r.dif = difPorFecha[r.fecha];
+    if (penPorFecha[r.fecha] !== undefined) r.pen = penPorFecha[r.fecha];
+    r.star = fechasMejores.has(r.fecha);
   }
 
   const unique = rounds.filter(r => r.dif !== null);
-  const pendientes = [...mejoresDifs];
-  for (const r of unique) {
-    const idx = pendientes.findIndex(d => Math.abs(d - r.dif) < 0.05);
-    if (idx >= 0) { r.star = true; pendientes.splice(idx, 1); }
-  }
-
   return { hcpAct, pdfFecha: unique[0]?.fecha ?? null, rondas: unique.slice(0, 20) };
 }
 
@@ -705,13 +725,9 @@ async function actualizarActividad() {
     if (!buf) { await new Promise(r => setTimeout(r, 2000)); buf = await tryProxies(); }
     if (!buf) throw new Error(`Sin datos en RFEG para ${jugador.licencia} — probá cargar el PDF manualmente.`);
     const items = await extraerItemsPDF(buf);
-    const filas = agruparFilas(items);
-    const datos = parsearRFEG(filas);
+    const datos = parsearRFEG(items);
     console.group('RFEG · ' + jugador.nombre);
-    console.log('Items PDF:', items.length, '| Filas agrupadas:', filas.length);
-    const filasConFecha = filas.filter(f => /\d{2}\/\d{2}\/\d{4}/.test(f.text));
-    console.log('Filas con fecha:', filasConFecha.length);
-    filasConFecha.slice(0, 5).forEach((f,i) => console.log(' fila'+i+' y='+f.y+':', f.items.map(x=>x.str+'@'+x.x).join(' | ')));
+    console.log('Items PDF:', items.length, '| Páginas:', Math.max(...items.map(i => i.page)));
     console.log('Rondas encontradas:', datos.rondas.length);
     datos.rondas.forEach(r => console.log(' ', r.fecha, r.torneo, '/', r.campo, 'hcp:'+r.hcp, 'stb:'+r.stb, 'dif:'+r.dif));
     console.groupEnd();
@@ -871,8 +887,7 @@ async function cargarPDFManual(event) {
     await cargarPDFJS();
     const buf = await file.arrayBuffer();
     const items = await extraerItemsPDF(buf);
-    const filas = agruparFilas(items);
-    const datos = parsearRFEG(filas);
+    const datos = parsearRFEG(items);
     if (datos.rondas.length > 0) {
       jugador.rondas   = datos.rondas;
       jugador.hcpAct   = datos.hcpAct   ?? jugador.hcpAct;
@@ -987,67 +1002,34 @@ async function cargarPDFManual(event) {
     }
 
     async function buscarEnRFEG(licencia) {
-        const rfegUrl = `https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx?HLic=${encodeURIComponent(licencia)}`;
-        const proxies = [
-            url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
-            url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-            url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-            url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-            url => `https://thingproxy.freeboard.io/fetch/${url}`,
-        ];
-
-        let html = '';
-        for (const proxy of proxies) {
-            try {
-                const res = await fetchTimeout(proxy(rfegUrl), 12000);
-                if (!res.ok) continue;
-                const text = await res.text();
-                try { html = JSON.parse(text).contents || ''; } catch { html = text; }
-                if (html.length > 500) break;
-            } catch { continue; }
-            html = '';
+        // API oficial de la RFEG (buscador de la web "Consulta tu Hándicap") -- JSON
+        // directo, sin necesidad de proxy CORS: el servidor responde
+        // Access-Control-Allow-Origin reflejando cualquier origen. Reemplaza al scraping
+        // de ServicioHandicap.aspx vía proxies públicos (corsproxy.io/allorigins/
+        // thingproxy), que era el punto más frágil de esta función.
+        const url = `https://rfegolf.es/wp-json/handicap-search/v1/search?q=${encodeURIComponent(licencia)}`;
+        let json;
+        try {
+            const res = await fetchTimeout(url, 10000);
+            if (!res.ok) throw new Error('bad status');
+            json = await res.json();
+        } catch {
+            throw new Error('No se pudo conectar con la RFEG.');
         }
 
-        if (!html) throw new Error('No se pudo conectar con la RFEG.');
+        const hits = json?.data?.hits || [];
+        const licUp = licencia.toUpperCase();
+        const hit = hits.find(h => (h.document?.guid_licence || '').toUpperCase() === licUp) || hits[0];
+        const doc = hit?.document;
+        const hcpAct = doc ? parseFloat(String(doc.handicap).replace(',', '.')) : NaN;
+        if (!doc || isNaN(hcpAct)) throw new Error(`No se encontró "${licencia}" en la RFEG.`);
 
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        const tds = Array.from(doc.querySelectorAll('td'));
-        console.log(`[RFEG ${licencia}] celdas:`, tds.map(td => td.textContent.trim()).filter(t => t));
+        const nombre = doc.full_name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+        let fechaMod = '';
+        const fm = (doc.date_hdc_updated_at || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (fm) fechaMod = `${fm[3]}/${fm[2]}/${fm[1]}`;
 
-        const validoTd = tds.find(td => /^v[áa]lid[oa]$/i.test(td.textContent.trim()));
-        if (validoTd) {
-            const fila = validoTd.closest('tr');
-            if (fila) {
-                const celdas = Array.from(fila.querySelectorAll('td')).map(td => td.textContent.trim());
-                console.log(`[RFEG ${licencia}] fila válido:`, celdas);
-                const iValido = celdas.findIndex(c => /^v[áa]lid[oa]$/i.test(c));
-                for (const offset of [3, 2, 4]) {
-                    if (iValido < offset) continue;
-                    const nombre = celdas[iValido - offset].toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-                    const hcpAct = parseFloat(celdas[iValido - 1].replace(',', '.'));
-                    const fechaMod = celdas[iValido + 1] || '';
-                    if (nombre.length > 3 && !isNaN(hcpAct)) return { nombre, hcpAct, fechaMod };
-                }
-            }
-        }
-
-        const texto = doc.body ? doc.body.innerText || doc.body.textContent : html;
-        const licNum = licencia.replace(/\D/g, '');
-        const mLic = texto.match(new RegExp(`([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ, ]{4,})\\s+${licNum}\\D*(\\d+[,.]\\d+)`));
-        if (mLic) {
-            const nombre = mLic[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-            const hcpAct = parseFloat(mLic[2].replace(',', '.'));
-            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
-        }
-
-        const m = texto.match(/([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ ]{4,})\s+[\w-]+\s+([\d,]+)\s+V[áa]lid/i);
-        if (m) {
-            const nombre = m[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-            const hcpAct = parseFloat(m[2].replace(',', '.'));
-            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
-        }
-
-        throw new Error(`No se encontró "${licencia}" en la RFEG.`);
+        return { nombre, hcpAct, fechaMod };
     }
 
     async function buscarEnRFEGConReintentos(licencia, maxReintentos = 5, onIntento = null) {
@@ -1140,8 +1122,7 @@ async function cargarPDFManual(event) {
                         }
                         if (buf) {
                             const items = await extraerItemsPDF(buf);
-                            const filas = agruparFilas(items);
-                            const datos = parsearRFEG(filas);
+                            const datos = parsearRFEG(items);
                             if (datos.rondas.length > 0) {
                                 const jAct = JUGADORES_ACT.find(ja => ja.licencia.toUpperCase() === j.licencia.toUpperCase());
                                 if (jAct) {

@@ -388,11 +388,7 @@
         <h2>🏆 Clasificación Stableford</h2>
         <div style="display:flex;gap:8px;">
             <button class="btn-update" id="btn-update" onclick="actualizarTodos()" fdprocessedid="7yhue4">↻ Actualizar RFEG</button>
-            <button class="btn-export" onclick="exportarExcel()" fdprocessedid="f9ra8e">⬇ Exportar Excel</button>
             <button class="btn-export" onclick="guardarJSON()" title="Guardar copia de seguridad" fdprocessedid="oljau9">💾 Guardar</button>
-            <label class="btn-export" style="cursor:pointer;margin:0" title="Cargar copia de seguridad">
-                📂 Cargar<input type="file" accept=".json" onchange="cargarJSON(event)" style="display:none">
-            </label>
         </div>
     </div>
     <table>
@@ -574,6 +570,7 @@ function renderScorecard() {
     + '<td colspan="11" style="' + tdSlope + 'color:#64748b;font-style:italic;font-size:0.7rem;">HCP juego = round(HI × Slope/113 + (CR − Par))</td>'
     + '</tr>';
 
+  const bonos = calcClinesBonus(todos);
   let rows = '';
   jugadores.forEach(function(j) {
     const jIdx = todos.indexOf(j);
@@ -593,6 +590,7 @@ function renderScorecard() {
     const clExtra  = parseClines(j.clinesExtra);
     const clBirdie = parseClines(j.clinesBirdie);
     const clExComb = clExtra.map(function(v, i){ return v + clBirdie[i]; });
+    clExComb[17] += bonos[jIdx];
     const outCH  = clHoyo.slice(0,9).reduce(function(a,v){return a+v;},0);
     const inCH   = clHoyo.slice(9).reduce(function(a,v){return a+v;},0);
     const outCE  = clExComb.slice(0,9).reduce(function(a,v){return a+v;},0);
@@ -607,6 +605,7 @@ function renderScorecard() {
     rows += '<td style="border:1px solid #d1fae5;background:#f0fdf4;"></td>';
     rows += '<td data-tot="' + jIdx + '" rowspan="5" style="text-align:center;border:1px solid #d1fae5;background:#ecfdf5;padding:4px 6px;font-weight:700;vertical-align:middle;white-space:nowrap;">'
       + (hasScore ? '<div style="font-size:1rem;color:#1e293b;">' + (outG+inG) + '</div><div style="font-size:0.85rem;color:#166534;">' + (outP+inP) + ' pts</div>' : '<span style="color:#94a3b8;font-size:0.8rem;">—</span>')
+      + '<div style="font-size:0.82rem;color:#92400e;margin-top:3px;">' + (outCH+inCH+outCE+inCE) + ' 🪙</div>'
       + '</td></tr>';
 
     rows += '<tr style="background:' + bg + ';">'
@@ -671,6 +670,26 @@ function editarGolpe(td) {
   });
 }
 
+function recalcularClinesBirdie(jugadores) {
+  const par = _courseConfig.par;
+  jugadores.forEach(function(j) { j.clinesBirdie = Array(18).fill(0); });
+  jugadores.forEach(function(j, jIdx) {
+    const golpes = parseGolpes(j.golpes);
+    golpes.forEach(function(g, h) {
+      if (g === null || g <= 0) return;
+      const p = par[h];
+      var eff = 0;
+      if (g <= p - 2) eff = -5;
+      else if (g === p - 1) eff = -1;
+      if (eff === 0) return;
+      jugadores[jIdx].clinesBirdie[h] += eff;
+      jugadores.forEach(function(_, k) {
+        if (k !== jIdx) jugadores[k].clinesBirdie[h] -= eff;
+      });
+    });
+  });
+}
+
 function saveScore(cell) {
   const jIdx = parseInt(cell.dataset.jidx);
   const hoyo = parseInt(cell.dataset.hoyo);
@@ -678,28 +697,11 @@ function saveScore(cell) {
   const jugadores = cargarDatos();
   if (!jugadores[jIdx]) return;
 
-  const par = _courseConfig.par[hoyo];
-  const prevGolpe = parseGolpes(jugadores[jIdx].golpes)[hoyo];
-  const newGolpe  = (!isNaN(val) && val > 0) ? val : null;
-
-  // Delta de efecto birdie: -1 para el jugador, +1 para el resto (o al revés al deshacer)
-  const prevEfecto = (prevGolpe !== null && prevGolpe < par) ? -1 : 0;
-  const newEfecto  = (newGolpe  !== null && newGolpe  < par) ? -1 : 0;
-  const delta = newEfecto - prevEfecto;  // puede ser -1, 0 o +1
-
-  if (delta !== 0) {
-    jugadores.forEach(function(j, k) {
-      j.clinesBirdie = parseClines(j.clinesBirdie);
-      if (k === jIdx) {
-        j.clinesBirdie[hoyo] += delta;
-      } else {
-        j.clinesBirdie[hoyo] -= delta;
-      }
-    });
-  }
-
   jugadores[jIdx].golpes = parseGolpes(jugadores[jIdx].golpes);
-  jugadores[jIdx].golpes[hoyo] = newGolpe;
+  jugadores[jIdx].golpes[hoyo] = (!isNaN(val) && val > 0) ? val : null;
+
+  recalcularClinesBirdie(jugadores);
+
   guardarDatos(jugadores);
   renderScorecard();
 }
@@ -923,69 +925,36 @@ function resetClinesExtra() {
     }
 
     async function buscarEnRFEG(licencia) {
-        const rfegUrl = `https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx?HLic=${encodeURIComponent(licencia)}`;
-        const proxies = [
-            url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
-            url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-            url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-            url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-            url => `https://thingproxy.freeboard.io/fetch/${url}`,
-        ];
-
-        let html = '';
-        for (const proxy of proxies) {
-            try {
-                const res = await fetchTimeout(proxy(rfegUrl), 12000);
-                if (!res.ok) continue;
-                const text = await res.text();
-                try { html = JSON.parse(text).contents || ''; } catch { html = text; }
-                if (html.length > 500) break;
-            } catch { continue; }
-            html = '';
+        // API oficial de la RFEG (buscador de la web "Consulta tu Hándicap") -- JSON
+        // directo, sin necesidad de proxy CORS: el servidor responde
+        // Access-Control-Allow-Origin reflejando cualquier origen. Reemplaza al scraping
+        // de ServicioHandicap.aspx vía proxies públicos (corsproxy.io/allorigins/
+        // thingproxy), que era el punto más frágil de esta función. enum_gender: 1=hombre,
+        // 2=mujer (verificado contra ejemplos reales de la propia API).
+        const url = `https://rfegolf.es/wp-json/handicap-search/v1/search?q=${encodeURIComponent(licencia)}`;
+        let json;
+        try {
+            const res = await fetchTimeout(url, 10000);
+            if (!res.ok) throw new Error('bad status');
+            json = await res.json();
+        } catch {
+            throw new Error('No se pudo conectar con la RFEG.');
         }
 
-        if (!html) throw new Error('No se pudo conectar con la RFEG.');
+        const hits = json?.data?.hits || [];
+        const licUp = licencia.toUpperCase();
+        const hit = hits.find(h => (h.document?.guid_licence || '').toUpperCase() === licUp) || hits[0];
+        const doc = hit?.document;
+        const hcpAct = doc ? parseFloat(String(doc.handicap).replace(',', '.')) : NaN;
+        if (!doc || isNaN(hcpAct)) throw new Error(`No se encontró "${licencia}" en la RFEG.`);
 
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        const tds = Array.from(doc.querySelectorAll('td'));
-        console.log(`[RFEG ${licencia}] celdas:`, tds.map(td => td.textContent.trim()).filter(t => t));
+        const nombre = doc.full_name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+        const genero = doc.enum_gender === 2 ? 'M' : 'H';
+        let fechaMod = '';
+        const fm = (doc.date_hdc_updated_at || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (fm) fechaMod = `${fm[3]}/${fm[2]}/${fm[1]}`;
 
-        const validoTd = tds.find(td => /^v[áa]lid[oa]$/i.test(td.textContent.trim()));
-        if (validoTd) {
-            const validoTxt = validoTd.textContent.trim().toLowerCase();
-            const genero = /válida|valida/i.test(validoTxt) ? 'M' : 'H';
-            const fila = validoTd.closest('tr');
-            if (fila) {
-                const celdas = Array.from(fila.querySelectorAll('td')).map(td => td.textContent.trim());
-                console.log(`[RFEG ${licencia}] fila válido:`, celdas);
-                const iValido = celdas.findIndex(c => /^v[áa]lid[oa]$/i.test(c));
-                for (const offset of [3, 2, 4]) {
-                    if (iValido < offset) continue;
-                    const nombre = celdas[iValido - offset].toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-                    const hcpAct = parseFloat(celdas[iValido - 1].replace(',', '.'));
-                    const fechaMod = celdas[iValido + 1] || '';
-                    if (nombre.length > 3 && !isNaN(hcpAct)) return { nombre, hcpAct, fechaMod, genero };
-                }
-            }
-        }
-
-        const texto = doc.body ? doc.body.innerText || doc.body.textContent : html;
-        const licNum = licencia.replace(/\D/g, '');
-        const mLic = texto.match(new RegExp(`([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ, ]{4,})\\s+${licNum}\\D*(\\d+[,.]\\d+)`));
-        if (mLic) {
-            const nombre = mLic[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-            const hcpAct = parseFloat(mLic[2].replace(',', '.'));
-            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
-        }
-
-        const m = texto.match(/([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ ]{4,})\s+[\w-]+\s+([\d,]+)\s+V[áa]lid/i);
-        if (m) {
-            const nombre = m[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-            const hcpAct = parseFloat(m[2].replace(',', '.'));
-            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
-        }
-
-        throw new Error(`No se encontró "${licencia}" en la RFEG.`);
+        return { nombre, hcpAct, fechaMod, genero };
     }
 
     async function buscarEnRFEGConReintentos(licencia, maxReintentos = 5, onIntento = null) {
@@ -1156,6 +1125,28 @@ function resetClinesExtra() {
         renderTabla();
     }
 
+    function calcClinesBonus(jugadores) {
+        const par = _courseConfig.par;
+        const si  = _courseConfig.si;
+        const bonos = jugadores.map(function() { return 0; });
+        jugadores.forEach(function(j, idx) {
+            const golpes = parseGolpes(j.golpes);
+            if (!golpes.every(function(g) { return g !== null; })) return;
+            const ch = calcCourseHcp(j.hcpAct || 0, j.genero || 'H');
+            const strokes = calcHcpStrokes(ch, si);
+            const totalPts = golpes.reduce(function(acc, g, i) {
+                const p = calcStableford(g, par[i], strokes[i]);
+                return acc + (p !== null ? p : 0);
+            }, 0);
+            if (totalPts < 30) bonos[idx] += 2;
+            if (totalPts >= 40) {
+                bonos[idx] -= 2;
+                bonos.forEach(function(_, k) { if (k !== idx) bonos[k] += 2; });
+            }
+        });
+        return bonos;
+    }
+
     function renderTabla() {
         const jugadores = cargarDatos();
 
@@ -1168,6 +1159,7 @@ function resetClinesExtra() {
         // Calcular puntos Stableford totales de cada jugador y ordenar de mayor a menor
         const par = _courseConfig.par;
         const si  = _courseConfig.si;
+        const bonos = calcClinesBonus(jugadores);
         const conPuntos = jugadores.map((j, originalIdx) => {
             const ch = calcCourseHcp(j.hcpAct || 0, j.genero || 'H');
             const strokes = calcHcpStrokes(ch, si);
@@ -1180,7 +1172,7 @@ function resetClinesExtra() {
             const clHoyo   = parseClines(j.clinesHoyo);
             const clExtra  = parseClines(j.clinesExtra);
             const clBirdie = parseClines(j.clinesBirdie);
-            const clinesTotal = clHoyo.reduce(function(a,v){return a+v;},0) + clExtra.reduce(function(a,v){return a+v;},0) + clBirdie.reduce(function(a,v){return a+v;},0);
+            const clinesTotal = clHoyo.reduce(function(a,v){return a+v;},0) + clExtra.reduce(function(a,v){return a+v;},0) + clBirdie.reduce(function(a,v){return a+v;},0) + bonos[originalIdx];
             return { ...j, originalIdx, totalPts, hcpJuego, clinesTotal };
         });
 
@@ -1207,7 +1199,7 @@ function resetClinesExtra() {
                 <td style="text-align:center;font-weight:700;color:#14532d;">${j.hcpJuego}</td>
                 <td style="text-align:center;font-weight:700;color:#92400e;">${j.clinesTotal}</td>
                 <td class="hcp hcp-editable" title="Clic para editar" onclick="editarCampo(this,${j.originalIdx},'partida')">${escHtml(j.partida||'—')}</td>
-                <td style="${ptsStyle}">${j.totalPts > 0 ? j.totalPts : '—'}</td>
+                <td style="${ptsStyle}">${j.totalPts > 0 ? j.totalPts : '—'}<br><span style="font-size:0.78rem;font-weight:700;color:#92400e;">${j.clinesTotal} clines</span></td>
                 <td><button class="btn-del" onclick="eliminarJugador(${j.originalIdx})" title="Eliminar">✕</button></td>
             </tr>`;
         }).join('');

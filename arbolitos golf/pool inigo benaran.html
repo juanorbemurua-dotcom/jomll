@@ -782,69 +782,36 @@ function resetScorecard() {
     }
 
     async function buscarEnRFEG(licencia) {
-        const rfegUrl = `https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx?HLic=${encodeURIComponent(licencia)}`;
-        const proxies = [
-            url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
-            url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-            url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-            url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-            url => `https://thingproxy.freeboard.io/fetch/${url}`,
-        ];
-
-        let html = '';
-        for (const proxy of proxies) {
-            try {
-                const res = await fetchTimeout(proxy(rfegUrl), 12000);
-                if (!res.ok) continue;
-                const text = await res.text();
-                try { html = JSON.parse(text).contents || ''; } catch { html = text; }
-                if (html.length > 500) break;
-            } catch { continue; }
-            html = '';
+        // API oficial de la RFEG (buscador de la web "Consulta tu Hándicap") -- JSON
+        // directo, sin necesidad de proxy CORS: el servidor responde
+        // Access-Control-Allow-Origin reflejando cualquier origen. Reemplaza al scraping
+        // de ServicioHandicap.aspx vía proxies públicos (corsproxy.io/allorigins/
+        // thingproxy), que era el punto más frágil de esta función. enum_gender: 1=hombre,
+        // 2=mujer (verificado contra ejemplos reales de la propia API).
+        const url = `https://rfegolf.es/wp-json/handicap-search/v1/search?q=${encodeURIComponent(licencia)}`;
+        let json;
+        try {
+            const res = await fetchTimeout(url, 10000);
+            if (!res.ok) throw new Error('bad status');
+            json = await res.json();
+        } catch {
+            throw new Error('No se pudo conectar con la RFEG.');
         }
 
-        if (!html) throw new Error('No se pudo conectar con la RFEG.');
+        const hits = json?.data?.hits || [];
+        const licUp = licencia.toUpperCase();
+        const hit = hits.find(h => (h.document?.guid_licence || '').toUpperCase() === licUp) || hits[0];
+        const doc = hit?.document;
+        const hcpAct = doc ? parseFloat(String(doc.handicap).replace(',', '.')) : NaN;
+        if (!doc || isNaN(hcpAct)) throw new Error(`No se encontró "${licencia}" en la RFEG.`);
 
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        const tds = Array.from(doc.querySelectorAll('td'));
-        console.log(`[RFEG ${licencia}] celdas:`, tds.map(td => td.textContent.trim()).filter(t => t));
+        const nombre = doc.full_name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+        const genero = doc.enum_gender === 2 ? 'M' : 'H';
+        let fechaMod = '';
+        const fm = (doc.date_hdc_updated_at || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (fm) fechaMod = `${fm[3]}/${fm[2]}/${fm[1]}`;
 
-        const validoTd = tds.find(td => /^v[áa]lid[oa]$/i.test(td.textContent.trim()));
-        if (validoTd) {
-            const validoTxt = validoTd.textContent.trim().toLowerCase();
-            const genero = /válida|valida/i.test(validoTxt) ? 'M' : 'H';
-            const fila = validoTd.closest('tr');
-            if (fila) {
-                const celdas = Array.from(fila.querySelectorAll('td')).map(td => td.textContent.trim());
-                console.log(`[RFEG ${licencia}] fila válido:`, celdas);
-                const iValido = celdas.findIndex(c => /^v[áa]lid[oa]$/i.test(c));
-                for (const offset of [3, 2, 4]) {
-                    if (iValido < offset) continue;
-                    const nombre = celdas[iValido - offset].toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-                    const hcpAct = parseFloat(celdas[iValido - 1].replace(',', '.'));
-                    const fechaMod = celdas[iValido + 1] || '';
-                    if (nombre.length > 3 && !isNaN(hcpAct)) return { nombre, hcpAct, fechaMod, genero };
-                }
-            }
-        }
-
-        const texto = doc.body ? doc.body.innerText || doc.body.textContent : html;
-        const licNum = licencia.replace(/\D/g, '');
-        const mLic = texto.match(new RegExp(`([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ, ]{4,})\\s+${licNum}\\D*(\\d+[,.]\\d+)`));
-        if (mLic) {
-            const nombre = mLic[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-            const hcpAct = parseFloat(mLic[2].replace(',', '.'));
-            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
-        }
-
-        const m = texto.match(/([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ ]{4,})\s+[\w-]+\s+([\d,]+)\s+V[áa]lid/i);
-        if (m) {
-            const nombre = m[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-            const hcpAct = parseFloat(m[2].replace(',', '.'));
-            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
-        }
-
-        throw new Error(`No se encontró "${licencia}" en la RFEG.`);
+        return { nombre, hcpAct, fechaMod, genero };
     }
 
     async function buscarEnRFEGConReintentos(licencia, maxReintentos = 5, onIntento = null) {

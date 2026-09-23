@@ -1,7 +1,7 @@
-﻿<html lang="es"><head>
+<html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>arbolito 2026</title>
+    <title>arbolito2026 viernes clink</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -361,7 +361,7 @@
     <p id="titulo-subtitulo" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">Seguimiento de Handicap · Temporada 2026</p>
 </header>
 
-<p class="fecha-hoy" id="fechaHoy">Fecha actual: miércoles, 10 de junio de 2026</p>
+<p class="fecha-hoy" id="fechaHoy">Fecha actual: domingo, 2 de agosto de 2026</p>
 
 <!-- Formulario -->
 <div class="form-card">
@@ -369,18 +369,18 @@
     <div class="form-grid">
         <div class="form-group">
             <label>Nº Licencia</label>
-            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()" fdprocessedid="2mkoqh">
+            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()">
         </div>
         <div class="form-group">
             <label>HCP 01/01/2026</label>
-            <input type="number" id="inp-hcp-ini" placeholder="Ej. 18.4" step="0.1" fdprocessedid="a1ij58">
+            <input type="number" id="inp-hcp-ini" placeholder="Ej. 18.4" step="0.1">
         </div>
         <div class="form-group" style="display:none">
             <input type="text" id="inp-nombre">
             <input type="number" id="inp-hcp-act">
         </div>
         <div class="form-group" style="display:flex;gap:8px;align-items:flex-end;">
-            <button class="btn-add" id="btn-add" onclick="añadirJugador()" fdprocessedid="t8bq9">Añadir</button>
+            <button class="btn-add" id="btn-add" onclick="añadirJugador()">Añadir</button>
             <a id="enlace-rfeg" href="#" target="_blank" class="btn-rfeg" title="Consultar en RFEG">🔍 RFEG</a>
         </div>
     </div>
@@ -390,7 +390,7 @@
             <input type="text" id="inp-nombre-manual" placeholder="Ej. Juan García López" style="max-width:280px;">
         </div>
     </div>
-    <p id="msg-estado" style="margin-top: 10px; font-size: 0.82rem; color: rgb(22, 163, 74); min-height: 18px;">✓ 6 jugadores actualizados correctamente.</p>
+    <p id="msg-estado" style="margin-top: 10px; font-size: 0.82rem; color: rgb(239, 68, 68); min-height: 18px;">✓ 14 actualizados · ⚠ Sin datos: VB03031463</p>
 </div>
 
 <!-- Tabla -->
@@ -398,9 +398,9 @@
     <div class="tabla-header">
         <h2>🏆 Clasificación por Mejora de Handicap</h2>
         <div style="display:flex;gap:8px;">
-            <button class="btn-update" id="btn-update" onclick="actualizarTodos()" fdprocessedid="42anb5">↻ Actualizar RFEG</button>
-            <button class="btn-export" onclick="exportarExcel()" fdprocessedid="c3iao">⬇ Exportar Excel</button>
-            <button class="btn-export" onclick="guardarJSON()" title="Guardar copia de seguridad" fdprocessedid="u4odwb">💾 Guardar</button>
+            <button class="btn-update" id="btn-update" onclick="actualizarTodos()">↻ Actualizar RFEG</button>
+            <button class="btn-export" onclick="exportarExcel()">⬇ Exportar Excel</button>
+            <button class="btn-export" onclick="guardarJSON()" title="Guardar copia de seguridad">💾 Guardar</button>
             <label class="btn-export" style="cursor:pointer;margin:0" title="Cargar copia de seguridad">
                 📂 Cargar<input type="file" accept=".json" onchange="cargarJSON(event)" style="display:none">
             </label>
@@ -418,208 +418,174 @@
                 <th>% Incremento</th>
                 <th>Premios jugados año</th>
                 <th>Últ. Modificación</th>
-                <th>Apuesta</th>
-                <th>Propietario</th>
-                <th>Propietario 2</th>
                 <th></th>
             </tr>
         </thead>
         <tbody id="tabla-body"><tr class="top1">
                 <td><span class="medal">🥇</span></td>
-                <td class="nombre">Gonzalo Pardo Arin</td>
-                <td class="licencia">VB09020318</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 13)">-0.5</td>
-                <td class="hcp">-0.2</td>
-                <td><span class="incremento inc-mejor">0.3</span></td>
-                <td><span class="incremento inc-mejor">-60.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">06-06-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 13, 'apuesta')">330€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 13, 'propietario')">gonzalo</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 13, 'propietario2')">alejandro</td>
-                <td><button class="btn-del" onclick="eliminarJugador(13)" title="Eliminar" fdprocessedid="qyis7i">✕</button></td>
-            </tr><tr class="top6">
-                <td><span class="medal">🥈</span></td>
                 <td class="nombre">Luis AntuñAno Eguillor</td>
                 <td class="licencia">VB01027471</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 9)">3.6</td>
-                <td class="hcp">2.6</td>
-                <td><span class="incremento inc-mejor">-1.0</span></td>
-                <td><span class="incremento inc-mejor">-27.8%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">6</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">07-06-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 9, 'apuesta')">200€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 9, 'propietario')">lati</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 9, 'propietario2')">lati</td>
-                <td><button class="btn-del" onclick="eliminarJugador(9)" title="Eliminar" fdprocessedid="ynyasw">✕</button></td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 0)">3.6</td>
+                <td class="hcp">2.4</td>
+                <td><span class="incremento inc-mejor">-1.2</span></td>
+                <td><span class="incremento inc-mejor">-33.3%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">9</td>
+                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">02-08-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(0)" title="Eliminar">✕</button></td>
+            </tr><tr class="top6">
+                <td><span class="medal">🥈</span></td>
+                <td class="nombre">Alejo Cuadra Ibarguchi</td>
+                <td class="licencia">VB090445-P</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 9)">2.6</td>
+                <td class="hcp">2.2</td>
+                <td><span class="incremento inc-mejor">-0.4</span></td>
+                <td><span class="incremento inc-mejor">-15.4%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">26-07-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(9)" title="Eliminar">✕</button></td>
             </tr><tr class="top6">
                 <td><span class="medal">🥉</span></td>
                 <td class="nombre">Ramon Elosegui Bergareche</td>
                 <td class="licencia">VB01020079</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 1)">10.0</td>
-                <td class="hcp">8.7</td>
-                <td><span class="incremento inc-mejor">-1.3</span></td>
-                <td><span class="incremento inc-mejor">-13.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">4</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">07-06-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 1, 'apuesta')">190€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 1, 'propietario')">moncho</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 1, 'propietario2')">piti</td>
-                <td><button class="btn-del" onclick="eliminarJugador(1)" title="Eliminar" fdprocessedid="voz6x">✕</button></td>
+                <td class="hcp">9.2</td>
+                <td><span class="incremento inc-mejor">-0.8</span></td>
+                <td><span class="incremento inc-mejor">-8.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">02-08-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(1)" title="Eliminar">✕</button></td>
             </tr><tr class="topGreen">
                 <td><span class="pos">4</span></td>
-                <td class="nombre">Gorka  Montero Fernandez</td>
-                <td class="licencia">VB09400249</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 10)">11.0</td>
-                <td class="hcp">10.5</td>
-                <td><span class="incremento inc-mejor">-0.5</span></td>
-                <td><span class="incremento inc-mejor">-4.5%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">5</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">08-06-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 10, 'apuesta')">90€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 10, 'propietario')">gorka</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 10, 'propietario2')">piti</td>
-                <td><button class="btn-del" onclick="eliminarJugador(10)" title="Eliminar" fdprocessedid="3pkqx9">✕</button></td>
-            </tr><tr class="">
-                <td><span class="pos">5</span></td>
                 <td class="nombre">Victor San Gil Noain</td>
                 <td class="licencia">VB09320423</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 3)">5.1</td>
-                <td class="hcp">5.1</td>
-                <td><span class="incremento inc-igual">0.0</span></td>
-                <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">4</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">31-05-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 3, 'apuesta')">70€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 3, 'propietario')">victor</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 3, 'propietario2')">alejandro</td>
-                <td><button class="btn-del" onclick="eliminarJugador(3)" title="Eliminar" fdprocessedid="fpche">✕</button></td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 7)">5.1</td>
+                <td class="hcp">5.0</td>
+                <td><span class="incremento inc-mejor">-0.1</span></td>
+                <td><span class="incremento inc-mejor">-2.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">11</td>
+                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">02-08-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(7)" title="Eliminar">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">6</span></td>
-                <td class="nombre">Alejo Cuadra Ibarguchi</td>
-                <td class="licencia">VB090445-P</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 7)">2.6</td>
-                <td class="hcp">2.6</td>
-                <td><span class="incremento inc-igual">0.0</span></td>
-                <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">30-05-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 7, 'apuesta')">120€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 7, 'propietario')">alejo</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 7, 'propietario2')">alejo</td>
-                <td><button class="btn-del" onclick="eliminarJugador(7)" title="Eliminar" fdprocessedid="8by4lab">✕</button></td>
-            </tr><tr class="">
-                <td><span class="pos">7</span></td>
+                <td><span class="pos">5</span></td>
                 <td class="nombre">Juan Ignacio Orbe Murua</td>
                 <td class="licencia">VB01069771</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 12)">6.5</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 13)">6.5</td>
                 <td class="hcp">6.5</td>
                 <td><span class="incremento inc-igual">0.0</span></td>
                 <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">3</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">30-05-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 12, 'apuesta')">100€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 12, 'propietario')">juan</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 12, 'propietario2')">lati</td>
-                <td><button class="btn-del" onclick="eliminarJugador(12)" title="Eliminar" fdprocessedid="f08prf">✕</button></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">02-08-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(13)" title="Eliminar">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">8</span></td>
+                <td><span class="pos">6</span></td>
+                <td class="nombre">Laura BeñAran Orbe</td>
+                <td class="licencia">VB03419848</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 14)">0.0</td>
+                <td class="hcp">6.9</td>
+                <td><span class="incremento inc-igual">6.9</span></td>
+                <td><span class="incremento inc-igual">0.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">20-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(14)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">7</span></td>
                 <td class="nombre">Eugenio Rezola Murua</td>
                 <td class="licencia">VB01026531</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 8)">11.8</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 11)">11.8</td>
                 <td class="hcp">12.1</td>
                 <td><span class="incremento inc-peor">+0.3</span></td>
                 <td><span class="incremento inc-peor">+2.5%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">04-05-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 8, 'apuesta')">20€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 8, 'propietario')">eugenio</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 8, 'propietario2')">piti</td>
-                <td><button class="btn-del" onclick="eliminarJugador(8)" title="Eliminar" fdprocessedid="bw556s">✕</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(11)" title="Eliminar">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">9</span></td>
-                <td class="nombre">Jaime BeñAran Arocena</td>
-                <td class="licencia">VB09020398</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 0)">3.0</td>
-                <td class="hcp">3.1</td>
-                <td><span class="incremento inc-peor">+0.1</span></td>
-                <td><span class="incremento inc-peor">+3.3%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 0, 'apuesta')">140€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 0, 'propietario')">jaime</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 0, 'propietario2')">piti</td>
-                <td><button class="btn-del" onclick="eliminarJugador(0)" title="Eliminar" fdprocessedid="1ye84sj">✕</button></td>
-            </tr><tr class="">
-                <td><span class="pos">10</span></td>
-                <td class="nombre">Pablo Manuel Orbe Murua</td>
-                <td class="licencia">VB01069770</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 4)">14.3</td>
-                <td class="hcp">14.8</td>
-                <td><span class="incremento inc-peor">+0.5</span></td>
-                <td><span class="incremento inc-peor">+3.5%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">07-06-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 4, 'apuesta')">30€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 4, 'propietario')">pablo</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 4, 'propietario2')">gorka</td>
-                <td><button class="btn-del" onclick="eliminarJugador(4)" title="Eliminar" fdprocessedid="9tfq03">✕</button></td>
-            </tr><tr class="">
-                <td><span class="pos">11</span></td>
+                <td><span class="pos">8</span></td>
                 <td class="nombre">Alejandro Muro Aristizabal</td>
                 <td class="licencia">VB09245518</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 2)">16.4</td>
-                <td class="hcp">17.4</td>
-                <td><span class="incremento inc-peor">+1.0</span></td>
-                <td><span class="incremento inc-peor">+6.1%</span></td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 12)">16.4</td>
+                <td class="hcp">16.9</td>
+                <td><span class="incremento inc-peor">+0.5</span></td>
+                <td><span class="incremento inc-peor">+3.0%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">8</td>
-                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">09-06-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 2, 'apuesta')">100€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 2, 'propietario')">alejandro</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 2, 'propietario2')">victor</td>
-                <td><button class="btn-del" onclick="eliminarJugador(2)" title="Eliminar" fdprocessedid="sf8vco">✕</button></td>
+                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">02-08-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(12)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">9</span></td>
+                <td class="nombre">Gorka  Montero Fernandez</td>
+                <td class="licencia">VB09400249</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 2)">11.0</td>
+                <td class="hcp">11.4</td>
+                <td><span class="incremento inc-peor">+0.4</span></td>
+                <td><span class="incremento inc-peor">+3.6%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">14-07-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(2)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">10</span></td>
+                <td class="nombre">Fernando Aguirre FlañO</td>
+                <td class="licencia">VB09233692</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 10)">3.4</td>
+                <td class="hcp">3.6</td>
+                <td><span class="incremento inc-peor">+0.2</span></td>
+                <td><span class="incremento inc-peor">+5.9%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">9</td>
+                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">02-08-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(10)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">11</span></td>
+                <td class="nombre">Pablo Manuel Orbe Murua</td>
+                <td class="licencia">VB01069770</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 6)">14.3</td>
+                <td class="hcp">15.2</td>
+                <td><span class="incremento inc-peor">+0.9</span></td>
+                <td><span class="incremento inc-peor">+6.3%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">3</td>
+                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">02-08-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(6)" title="Eliminar">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">12</span></td>
+                <td class="nombre">Jaime BeñAran Arocena</td>
+                <td class="licencia">VB09020398</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 8)">3.0</td>
+                <td class="hcp">3.2</td>
+                <td><span class="incremento inc-peor">+0.2</span></td>
+                <td><span class="incremento inc-peor">+6.7%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">4</td>
+                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">02-08-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(8)" title="Eliminar">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">13</span></td>
                 <td class="nombre">Andres Murua Urruticoechea</td>
                 <td class="licencia">VB09127515</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 11)">14.6</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 4)">14.6</td>
                 <td class="hcp">15.6</td>
                 <td><span class="incremento inc-peor">+1.0</span></td>
                 <td><span class="incremento inc-peor">+6.8%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">24-05-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 11, 'apuesta')">30€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 11, 'propietario')">andres</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 11, 'propietario2')">piti</td>
-                <td><button class="btn-del" onclick="eliminarJugador(11)" title="Eliminar" fdprocessedid="j5h9ar">✕</button></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">20-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(4)" title="Eliminar">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">13</span></td>
+                <td><span class="pos">14</span></td>
                 <td class="nombre">Fernando Arocena Garcia Tapia</td>
                 <td class="licencia">VB03031463</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 5)">13.6</td>
                 <td class="hcp">14.6</td>
                 <td><span class="incremento inc-peor">+1.0</span></td>
                 <td><span class="incremento inc-peor">+7.4%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">31-05-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 5, 'apuesta')">50€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 5, 'propietario')">muli</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 5, 'propietario2')">jaime</td>
-                <td><button class="btn-del" onclick="eliminarJugador(5)" title="Eliminar" fdprocessedid="m4pc0d">✕</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(5)" title="Eliminar">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">14</span></td>
-                <td class="nombre">Fernando Aguirre FlañO</td>
-                <td class="licencia">VB09233692</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 6)">3.4</td>
-                <td class="hcp">4.0</td>
-                <td><span class="incremento inc-peor">+0.6</span></td>
-                <td><span class="incremento inc-peor">+17.6%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">3</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">06-06-2026</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 6, 'apuesta')">150€</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 6, 'propietario')">fernando</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, 6, 'propietario2')">jaime</td>
-                <td><button class="btn-del" onclick="eliminarJugador(6)" title="Eliminar" fdprocessedid="t53emv">✕</button></td>
+                <td><span class="pos">15</span></td>
+                <td class="nombre">Gonzalo Pardo Arin</td>
+                <td class="licencia">VB09020318</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 3)">-0.5</td>
+                <td class="hcp">0.7</td>
+                <td><span class="incremento inc-peor">+1.2</span></td>
+                <td><span class="incremento inc-peor">+240.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">28-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(3)" title="Eliminar">✕</button></td>
             </tr></tbody>
     </table>
 </div>
@@ -629,9 +595,9 @@
   <div style="background:#14532d;color:#fde68a;font-weight:700;font-size:1.05rem;padding:14px 20px;border-radius:10px 10px 0 0;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;">
     <span>⛳ Actividad — Últimas 20 rondas jugadas</span>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-      <select id="selectJugador" onchange="renderTablaActividad()" style="background:#166534;color:#fde68a;border:1px solid rgba(253,230,138,0.5);border-radius:6px;padding:5px 10px;font-weight:600;font-size:0.85rem;cursor:pointer;max-width:240px;" fdprocessedid="7ejcve"><option value="">— Seleccionar jugador —</option><option value="0">Juan Ignacio Orbe Murua</option><option value="1">Jaime BeñAran Arocena</option><option value="2">Ramon Elosegui Bergareche</option><option value="3">Alejandro Muro Aristizabal</option><option value="4">Victor San Gil Noain</option><option value="5">Pablo Manuel Orbe Murua</option><option value="6">Fernando Arocena Garcia Tapia</option><option value="7">Fernando Aguirre FlañO</option><option value="8">Alejo Cuadra Ibarguchi</option><option value="9">Eugenio Rezola Murua</option><option value="10">Luis AntuñAno Eguillor</option><option value="11">Gorka  Montero Fernandez</option><option value="12">Andres Murua Urruticoechea</option><option value="13">Gonzalo Pardo Arin</option></select>
-      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;" fdprocessedid="q0ptxo">🔄 Actualizar RFEG</button>
-      <button id="btnFichasPDF" onclick="exportarFichasPDF()" style="background: rgb(180, 83, 9); color: rgb(255, 255, 255); border: 1px solid transparent; border-radius: 6px; padding: 6px 14px; font-weight: 700; font-size: 0.88rem; cursor: pointer;" title="Hay cambios — regenerar fichas PDF" fdprocessedid="95hgs">📄 Fichas PDF ●</button>
+      <select id="selectJugador" onchange="renderTablaActividad()" style="background:#166534;color:#fde68a;border:1px solid rgba(253,230,138,0.5);border-radius:6px;padding:5px 10px;font-weight:600;font-size:0.85rem;cursor:pointer;max-width:240px;"><option value="">— Seleccionar jugador —</option><option value="0">Juan Ignacio Orbe Murua</option><option value="1">Luis AntuñAno Eguillor</option><option value="2">Ramon Elosegui Bergareche</option><option value="3">Gorka  Montero Fernandez</option><option value="4">Gonzalo Pardo Arin</option><option value="5">Andres Murua Urruticoechea</option><option value="6">Fernando Arocena Garcia Tapia</option><option value="7">Pablo Manuel Orbe Murua</option><option value="8">Victor San Gil Noain</option><option value="9">Jaime BeñAran Arocena</option><option value="10">Alejo Cuadra Ibarguchi</option><option value="11">Fernando Aguirre FlañO</option><option value="12">Eugenio Rezola Murua</option><option value="13">Alejandro Muro Aristizabal</option><option value="14">Laura BeñAran Orbe</option></select>
+      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;">🔄 Actualizar RFEG</button>
+      <button id="btnFichasPDF" onclick="exportarFichasPDF()" style="background: rgb(180, 83, 9); color: rgb(255, 255, 255); border: 1px solid transparent; border-radius: 6px; padding: 6px 14px; font-weight: 700; font-size: 0.88rem; cursor: pointer;" title="Hay cambios — regenerar fichas PDF">📄 Fichas PDF ●</button>
     </div>
   </div>
   <div id="actStatus" style="display: none; padding: 8px 16px; font-size: 0.82rem; background: rgb(240, 253, 244); border-left: 3px solid rgb(22, 101, 52); color: rgb(22, 102, 52);"></div>
@@ -849,8 +815,8 @@ function renderTablaActividad() {
       <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis${star?';background:#fff5f5':''}" title="${r.campo}">${r.campo}</td>
       <td class="act-hcp"${star?' style="background:#fff5f5"':''}>${r.hcp}</td>
       <td class="act-stb"${star?' style="background:#fff5f5"':''}>${r.stb}</td>
-      <td style="text-align:center${star?';background:#fff5f5':''}">${r.pen !== 0 ? `<span style="color:#b45309;font-weight:600">${r.pen > 0 ? '+' : ''}${r.pen.toFixed(1)}</span>` : '<span style="color:#94a3b8">0</span>'}</td>
-      <td style="text-align:center${star?';background:#fff5f5':''}">${star?`<span class="dif-star">★ ${r.dif.toFixed(1)}</span>`:`<span class="dif-norm">${r.dif.toFixed(1)}</span>`}</td>
+      <td style="text-align:center${star?';background:#fff5f5':''}">${(r.pen != null && r.pen !== 0) ? `<span style="color:#b45309;font-weight:600">${r.pen > 0 ? '+' : ''}${Number(r.pen).toFixed(1)}</span>` : '<span style="color:#94a3b8">0</span>'}</td>
+      <td style="text-align:center${star?';background:#fff5f5':''}">${r.dif != null ? (star?`<span class="dif-star">★ ${Number(r.dif).toFixed(1)}</span>`:`<span class="dif-norm">${Number(r.dif).toFixed(1)}</span>`) : '—'}</td>
     </tr>`;
   }).join('');
   container.innerHTML = styles + infoBar + `<table class="act-table">
@@ -902,7 +868,10 @@ async function extraerItemsPDF(arrayBuffer) {
     const cont  = await page.getTextContent();
     for (const it of cont.items) {
       if (!it.str.trim()) continue;
-      items.push({ str: it.str.trim(), x: Math.round(it.transform[4]), y: Math.round(vp.height - it.transform[5]) });
+      // 'page' es clave para parsearRFEG: el PDF de resumen RFEG tiene 7 paginas con
+      // tablas DISTINTAS (rondas, ajustes, diferenciales, mejores 8...) que NO se pueden
+      // mezclar por coordenada Y sola -- ver nota en parsearRFEG.
+      items.push({ str: it.str.trim(), x: Math.round(it.transform[4]), y: Math.round(vp.height - it.transform[5]), page: p });
     }
   }
   return items;
@@ -920,93 +889,110 @@ function agruparFilas(items, tol = 4) {
   return filas;
 }
 
-function parsearRFEG(filas) {
-  // HCP actual
+function parsearRFEG(items) {
+  // El PDF de resumen de handicap de la RFEG tiene 7 paginas, cada una una tabla
+  // DISTINTA del mismo calculo SMH (rondas / resultado bruto / nivel de juego / ajustes
+  // vacios / diferenciales+penalizacion / mejores 8 diferenciales / pasos finales).
+  // Version anterior (hasta 23/09/2026): mezclaba los items de TODAS las paginas en una
+  // sola lista y los agrupaba solo por coordenada Y, asumiendo que "la fila de la ronda
+  // N+1" siempre contenia el diferencial de la ronda N -- funcionaba por coincidencia de
+  // alineado vertical entre paginas, pero: (a) TORNEO/CAMPO se cortaban a la primera
+  // palabra si el nombre tenia mas de una (ej. "SAN SEBASTIAN" -> "SAN"), porque se
+  // tomaba un unico item por `.find()` en vez de juntar todos los de esa columna; (b) el
+  // rango x=[400,430] usado como "diferencial" en realidad cae en la columna "NIVEL
+  // JUGADO" de la pagina de ajustes, NO en la columna "DIFERENCIAL" real (x~700-720) --
+  // son iguales solo cuando el jugador no tiene ajustes/penalizaciones en esa ronda, asi
+  // que para rondas CON ajuste el numero mostrado podia ser el valor sin ajustar. Fix:
+  // identificar cada pagina por sus propios encabezados y leer cada columna de la pagina
+  // que corresponde, sin mezclar coordenadas Y entre paginas.
+  const dateReg = /^\d{2}\/\d{2}\/\d{4}$/;
+
+  const porPagina = {};
+  for (const it of items) { (porPagina[it.page] = porPagina[it.page] || []).push(it); }
+  const paginas = Object.keys(porPagina).map(Number);
+  const tieneExacto = (arr, s) => arr.some(it => it.str === s);
+  const tieneSub    = (arr, s) => arr.some(it => it.str.includes(s));
+
+  // Pagina de rondas: la que tiene las columnas VUELTA y MODALIDAD (fecha/torneo/campo/hcp/stb)
+  const pgRondas  = paginas.find(p => tieneExacto(porPagina[p], 'VUELTA') && tieneExacto(porPagina[p], 'MODALIDAD'));
+  // Pagina de diferenciales: tiene PENALIZACIÓN (o similar) Y la columna DIFERENCIAL
+  const pgDif     = paginas.find(p => tieneSub(porPagina[p], 'PENALIZACI') && tieneExacto(porPagina[p], 'DIFERENCIAL'));
+  // Pagina de "mejores 8": tiene DIFERENCIAL pero NO PENALIZACIÓN (tabla mas chica, solo 8 filas)
+  const pgMejores = paginas.find(p => tieneExacto(porPagina[p], 'DIFERENCIAL') && !tieneSub(porPagina[p], 'PENALIZACI'));
+
+  // HCP actual: se busca "NUEVO HÁNDICAP: X.X" en la última página (paso final del cálculo)
   let hcpAct = null;
-  const hcpFila = filas.find(f => /[Íi]ndice.*h[áa]ndic|WHS/i.test(f.text));
-  if (hcpFila) {
-    const m = hcpFila.text.match(/(\d+[,\.]\d+)/);
+  if (paginas.length) {
+    const ultima = porPagina[Math.max(...paginas)] || [];
+    const ordenada = [...ultima].sort((a, b) => a.y - b.y || a.x - b.x);
+    const texto = ordenada.map(it => it.str).join(' ');
+    const m = texto.match(/NUEVO\s*H.NDICAP:?\s*(\d+[,.]\d+)/i);
     if (m) hcpAct = parseFloat(m[1].replace(',', '.'));
   }
 
-  // Mejores 8 diferenciales (para star)
-  const mejIdx = filas.findIndex(f => /mejor.*dif|dif.*utiliz/i.test(f.text));
-  const mejoresDifs = [];
-  if (mejIdx >= 0) {
-    for (let i = mejIdx; i < Math.min(mejIdx + 15, filas.length) && mejoresDifs.length < 8; i++) {
-      filas[i].items.filter(it => /^-?\d+[,\.]\d+$/.test(it.str))
-                    .forEach(it => mejoresDifs.push(parseFloat(it.str.replace(',', '.'))));
+  // Paso 1: fecha/torneo/campo/hcp/stb -- desde la página de rondas únicamente
+  const rounds = [];
+  if (pgRondas != null) {
+    const filas = agruparFilas(porPagina[pgRondas]);
+    for (const fila of filas) {
+      const it = fila.items;
+      const fechaIt  = it.find(i => dateReg.test(i.str) && i.x >= 55 && i.x <= 80);
+      const rowNumIt = it.find(i => /^\d{1,2}$/.test(i.str) && i.x >= 40 && i.x <= 56);
+      if (!fechaIt || !rowNumIt) continue;
+
+      // Torneo/campo: se juntan TODOS los items dentro del rango de la columna (no solo
+      // el primero) para no cortar nombres de mas de una palabra.
+      const torneo = it.filter(i => i.x >= 95  && i.x <= 345).map(i => i.str).join(' ');
+      const campo  = it.filter(i => i.x >= 355 && i.x <= 520).map(i => i.str).join(' ');
+      const hcpItems = it.filter(i => i.x >= 720 && i.x <= 755 && /^\d+$/.test(i.str));
+      const stbItems = it.filter(i => i.x >= 755 && i.x <= 785 && /^\d+$/.test(i.str));
+
+      rounds.push({
+        fecha: fechaIt.str, torneo, campo,
+        hcp: hcpItems.length ? parseInt(hcpItems[hcpItems.length - 1].str) : 0,
+        stb: stbItems.length ? parseInt(stbItems[stbItems.length - 1].str) : 0,
+        dif: null, pen: 0, star: false
+      });
     }
   }
 
-  // Columnas fijas del PDF RFEG (verificadas con datos reales):
-  // x≈63: fecha primaria | x≈108: torneo | x≈371: campo | x≈731: hcp | x≈763: stb
-  // El diferencial de la ronda N aparece en x≈411 de la fila de la ronda N+1
-  const dateReg = /^(\d{2}\/\d{2}\/\d{4})$/;
-  const pdfLabel = /\b(FECHA|TORNEO|NIVEL|JUGADO|RESULTADO|BRUTO|DIFERENCIAL|HANDICAP|STABLEFORD|AJUSTADO|PENALIZ|LIMITAC|PROMEDIO|ASC|SLOPE|INDIVIDUALES|MEJOR|EXTRAORDINARIO|VALOR|PAR|JUEGO|CAMPO)\b/i;
-  const isNum  = i => /^-?\d+[,\.]?\d*$/.test(i.str);
-  const isRating = i => /\d+[\/\.]\d+[\/\.]\d+/.test(i.str);
-  const isLabel  = i => pdfLabel.test(i.str) || dateReg.test(i.str);
-  // Para torneo: solo rechazar etiquetas exactas (no parciales) para no filtrar "I Torneo XXX"
-  const isTorneoLabel = i => /^(FECHA|TORNEO|NIVEL|JUGADO|RESULTADO|BRUTO|DIFERENCIAL|HANDICAP|STABLEFORD|AJUSTADO|PENALIZ|LIMITAC|PROMEDIO|ASC|SLOPE|INDIVIDUALES|MEJOR|EXTRAORDINARIO|VALOR|PAR|JUEGO|CAMPO|MANUAL|TOPE)$/i.test(i.str) || dateReg.test(i.str);
-
-  // Paso 1: rondas por fecha primaria (solo x entre 55 y 80)
-  // Además requiere número de fila (entero 1-20) en x≈48 — identifica filas reales de la tabla
-  const rounds = [], roundFilaIdx = [];
-  for (let fi = 0; fi < filas.length; fi++) {
-    const fila = filas[fi];
-    const pd = fila.items.find(i => dateReg.test(i.str) && i.x >= 55 && i.x <= 80);
-    if (!pd) continue;
-    const rowNum = fila.items.find(i => /^\d{1,2}$/.test(i.str) && i.x >= 40 && i.x <= 56);
-    if (!rowNum || parseInt(rowNum.str) < 1 || parseInt(rowNum.str) > 20) continue;
-
-    const torneoItem = fila.items.find(i => i.x >= 80  && i.x <= 140 && !isTorneoLabel(i) && !isNum(i) && !isRating(i) && i.str.length > 1);
-    const campoItem  = fila.items.find(i => i.x >= 355 && i.x <= 425 && !isLabel(i) && !isNum(i) && !isRating(i) && i.str.length > 1);
-    const hcpItems   = fila.items.filter(i => i.x >= 720 && i.x <= 755 && /^\d+$/.test(i.str));
-    const stbItems   = fila.items.filter(i => i.x >= 755 && i.x <= 785 && /^\d+$/.test(i.str));
-    const penItems = fila.items.filter(i => i.x >= 630 && i.x <= 643 && /^-?\d+([,.]\d+)?$/.test(i.str) && !isRating(i));
-
-    rounds.push({
-      fecha:  pd.str,
-      torneo: torneoItem?.str ?? '',
-      campo:  campoItem?.str  ?? '',
-      hcp:    hcpItems.length ? parseInt(hcpItems[hcpItems.length - 1].str) : 0,
-      stb:    stbItems.length ? parseInt(stbItems[stbItems.length - 1].str) : 0,
-      pen:    penItems.length ? parseFloat(penItems[penItems.length - 1].str.replace(',', '.')) : 0,
-      dif: null, star: false
-    });
-    roundFilaIdx.push(fi);
+  // Paso 2: diferencial real (columna DIFERENCIAL, no "Nivel Jugado") por FECHA --
+  // emparejar por fecha en vez de por posicion de fila es lo que evita el problema de
+  // alineado entre paginas.
+  const difPorFecha = {};
+  const penPorFecha = {};
+  if (pgDif != null) {
+    const filas = agruparFilas(porPagina[pgDif]);
+    for (const fila of filas) {
+      const fechaIt = fila.items.find(i => dateReg.test(i.str));
+      if (!fechaIt) continue;
+      const difItems = fila.items.filter(i => i.x >= 695 && i.x <= 730 && /^-?\d+[,.]\d+$/.test(i.str));
+      if (difItems.length) difPorFecha[fechaIt.str] = parseFloat(difItems[difItems.length - 1].str.replace(',', '.'));
+      // Columna PENALIZACIÓN (entre MANUAL y DIFERENCIAL) -- solo para mostrar el
+      // ajuste en la ficha, el diferencial ya viene ajustado desde difPorFecha arriba.
+      const penItems = fila.items.filter(i => i.x >= 615 && i.x <= 690 && /^-?\d+[,.]\d+$/.test(i.str));
+      if (penItems.length) penPorFecha[fechaIt.str] = parseFloat(penItems[penItems.length - 1].str.replace(',', '.'));
+    }
   }
 
-  // Paso 2: diferencial de ronda_i = decimal en x=[400,430] de la fila de ronda_{i+1}
-  for (let ri = 0; ri < rounds.length; ri++) {
-    const lookFi = roundFilaIdx[ri] + 1;
-    if (lookFi < filas.length) {
-      for (const it of filas[lookFi].items) {
-        if (it.x < 400 || it.x > 430 || !/^-?\d+[,.]\d+$/.test(it.str) || isRating(it)) continue;
-        const v = parseFloat(it.str.replace(',', '.'));
-        if (v >= -10 && v <= 54) { rounds[ri].dif = v; break; }
-      }
+  // Paso 3: mejores 8 diferenciales (para el marcador ★) -- por fecha, esa página solo
+  // lista esas 8 rondas (no todas las 20), en otro orden.
+  const fechasMejores = new Set();
+  if (pgMejores != null) {
+    const filas = agruparFilas(porPagina[pgMejores]);
+    for (const fila of filas) {
+      const fechaIt = fila.items.find(i => dateReg.test(i.str));
+      if (fechaIt) fechasMejores.add(fechaIt.str);
     }
-    if (rounds[ri].dif === null) {
-      for (const it of filas[roundFilaIdx[ri]].items) {
-        if (!/^-?\d+[,.]\d+$/.test(it.str) || isRating(it)) continue;
-        const v = parseFloat(it.str.replace(',', '.'));
-        if (v >= -10 && v <= 54) { rounds[ri].dif = v; break; }
-      }
-    }
-    if (rounds[ri].dif !== null && rounds[ri].pen !== 0) {
-      rounds[ri].dif = parseFloat((rounds[ri].dif + rounds[ri].pen).toFixed(1));
-    }
+  }
+
+  for (const r of rounds) {
+    if (difPorFecha[r.fecha] !== undefined) r.dif = difPorFecha[r.fecha];
+    if (penPorFecha[r.fecha] !== undefined) r.pen = penPorFecha[r.fecha];
+    r.star = fechasMejores.has(r.fecha);
   }
 
   const unique = rounds.filter(r => r.dif !== null);
-  const pendientes = [...mejoresDifs];
-  for (const r of unique) {
-    const idx = pendientes.findIndex(d => Math.abs(d - r.dif) < 0.05);
-    if (idx >= 0) { r.star = true; pendientes.splice(idx, 1); }
-  }
-
   return { hcpAct, pdfFecha: unique[0]?.fecha ?? null, rondas: unique.slice(0, 20) };
 }
 
@@ -1050,13 +1036,9 @@ async function actualizarActividad() {
     if (!buf) { await new Promise(r => setTimeout(r, 2000)); buf = await tryProxies(); }
     if (!buf) throw new Error(`Sin datos en RFEG para ${jugador.licencia} — probá cargar el PDF manualmente.`);
     const items = await extraerItemsPDF(buf);
-    const filas = agruparFilas(items);
-    const datos = parsearRFEG(filas);
+    const datos = parsearRFEG(items);
     console.group('RFEG · ' + jugador.nombre);
-    console.log('Items PDF:', items.length, '| Filas agrupadas:', filas.length);
-    const filasConFecha = filas.filter(f => /\d{2}\/\d{2}\/\d{4}/.test(f.text));
-    console.log('Filas con fecha:', filasConFecha.length);
-    filasConFecha.slice(0, 5).forEach((f,i) => console.log(' fila'+i+' y='+f.y+':', f.items.map(x=>x.str+'@'+x.x).join(' | ')));
+    console.log('Items PDF:', items.length, '| Páginas:', Math.max(...items.map(i => i.page)));
     console.log('Rondas encontradas:', datos.rondas.length);
     datos.rondas.forEach(r => console.log(' ', r.fecha, r.torneo, '/', r.campo, 'hcp:'+r.hcp, 'stb:'+r.stb, 'dif:'+r.dif));
     console.groupEnd();
@@ -1217,8 +1199,7 @@ async function cargarPDFManual(event) {
     await cargarPDFJS();
     const buf = await file.arrayBuffer();
     const items = await extraerItemsPDF(buf);
-    const filas = agruparFilas(items);
-    const datos = parsearRFEG(filas);
+    const datos = parsearRFEG(items);
     if (datos.rondas.length > 0) {
       jugador.rondas   = datos.rondas;
       jugador.hcpAct   = datos.hcpAct   ?? jugador.hcpAct;
@@ -1259,158 +1240,130 @@ async function cargarPDFManual(event) {
     // DATOS — se actualizan al pulsar 💾 Guardar y reemplazar el archivo
     let _jugadores = [
                 {
-                        "apuesta": "140€",
-                        "fechaMod": "24-05-2026",
-                        "hcpAct": 3.1,
-                        "hcpIni": 3,
-                        "licencia": "VB09020398",
-                        "nombre": "Jaime BeñAran Arocena",
-                        "premiosAño": 1,
-                        "propietario": "jaime",
-                        "propietario2": "piti"
+                        "fechaMod": "02-08-2026",
+                        "hcpAct": 2.4,
+                        "hcpIni": 3.6,
+                        "licencia": "VB01027471",
+                        "nombre": "Luis AntuñAno Eguillor",
+                        "premiosAño": 9,
+                        "premiosA�o": 6
                 },
                 {
-                        "apuesta": "190€",
-                        "fechaMod": "07-06-2026",
-                        "hcpAct": 8.7,
+                        "fechaMod": "02-08-2026",
+                        "hcpAct": 9.2,
                         "hcpIni": 10,
                         "licencia": "VB01020079",
                         "nombre": "Ramon Elosegui Bergareche",
-                        "premiosAño": 4,
-                        "propietario": "moncho",
-                        "propietario2": "piti"
+                        "premiosA�o": 4
                 },
                 {
-                        "apuesta": "100€",
-                        "fechaMod": "09-06-2026",
-                        "hcpAct": 17.4,
-                        "hcpIni": 16.4,
-                        "licencia": "VB09245518",
-                        "nombre": "Alejandro Muro Aristizabal",
-                        "premiosAño": 8,
-                        "propietario": "alejandro",
-                        "propietario2": "victor"
+                        "fechaMod": "14-07-2026",
+                        "hcpAct": 11.4,
+                        "hcpIni": 11,
+                        "licencia": "VB09400249",
+                        "nombre": "Gorka  Montero Fernandez",
+                        "premiosA�o": 5
                 },
                 {
-                        "apuesta": "70€",
-                        "fechaMod": "31-05-2026",
-                        "hcpAct": 5.1,
-                        "hcpIni": 5.1,
-                        "licencia": "VB09320423",
-                        "nombre": "Victor San Gil Noain",
-                        "premiosAño": 4,
-                        "propietario": "victor",
-                        "propietario2": "alejandro"
+                        "fechaMod": "28-06-2026",
+                        "hcpAct": 0.7,
+                        "hcpIni": -0.5,
+                        "licencia": "VB09020318",
+                        "nombre": "Gonzalo Pardo Arin",
+                        "premiosA�o": 1
                 },
                 {
-                        "apuesta": "30€",
-                        "fechaMod": "07-06-2026",
-                        "hcpAct": 14.8,
-                        "hcpIni": 14.3,
-                        "licencia": "VB01069770",
-                        "nombre": "Pablo Manuel Orbe Murua",
-                        "premiosAño": 0,
-                        "propietario": "pablo",
-                        "propietario2": "gorka"
+                        "fechaMod": "20-06-2026",
+                        "hcpAct": 15.6,
+                        "hcpIni": 14.6,
+                        "licencia": "VB09127515",
+                        "nombre": "Andres Murua Urruticoechea",
+                        "premiosA�o": 2
                 },
                 {
-                        "apuesta": "50€",
                         "fechaMod": "31-05-2026",
                         "hcpAct": 14.6,
                         "hcpIni": 13.6,
                         "licencia": "VB03031463",
                         "nombre": "Fernando Arocena Garcia Tapia",
-                        "premiosAño": 1,
-                        "propietario": "muli",
-                        "propietario2": "jaime"
+                        "premiosA�o": 1
                 },
                 {
-                        "apuesta": "150€",
-                        "fechaMod": "06-06-2026",
-                        "hcpAct": 4,
-                        "hcpIni": 3.4,
-                        "licencia": "VB09233692",
-                        "nombre": "Fernando Aguirre FlañO",
+                        "fechaMod": "02-08-2026",
+                        "hcpAct": 15.2,
+                        "hcpIni": 14.3,
+                        "licencia": "VB01069770",
+                        "nombre": "Pablo Manuel Orbe Murua",
                         "premiosAño": 3,
-                        "propietario": "fernando",
-                        "propietario2": "jaime"
+                        "premiosA�o": 0
                 },
                 {
-                        "apuesta": "120€",
-                        "fechaMod": "30-05-2026",
-                        "hcpAct": 2.6,
+                        "fechaMod": "02-08-2026",
+                        "hcpAct": 5,
+                        "hcpIni": 5.1,
+                        "licencia": "VB09320423",
+                        "nombre": "Victor San Gil Noain",
+                        "premiosAño": 11,
+                        "premiosA�o": 4
+                },
+                {
+                        "fechaMod": "02-08-2026",
+                        "hcpAct": 3.2,
+                        "hcpIni": 3,
+                        "licencia": "VB09020398",
+                        "nombre": "Jaime BeñAran Arocena",
+                        "premiosAño": 4,
+                        "premiosA�o": 1
+                },
+                {
+                        "fechaMod": "26-07-2026",
+                        "hcpAct": 2.2,
                         "hcpIni": 2.6,
                         "licencia": "VB090445-P",
                         "nombre": "Alejo Cuadra Ibarguchi",
-                        "premiosAño": 2,
-                        "propietario": "alejo",
-                        "propietario2": "alejo"
+                        "premiosA�o": 2
                 },
                 {
-                        "apuesta": "20€",
+                        "fechaMod": "02-08-2026",
+                        "hcpAct": 3.6,
+                        "hcpIni": 3.4,
+                        "licencia": "VB09233692",
+                        "nombre": "Fernando Aguirre FlañO",
+                        "premiosAño": 9,
+                        "premiosA�o": 3
+                },
+                {
                         "fechaMod": "04-05-2026",
                         "hcpAct": 12.1,
                         "hcpIni": 11.8,
                         "licencia": "VB01026531",
                         "nombre": "Eugenio Rezola Murua",
-                        "premiosAño": 2,
-                        "propietario": "eugenio",
-                        "propietario2": "piti"
+                        "premiosA�o": 2
                 },
                 {
-                        "apuesta": "200€",
-                        "fechaMod": "07-06-2026",
-                        "hcpAct": 2.6,
-                        "hcpIni": 3.6,
-                        "licencia": "VB01027471",
-                        "nombre": "Luis AntuñAno Eguillor",
-                        "premiosAño": 6,
-                        "propietario": "lati",
-                        "propietario2": "lati"
+                        "fechaMod": "02-08-2026",
+                        "hcpAct": 16.9,
+                        "hcpIni": 16.4,
+                        "licencia": "VB09245518",
+                        "nombre": "Alejandro Muro Aristizabal",
+                        "premiosAño": 8,
+                        "premiosA�o": 5
                 },
                 {
-                        "apuesta": "90€",
-                        "fechaMod": "08-06-2026",
-                        "hcpAct": 10.5,
-                        "hcpIni": 11,
-                        "licencia": "VB09400249",
-                        "nombre": "Gorka  Montero Fernandez",
-                        "premiosAño": 5,
-                        "propietario": "gorka",
-                        "propietario2": "piti"
-                },
-                {
-                        "apuesta": "30€",
-                        "fechaMod": "24-05-2026",
-                        "hcpAct": 15.6,
-                        "hcpIni": 14.6,
-                        "licencia": "VB09127515",
-                        "nombre": "Andres Murua Urruticoechea",
-                        "premiosAño": 2,
-                        "propietario": "andres",
-                        "propietario2": "piti"
-                },
-                {
-                        "apuesta": "100€",
-                        "fechaMod": "30-05-2026",
+                        "fechaMod": "02-08-2026",
                         "hcpAct": 6.5,
                         "hcpIni": 6.5,
                         "licencia": "VB01069771",
                         "nombre": "Juan Ignacio Orbe Murua",
-                        "premiosAño": 3,
-                        "propietario": "juan",
-                        "propietario2": "lati"
+                        "premiosA�o": 3
                 },
                 {
-                        "apuesta": "330€",
-                        "fechaMod": "06-06-2026",
-                        "hcpAct": -0.2,
-                        "hcpIni": -0.5,
-                        "licencia": "VB09020318",
-                        "nombre": "Gonzalo Pardo Arin",
-                        "premiosAño": 1,
-                        "propietario": "gonzalo",
-                        "propietario2": "alejandro"
+                        "fechaMod": "20-06-2026",
+                        "hcpAct": 6.9,
+                        "hcpIni": 0,
+                        "licencia": "VB03419848",
+                        "nombre": "Laura BeñAran Orbe",
+                        "premiosAño": 0
                 }
         ];
 
@@ -1488,67 +1441,34 @@ async function cargarPDFManual(event) {
     }
 
     async function buscarEnRFEG(licencia) {
-        const rfegUrl = `https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx?HLic=${encodeURIComponent(licencia)}`;
-        const proxies = [
-            url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
-            url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-            url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-            url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-            url => `https://thingproxy.freeboard.io/fetch/${url}`,
-        ];
-
-        let html = '';
-        for (const proxy of proxies) {
-            try {
-                const res = await fetchTimeout(proxy(rfegUrl), 12000);
-                if (!res.ok) continue;
-                const text = await res.text();
-                try { html = JSON.parse(text).contents || ''; } catch { html = text; }
-                if (html.length > 500) break;
-            } catch { continue; }
-            html = '';
+        // API oficial de la RFEG (buscador de la web "Consulta tu Hándicap") -- JSON
+        // directo, sin necesidad de proxy CORS: el servidor responde
+        // Access-Control-Allow-Origin reflejando cualquier origen. Reemplaza al scraping
+        // de ServicioHandicap.aspx vía proxies públicos (corsproxy.io/allorigins/
+        // thingproxy), que era el punto más frágil de esta función.
+        const url = `https://rfegolf.es/wp-json/handicap-search/v1/search?q=${encodeURIComponent(licencia)}`;
+        let json;
+        try {
+            const res = await fetchTimeout(url, 10000);
+            if (!res.ok) throw new Error('bad status');
+            json = await res.json();
+        } catch {
+            throw new Error('No se pudo conectar con la RFEG.');
         }
 
-        if (!html) throw new Error('No se pudo conectar con la RFEG.');
+        const hits = json?.data?.hits || [];
+        const licUp = licencia.toUpperCase();
+        const hit = hits.find(h => (h.document?.guid_licence || '').toUpperCase() === licUp) || hits[0];
+        const doc = hit?.document;
+        const hcpAct = doc ? parseFloat(String(doc.handicap).replace(',', '.')) : NaN;
+        if (!doc || isNaN(hcpAct)) throw new Error(`No se encontró "${licencia}" en la RFEG.`);
 
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        const tds = Array.from(doc.querySelectorAll('td'));
-        console.log(`[RFEG ${licencia}] celdas:`, tds.map(td => td.textContent.trim()).filter(t => t));
+        const nombre = doc.full_name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+        let fechaMod = '';
+        const fm = (doc.date_hdc_updated_at || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (fm) fechaMod = `${fm[3]}/${fm[2]}/${fm[1]}`;
 
-        const validoTd = tds.find(td => /^v[áa]lid[oa]$/i.test(td.textContent.trim()));
-        if (validoTd) {
-            const fila = validoTd.closest('tr');
-            if (fila) {
-                const celdas = Array.from(fila.querySelectorAll('td')).map(td => td.textContent.trim());
-                console.log(`[RFEG ${licencia}] fila válido:`, celdas);
-                const iValido = celdas.findIndex(c => /^v[áa]lid[oa]$/i.test(c));
-                for (const offset of [3, 2, 4]) {
-                    if (iValido < offset) continue;
-                    const nombre = celdas[iValido - offset].toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-                    const hcpAct = parseFloat(celdas[iValido - 1].replace(',', '.'));
-                    const fechaMod = celdas[iValido + 1] || '';
-                    if (nombre.length > 3 && !isNaN(hcpAct)) return { nombre, hcpAct, fechaMod };
-                }
-            }
-        }
-
-        const texto = doc.body ? doc.body.innerText || doc.body.textContent : html;
-        const licNum = licencia.replace(/\D/g, '');
-        const mLic = texto.match(new RegExp(`([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ, ]{4,})\\s+${licNum}\\D*(\\d+[,.]\\d+)`));
-        if (mLic) {
-            const nombre = mLic[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-            const hcpAct = parseFloat(mLic[2].replace(',', '.'));
-            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
-        }
-
-        const m = texto.match(/([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ ]{4,})\s+[\w-]+\s+([\d,]+)\s+V[áa]lid/i);
-        if (m) {
-            const nombre = m[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-            const hcpAct = parseFloat(m[2].replace(',', '.'));
-            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
-        }
-
-        throw new Error(`No se encontró "${licencia}" en la RFEG.`);
+        return { nombre, hcpAct, fechaMod };
     }
 
     async function buscarEnRFEGConReintentos(licencia, maxReintentos = 5, onIntento = null) {
@@ -1641,8 +1561,7 @@ async function cargarPDFManual(event) {
                         }
                         if (buf) {
                             const items = await extraerItemsPDF(buf);
-                            const filas = agruparFilas(items);
-                            const datos = parsearRFEG(filas);
+                            const datos = parsearRFEG(items);
                             if (datos.rondas.length > 0) {
                                 const jAct = JUGADORES_ACT.find(ja => ja.licencia.toUpperCase() === j.licencia.toUpperCase());
                                 if (jAct) {
@@ -1682,24 +1601,6 @@ async function cargarPDFManual(event) {
         }
     }
 
-    function editarTexto(td, idx, campo) {
-        if (td.querySelector('input')) return;
-        const valorActual = td.textContent === '—' ? '' : td.textContent;
-        td.innerHTML = `<input type="text" value="${valorActual.replace(/"/g,'&quot;')}" style="width:90px" />`;
-        const input = td.querySelector('input');
-        input.focus();
-        input.select();
-        function guardar() {
-            const nuevo = input.value.trim();
-            const jugadores = cargarDatos();
-            jugadores[idx][campo] = nuevo;
-            guardarDatos(jugadores);
-            renderTabla();
-        }
-        input.addEventListener('blur', guardar);
-        input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); } if (e.key === 'Escape') { renderTabla(); } });
-    }
-
     function setEstado(msg, tipo) {
         const el = document.getElementById('msg-estado');
         el.textContent = msg;
@@ -1719,7 +1620,7 @@ async function cargarPDFManual(event) {
 
         if (jugadores.length === 0) {
             document.getElementById('tabla-body').innerHTML =
-                '<tr><td colspan="12" class="empty">Aún no hay jugadores. Añade el primero con el formulario.</td></tr>';
+                '<tr><td colspan="9" class="empty">Aún no hay jugadores. Añade el primero con el formulario.</td></tr>';
             return;
         }
 
@@ -1764,9 +1665,6 @@ async function cargarPDFManual(event) {
                 <td><span class="incremento ${cls}">${signo}${j.incremento.toFixed(1)}%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">${premiosAño}</td>
                 <td style="font-size:0.82rem;color:${esReciente?'#dc2626':'#64748b'};font-weight:${esReciente?'700':'400'}">${j.fechaMod || '—'}</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, ${j.originalIdx}, 'apuesta')">${escHtml(j.apuesta || '—')}</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, ${j.originalIdx}, 'propietario')">${escHtml(j.propietario || '—')}</td>
-                <td class="hcp-editable" title="Haz clic para editar" onclick="editarTexto(this, ${j.originalIdx}, 'propietario2')">${escHtml(j.propietario2 || '—')}</td>
                 <td><button class="btn-del" onclick="eliminarJugador(${j.originalIdx})" title="Eliminar">✕</button></td>
             </tr>`;
         }).join('');
@@ -1812,12 +1710,13 @@ async function cargarPDFManual(event) {
         const datosStr = JSON.stringify(jugadores, null, 8).replace(/^/gm, '        ').trim();
         let html = document.documentElement.outerHTML;
         html = html.replace(/let _jugadores = \[[\s\S]*?\];/, `let _jugadores = ${datosStr};`);
+        html = html.replace(/<title>[^<]*<\/title>/, '<title>arbolito2026 viernes clink</title>');
         const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
         // iOS Safari no soporta showSaveFilePicker — usa descarga directa
         if (!window.showSaveFilePicker) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url; a.download = 'arbolito2026.html';
+            a.href = url; a.download = 'arbolito2026 viernes clink.html';
             document.body.appendChild(a); a.click();
             document.body.removeChild(a); URL.revokeObjectURL(url);
             setEstado('✓ Descargado. Reemplazá el archivo original con éste.', 'ok');
@@ -1909,7 +1808,7 @@ async function cargarPDFManual(event) {
 
 <script>
 (function() {
-  var DB = 'https://arbolito-golf-default-rtdb.europe-west1.firebasedatabase.app/arbolito-clink';
+  var DB = 'https://arbolito-golf-default-rtdb.europe-west1.firebasedatabase.app/arbolito-principal';
   var badge = document.createElement('div');
   badge.style.cssText = 'position:fixed;bottom:14px;right:14px;background:rgba(20,83,45,0.92);color:#86efac;font-size:0.76rem;font-weight:600;padding:5px 12px;border-radius:20px;z-index:9998;box-shadow:0 2px 8px rgba(0,0,0,0.3);transition:color 0.3s;';
   badge.textContent = '⟳ conectando...';
@@ -1955,5 +1854,5 @@ async function cargarPDFManual(event) {
   pullFirebase(false);
   setInterval(function() { pullFirebase(true); }, 15000);
 })();
-</script><div style="position: fixed; bottom: 14px; right: 14px; background: rgba(20, 83, 45, 0.92); color: rgb(134, 239, 172); font-size: 0.76rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; z-index: 9998; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 8px; transition: color 0.3s;">⟳ conectando...</div>
+</script><div style="position: fixed; bottom: 14px; right: 14px; background: rgba(20, 83, 45, 0.92); color: rgb(134, 239, 172); font-size: 0.76rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; z-index: 9998; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 8px; transition: color 0.3s;">● en vivo</div>
 </body></html>

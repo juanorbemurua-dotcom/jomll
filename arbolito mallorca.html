@@ -1,4 +1,4 @@
-﻿<html lang="es"><head>
+<html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arbolito Viernes Clink 2026</title>
@@ -356,7 +356,7 @@
     <p id="titulo-subtitulo" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">Seguimiento de Handicap · Temporada 2026</p>
 </header>
 
-<p class="fecha-hoy" id="fechaHoy">Fecha actual: sábado, 30 de mayo de 2026</p>
+<p class="fecha-hoy" id="fechaHoy">Fecha actual: miércoles, 10 de junio de 2026</p>
 
 <!-- Formulario -->
 <div class="form-card">
@@ -364,18 +364,18 @@
     <div class="form-grid">
         <div class="form-group">
             <label>Nº Licencia</label>
-            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()">
+            <input type="text" id="inp-licencia" placeholder="Ej. VB090445-P" oninput="actualizarEnlaceRFEG()" fdprocessedid="wo2pd">
         </div>
         <div class="form-group">
             <label>HCP 01/01/2026</label>
-            <input type="number" id="inp-hcp-ini" placeholder="Ej. 18.4" step="0.1">
+            <input type="number" id="inp-hcp-ini" placeholder="Ej. 18.4" step="0.1" fdprocessedid="0ek1sd">
         </div>
         <div class="form-group" style="display:none">
             <input type="text" id="inp-nombre">
             <input type="number" id="inp-hcp-act">
         </div>
         <div class="form-group" style="display:flex;gap:8px;align-items:flex-end;">
-            <button class="btn-add" id="btn-add" onclick="añadirJugador()">Añadir</button>
+            <button class="btn-add" id="btn-add" onclick="añadirJugador()" fdprocessedid="xrhip">Añadir</button>
             <a id="enlace-rfeg" href="#" target="_blank" class="btn-rfeg" title="Consultar en RFEG">🔍 RFEG</a>
         </div>
     </div>
@@ -385,7 +385,7 @@
             <input type="text" id="inp-nombre-manual" placeholder="Ej. Juan García López" style="max-width:280px;">
         </div>
     </div>
-    <p id="msg-estado" style="margin-top: 10px; font-size: 0.82rem; color: rgb(22, 163, 74); min-height: 18px;">✓ 19 jugadores actualizados correctamente.</p>
+    <p id="msg-estado" style="margin-top: 10px; font-size: 0.82rem; color: rgb(22, 163, 74); min-height: 18px;">✓ Archivo guardado correctamente.</p>
 </div>
 
 <!-- Tabla -->
@@ -393,9 +393,9 @@
     <div class="tabla-header">
         <h2>🏆 Clasificación por Mejora de Handicap</h2>
         <div style="display:flex;gap:8px;">
-            <button class="btn-update" id="btn-update" onclick="actualizarTodos()">↻ Actualizar RFEG</button>
-            <button class="btn-export" onclick="exportarExcel()">⬇ Exportar Excel</button>
-            <button class="btn-export" onclick="guardarJSON()" title="Guardar copia de seguridad">💾 Guardar</button>
+            <button class="btn-update" id="btn-update" onclick="actualizarTodos()" fdprocessedid="geahemj">↻ Actualizar RFEG</button>
+            <button class="btn-export" onclick="exportarExcel()" fdprocessedid="gd9vt">⬇ Exportar Excel</button>
+            <button class="btn-export" onclick="guardarJSON()" title="Guardar copia de seguridad" fdprocessedid="odfexc">💾 Guardar</button>
             <label class="btn-export" style="cursor:pointer;margin:0" title="Cargar copia de seguridad">
                 📂 Cargar<input type="file" accept=".json" onchange="cargarJSON(event)" style="display:none">
             </label>
@@ -418,48 +418,48 @@
         </thead>
         <tbody id="tabla-body"><tr class="top1">
                 <td><span class="medal">🥇</span></td>
-                <td class="nombre">Roberto Humera Amat</td>
-                <td class="licencia">BP16962237</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 6)">11.3</td>
-                <td class="hcp">10.2</td>
-                <td><span class="incremento inc-mejor">-1.1</span></td>
-                <td><span class="incremento inc-mejor">-9.7%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">8</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">17-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(6)" title="Eliminar">✕</button></td>
-            </tr><tr class="top6">
-                <td><span class="medal">🥈</span></td>
                 <td class="nombre">Leonor De Los Toyos Fischer</td>
                 <td class="licencia">4405775876</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 13)">19.0</td>
-                <td class="hcp">18.0</td>
-                <td><span class="incremento inc-mejor">-1.0</span></td>
-                <td><span class="incremento inc-mejor">-5.3%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">5</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">19-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(13)" title="Eliminar">✕</button></td>
+                <td class="hcp">15.9</td>
+                <td><span class="incremento inc-mejor">-3.1</span></td>
+                <td><span class="incremento inc-mejor">-16.3%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">08-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(13)" title="Eliminar" fdprocessedid="xn5ua7">✕</button></td>
+            </tr><tr class="top6">
+                <td><span class="medal">🥈</span></td>
+                <td class="nombre">Roberto Humera Amat</td>
+                <td class="licencia">BP16962237</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 6)">11.3</td>
+                <td class="hcp">10.4</td>
+                <td><span class="incremento inc-mejor">-0.9</span></td>
+                <td><span class="incremento inc-mejor">-8.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">08-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(6)" title="Eliminar" fdprocessedid="ad4ndo">✕</button></td>
             </tr><tr class="top6">
                 <td><span class="medal">🥉</span></td>
                 <td class="nombre">Carolina Blazquez Segura</td>
                 <td class="licencia">VB09313600</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 16)">18.4</td>
-                <td class="hcp">17.5</td>
-                <td><span class="incremento inc-mejor">-0.9</span></td>
-                <td><span class="incremento inc-mejor">-4.9%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">2</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">02-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(16)" title="Eliminar">✕</button></td>
+                <td class="hcp">17.0</td>
+                <td><span class="incremento inc-mejor">-1.4</span></td>
+                <td><span class="incremento inc-mejor">-7.6%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">08-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(16)" title="Eliminar" fdprocessedid="6pu0z">✕</button></td>
             </tr><tr class="topGreen">
                 <td><span class="pos">4</span></td>
                 <td class="nombre">Miguel Angel Riera Valles</td>
                 <td class="licencia">BP02886296</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 1)">20.0</td>
-                <td class="hcp">19.1</td>
-                <td><span class="incremento inc-mejor">-0.9</span></td>
-                <td><span class="incremento inc-mejor">-4.5%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">5</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">10-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(1)" title="Eliminar">✕</button></td>
+                <td class="hcp">19.0</td>
+                <td><span class="incremento inc-mejor">-1.0</span></td>
+                <td><span class="incremento inc-mejor">-5.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">07-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(1)" title="Eliminar" fdprocessedid="ownbop">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">5</span></td>
                 <td class="nombre">Rainer Rene   Alcon Gunther</td>
@@ -468,132 +468,154 @@
                 <td class="hcp">13.3</td>
                 <td><span class="incremento inc-igual">0.0</span></td>
                 <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">16-09-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(0)" title="Eliminar">✕</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(0)" title="Eliminar" fdprocessedid="jbqa7o">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">6</span></td>
-                <td class="nombre">Jordi Muntaner Gelabert</td>
-                <td class="licencia">BP02886289</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 2)">19.0</td>
-                <td class="hcp">19.0</td>
-                <td><span class="incremento inc-igual">0.0</span></td>
-                <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">10-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(2)" title="Eliminar">✕</button></td>
-            </tr><tr class="">
-                <td><span class="pos">7</span></td>
                 <td class="nombre">Gabriel Nebot Bauza</td>
                 <td class="licencia">BP02191619</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 3)">14.0</td>
                 <td class="hcp">14.0</td>
                 <td><span class="incremento inc-igual">0.0</span></td>
                 <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">10-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(3)" title="Eliminar">✕</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(3)" title="Eliminar" fdprocessedid="g97l6">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">8</span></td>
+                <td><span class="pos">7</span></td>
                 <td class="nombre">Antonio Casellas Ripoll</td>
                 <td class="licencia">BP02233210</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 4)">16.5</td>
                 <td class="hcp">16.5</td>
                 <td><span class="incremento inc-igual">0.0</span></td>
                 <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">1</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">12-04-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(4)" title="Eliminar">✕</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(4)" title="Eliminar" fdprocessedid="t60p8l">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">9</span></td>
+                <td><span class="pos">8</span></td>
                 <td class="nombre">Francisco Garcia De La Rosa Homar</td>
                 <td class="licencia">BP02644317</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 5)">23.4</td>
                 <td class="hcp">23.4</td>
                 <td><span class="incremento inc-igual">0.0</span></td>
                 <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">29-11-2020</td>
-                <td><button class="btn-del" onclick="eliminarJugador(5)" title="Eliminar">✕</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(5)" title="Eliminar" fdprocessedid="im334l">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">10</span></td>
+                <td><span class="pos">9</span></td>
                 <td class="nombre">Juan Ramis Bell</td>
                 <td class="licencia">BP55093089</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 7)">27.6</td>
                 <td class="hcp">27.6</td>
                 <td><span class="incremento inc-igual">0.0</span></td>
                 <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">16-09-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(7)" title="Eliminar">✕</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(7)" title="Eliminar" fdprocessedid="sfvww3">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">11</span></td>
+                <td><span class="pos">10</span></td>
                 <td class="nombre">Angel Santiago Pareja Morales</td>
                 <td class="licencia">BP55077938</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 8)">20.7</td>
                 <td class="hcp">20.7</td>
                 <td><span class="incremento inc-igual">0.0</span></td>
                 <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">17-12-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(8)" title="Eliminar">✕</button></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">07-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(8)" title="Eliminar" fdprocessedid="ze247j">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">12</span></td>
+                <td><span class="pos">11</span></td>
                 <td class="nombre">Carlos Riera Homar</td>
                 <td class="licencia">CB00175549</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 10)">18.4</td>
                 <td class="hcp">18.4</td>
                 <td><span class="incremento inc-igual">0.0</span></td>
                 <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">28-11-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(10)" title="Eliminar">✕</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(10)" title="Eliminar" fdprocessedid="bm6hml">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">13</span></td>
+                <td><span class="pos">12</span></td>
                 <td class="nombre">Pedro Jose EgañA Garcia</td>
                 <td class="licencia">4401964130</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 12)">17.6</td>
                 <td class="hcp">17.6</td>
                 <td><span class="incremento inc-igual">0.0</span></td>
                 <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">23-10-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(12)" title="Eliminar">✕</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(12)" title="Eliminar" fdprocessedid="1yyhd">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">14</span></td>
+                <td><span class="pos">13</span></td>
                 <td class="nombre">IñAki Saralegui Reta</td>
                 <td class="licencia">VB08690063</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 14)">26.5</td>
                 <td class="hcp">26.5</td>
                 <td><span class="incremento inc-igual">0.0</span></td>
                 <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">0</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">05-10-2025</td>
-                <td><button class="btn-del" onclick="eliminarJugador(14)" title="Eliminar">✕</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(14)" title="Eliminar" fdprocessedid="py6jei">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">15</span></td>
+                <td><span class="pos">14</span></td>
                 <td class="nombre">Juan Ignacio Orbe Murua</td>
                 <td class="licencia">VB01069771</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 17)">6.5</td>
                 <td class="hcp">6.5</td>
                 <td><span class="incremento inc-igual">0.0</span></td>
                 <td><span class="incremento inc-igual">0.0%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">3</td>
-                <td style="font-size:0.82rem;color:#dc2626;font-weight:700">30-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(17)" title="Eliminar">✕</button></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">30-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(17)" title="Eliminar" fdprocessedid="22vywx">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">15</span></td>
+                <td class="nombre">Gonzalo Pardo Arin</td>
+                <td class="licencia">VB09020318</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 19)">0.0</td>
+                <td class="hcp">-0.2</td>
+                <td><span class="incremento inc-igual">-0.2</span></td>
+                <td><span class="incremento inc-igual">0.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">06-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(19)" title="Eliminar" fdprocessedid="0d2xpd">✕</button></td>
             </tr><tr class="">
                 <td><span class="pos">16</span></td>
+                <td class="nombre">IñIgo BeñAran Orbe</td>
+                <td class="licencia">VB03368792</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 20)">0.0</td>
+                <td class="hcp">0.3</td>
+                <td><span class="incremento inc-igual">0.3</span></td>
+                <td><span class="incremento inc-igual">0.0%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">17-05-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(20)" title="Eliminar" fdprocessedid="39qsp">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">17</span></td>
+                <td class="nombre">Jordi Muntaner Gelabert</td>
+                <td class="licencia">BP02886289</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 2)">19.0</td>
+                <td class="hcp">19.1</td>
+                <td><span class="incremento inc-peor">+0.1</span></td>
+                <td><span class="incremento inc-peor">+0.5%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">06-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(2)" title="Eliminar" fdprocessedid="d9xupa">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">18</span></td>
                 <td class="nombre">Jose Miguel Juan Estela</td>
                 <td class="licencia">BP55077943</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 9)">24.0</td>
                 <td class="hcp">24.2</td>
                 <td><span class="incremento inc-peor">+0.2</span></td>
                 <td><span class="incremento inc-peor">+0.8%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">3</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">17-02-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(9)" title="Eliminar">✕</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(9)" title="Eliminar" fdprocessedid="p0blps">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">17</span></td>
+                <td><span class="pos">19</span></td>
                 <td class="nombre">Mariano Marques Moragues</td>
                 <td class="licencia">BP16980752</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 11)">7.3</td>
@@ -601,30 +623,30 @@
                 <td><span class="incremento inc-peor">+0.3</span></td>
                 <td><span class="incremento inc-peor">+4.1%</span></td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">3</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">12-04-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(11)" title="Eliminar">✕</button></td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">07-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(11)" title="Eliminar" fdprocessedid="mc8yvn">✕</button></td>
             </tr><tr class="">
-                <td><span class="pos">18</span></td>
-                <td class="nombre">Catalina Rossello Monjo</td>
-                <td class="licencia">BP01993596</td>
-                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 15)">15.1</td>
-                <td class="hcp">17.0</td>
-                <td><span class="incremento inc-peor">+1.9</span></td>
-                <td><span class="incremento inc-peor">+12.6%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">6</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">17-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(15)" title="Eliminar">✕</button></td>
-            </tr><tr class="">
-                <td><span class="pos">19</span></td>
+                <td><span class="pos">20</span></td>
                 <td class="nombre">Antonio Iturriagagoitia Ripoll</td>
                 <td class="licencia">4401458872</td>
                 <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 18)">3.5</td>
-                <td class="hcp">4.6</td>
-                <td><span class="incremento inc-peor">+1.1</span></td>
-                <td><span class="incremento inc-peor">+31.4%</span></td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">3</td>
-                <td style="font-size:0.82rem;color:#64748b;font-weight:400">19-05-2026</td>
-                <td><button class="btn-del" onclick="eliminarJugador(18)" title="Eliminar">✕</button></td>
+                <td class="hcp">3.9</td>
+                <td><span class="incremento inc-peor">+0.4</span></td>
+                <td><span class="incremento inc-peor">+11.4%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">08-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(18)" title="Eliminar" fdprocessedid="hq141">✕</button></td>
+            </tr><tr class="">
+                <td><span class="pos">21</span></td>
+                <td class="nombre">Catalina Rossello Monjo</td>
+                <td class="licencia">BP01993596</td>
+                <td class="hcp hcp-editable" title="Haz clic para editar" onclick="editarHcpIni(this, 15)">15.1</td>
+                <td class="hcp">17.8</td>
+                <td><span class="incremento inc-peor">+2.7</span></td>
+                <td><span class="incremento inc-peor">+17.9%</span></td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">—</td>
+                <td style="font-size:0.82rem;color:#64748b;font-weight:400">08-06-2026</td>
+                <td><button class="btn-del" onclick="eliminarJugador(15)" title="Eliminar" fdprocessedid="n5hkag">✕</button></td>
             </tr></tbody>
     </table>
 </div>
@@ -634,12 +656,12 @@
   <div style="background:#14532d;color:#fde68a;font-weight:700;font-size:1.05rem;padding:14px 20px;border-radius:10px 10px 0 0;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;">
     <span>⛳ Actividad — Últimas 20 rondas jugadas</span>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
-      <select id="selectJugador" onchange="renderTablaActividad()" style="background:#166534;color:#fde68a;border:1px solid rgba(253,230,138,0.5);border-radius:6px;padding:5px 10px;font-weight:600;font-size:0.85rem;cursor:pointer;max-width:240px;"><option value="">— Seleccionar jugador —</option><option value="0">Juan Ignacio Orbe Murua</option><option value="1">Rainer Rene   Alcon Gunther</option><option value="2">Miguel Angel Riera Valles</option><option value="3">Jordi Muntaner Gelabert</option><option value="4">Gabriel Nebot Bauza</option><option value="5">Antonio Casellas Ripoll</option><option value="6">Francisco Garcia De La Rosa Homar</option><option value="7">Roberto Humera Amat</option><option value="8">Juan Ramis Bell</option><option value="9">Angel Santiago Pareja Morales</option><option value="10">Jose Miguel Juan Estela</option><option value="11">Carlos Riera Homar</option><option value="12">Mariano Marques Moragues</option><option value="13">Pedro Jose EgañA Garcia</option><option value="14">Leonor De Los Toyos Fischer</option><option value="15">IñAki Saralegui Reta</option><option value="16">Catalina Rossello Monjo</option><option value="17">Carolina Blazquez Segura</option><option value="18">Antonio Iturriagagoitia Ripoll</option></select>
-      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;">🔄 Actualizar RFEG</button>
+      <select id="selectJugador" onchange="renderTablaActividad()" style="background:#166534;color:#fde68a;border:1px solid rgba(253,230,138,0.5);border-radius:6px;padding:5px 10px;font-weight:600;font-size:0.85rem;cursor:pointer;max-width:240px;" fdprocessedid="tky9eh"><option value="">— Seleccionar jugador —</option><option value="0">Juan Ignacio Orbe Murua</option><option value="1">Rainer Rene   Alcon Gunther</option><option value="2">Miguel Angel Riera Valles</option><option value="3">Jordi Muntaner Gelabert</option><option value="4">Gabriel Nebot Bauza</option><option value="5">Antonio Casellas Ripoll</option><option value="6">Francisco Garcia De La Rosa Homar</option><option value="7">Roberto Humera Amat</option><option value="8">Juan Ramis Bell</option><option value="9">Angel Santiago Pareja Morales</option><option value="10">Jose Miguel Juan Estela</option><option value="11">Carlos Riera Homar</option><option value="12">Mariano Marques Moragues</option><option value="13">Pedro Jose EgañA Garcia</option><option value="14">Leonor De Los Toyos Fischer</option><option value="15">IñAki Saralegui Reta</option><option value="16">Catalina Rossello Monjo</option><option value="17">Carolina Blazquez Segura</option><option value="18">Antonio Iturriagagoitia Ripoll</option><option value="19">Gonzalo Pardo Arin</option><option value="20">IñIgo BeñAran Orbe</option></select>
+      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;" fdprocessedid="tbnkph">🔄 Actualizar RFEG</button>
 
     </div>
   </div>
-  <div id="actStatus" style="display: block; padding: 8px 16px; font-size: 0.82rem; background: rgb(240, 253, 244); border-left: 3px solid rgb(22, 101, 52); color: rgb(22, 102, 52);">✅ Antonio actualizado — 20 ronda(s).</div>
+  <div id="actStatus" style="display: none; padding: 8px 16px; font-size: 0.82rem; background: rgb(240, 253, 244); border-left: 3px solid rgb(22, 101, 52); color: rgb(22, 102, 52);"></div>
   <div id="actContainer" style="overflow-x:auto;border:1px solid #bbf7d0;border-top:none;border-radius:0 0 10px 10px;"><style>
     .act-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
     .act-table th { background:#166534; color:#fde68a; padding:8px 10px; text-align:center; white-space:nowrap; position:-webkit-sticky; position:sticky; top:0; }
@@ -651,7 +673,177 @@
     .dif-norm { color:#111; font-weight:700; }
     .act-info-bar { background:#f0fdf4; border-bottom:2px solid #bbf7d0; padding:10px 16px; display:flex; gap:24px; flex-wrap:wrap; align-items:center; font-size:0.85rem; color:#166534; font-weight:600; }
     .act-info-bar span { font-weight:400; color:#475569; }
-  </style><div style="padding:32px;text-align:center;color:#94a3b8;font-style:italic;font-size:0.95rem;">Seleccioná un jugador para ver sus últimas 20 rondas</div></div>
+  </style><div class="act-info-bar">
+    <div>Jugador: <span>Mariano Marques Moragues</span></div>
+    <div>Licencia: <span>BP16980752</span></div>
+    <div>HCP actual: <span>7.6</span></div>
+    <div>Actualizado: <span>14/03/2026</span></div>
+  </div><table class="act-table">
+    <thead><tr>
+      <th>Fecha</th><th>Torneo</th><th>Campo de Golf</th><th>HCP</th><th>STB</th><th>Pen.</th><th>Diferencial</th>
+    </tr></thead>
+    <tbody><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">14/03/2026</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="RESULTADOS FUERA DE COMPETICION">RESULTADOS FUERA DE COMPETICION</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="SANTA PONSA">SANTA PONSA</td>
+      <td class="act-hcp" style="background:#fff5f5">10</td>
+      <td class="act-stb" style="background:#fff5f5">38</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 6.1</span></td>
+    </tr><tr>
+      <td class="act-fecha">14/02/2026</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="I PRUEBA CIRCUITO PENTAGONAL SENIOR - JARDINS">I PRUEBA CIRCUITO PENTAGONAL SENIOR - JARDINS</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title=""></td>
+      <td class="act-hcp">8</td>
+      <td class="act-stb">29</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">12.0</span></td>
+    </tr><tr>
+      <td class="act-fecha">10/01/2026</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="THE NEW CORPORATE BALEARHOUSE 2025 - 3ª JORNADA">THE NEW CORPORATE BALEARHOUSE 2025 - 3ª JORNADA</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="ALCANADA">ALCANADA</td>
+      <td class="act-hcp">9</td>
+      <td class="act-stb">26</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">14.7</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">20/12/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="THE NEW CORPORATE BALEARHOUSE 2025 - FASE">THE NEW CORPORATE BALEARHOUSE 2025 - FASE</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="T GOLF PALMA">T GOLF PALMA</td>
+      <td class="act-hcp" style="background:#fff5f5">7</td>
+      <td class="act-stb" style="background:#fff5f5">30</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 6.8</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">08/12/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="TORNEO DEL JAMÓN">TORNEO DEL JAMÓN</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="MAIORIS">MAIORIS</td>
+      <td class="act-hcp" style="background:#fff5f5">10</td>
+      <td class="act-stb" style="background:#fff5f5">36</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 6.7</span></td>
+    </tr><tr>
+      <td class="act-fecha">20/09/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="V PRUEBA CIRCUITO HEXAGONAL QROMIA 2025 - SÁBADO">V PRUEBA CIRCUITO HEXAGONAL QROMIA 2025 - SÁBADO</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title=""></td>
+      <td class="act-hcp">9</td>
+      <td class="act-stb">33</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">10.3</span></td>
+    </tr><tr>
+      <td class="act-fecha">03/08/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="TROFEO PRESIDENTA 2025">TROFEO PRESIDENTA 2025</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="SANTA PONSA">SANTA PONSA</td>
+      <td class="act-hcp">10</td>
+      <td class="act-stb">33</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">10.4</span></td>
+    </tr><tr>
+      <td class="act-fecha">28/06/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="III PRUEBA CIRCUITO HEXAGONAL QROMIA 2025 - SÁBADO">III PRUEBA CIRCUITO HEXAGONAL QROMIA 2025 - SÁBADO</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="PULA GOLF">PULA GOLF</td>
+      <td class="act-hcp">9</td>
+      <td class="act-stb">29</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">10.4</span></td>
+    </tr><tr>
+      <td class="act-fecha">26/04/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="I PRUEBA CIRCUITO HEXAGONAL QROMIA 2025 - SÁBADO">I PRUEBA CIRCUITO HEXAGONAL QROMIA 2025 - SÁBADO</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="ALCANADA">ALCANADA</td>
+      <td class="act-hcp">9</td>
+      <td class="act-stb">22</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">14.2</span></td>
+    </tr><tr>
+      <td class="act-fecha">11/04/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="III PRUEBA CIRCUITO PENTAGONAL - ELECTRICA BALEARES">III PRUEBA CIRCUITO PENTAGONAL - ELECTRICA BALEARES</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="AZULINE - I">AZULINE - I</td>
+      <td class="act-hcp">9</td>
+      <td class="act-stb">33</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">9.8</span></td>
+    </tr><tr>
+      <td class="act-fecha">08/03/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RESULTADOS FUERA DE COMPETICION">RESULTADOS FUERA DE COMPETICION</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="SANTA PONSA">SANTA PONSA</td>
+      <td class="act-hcp">9</td>
+      <td class="act-stb">32</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">10.4</span></td>
+    </tr><tr>
+      <td class="act-fecha">23/02/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="Campeonato de Baleares Mid-Amateur - Jornada 2">Campeonato de Baleares Mid-Amateur - Jornada 2</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="SANTA PONSA - Santa Ponsa I">SANTA PONSA - Santa Ponsa I</td>
+      <td class="act-hcp">9</td>
+      <td class="act-stb">27</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">14.8</span></td>
+    </tr><tr>
+      <td class="act-fecha">22/02/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="Campeonato de Baleares Mid-Amateur">Campeonato de Baleares Mid-Amateur</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="SANTA PONSA - Santa Ponsa I">SANTA PONSA - Santa Ponsa I</td>
+      <td class="act-hcp">9</td>
+      <td class="act-stb">30</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">12.2</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">15/02/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="I Prueba Circuito Pentagonal 2025">I Prueba Circuito Pentagonal 2025</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="MAIORIS">MAIORIS</td>
+      <td class="act-hcp" style="background:#fff5f5">10</td>
+      <td class="act-stb" style="background:#fff5f5">35</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 7.6</span></td>
+    </tr><tr>
+      <td class="act-fecha">08/02/2025</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="RESULTADOS FUERA DE COMPETICION">RESULTADOS FUERA DE COMPETICION</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="MAIORIS">MAIORIS</td>
+      <td class="act-hcp">10</td>
+      <td class="act-stb">33</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">9.3</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">07/12/2024</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="TORNEO JAMON">TORNEO JAMON</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="MAIORIS">MAIORIS</td>
+      <td class="act-hcp" style="background:#fff5f5">10</td>
+      <td class="act-stb" style="background:#fff5f5">36</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 6.8</span></td>
+    </tr><tr>
+      <td class="act-fecha">30/11/2024</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="XVII COPA PRESIDENTE">XVII COPA PRESIDENTE</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="MAIORIS">MAIORIS</td>
+      <td class="act-hcp">10</td>
+      <td class="act-stb">34</td>
+      <td style="text-align:center"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center"><span class="dif-norm">8.5</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">04/08/2024</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="TROFEO PRESIDENTA GOLF SANTA PONSA 2024">TROFEO PRESIDENTA GOLF SANTA PONSA 2024</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="HÁNDICAP MÁS BAJO">HÁNDICAP MÁS BAJO</td>
+      <td class="act-hcp" style="background:#fff5f5">9</td>
+      <td class="act-stb" style="background:#fff5f5">35</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 7.8</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">31/07/2024</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="TORNEO MON PORT AIR EUROPA T19">TORNEO MON PORT AIR EUROPA T19</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="MAIORIS">MAIORIS</td>
+      <td class="act-hcp" style="background:#fff5f5">11</td>
+      <td class="act-stb" style="background:#fff5f5">36</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 7.6</span></td>
+    </tr><tr style="background:#fff5f5">
+      <td class="act-fecha" style="background:#fff5f5">20/07/2024</td>
+      <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="IV PRUEBA CIRCUITO HEXAGONAL - QROMIA 2024 - SÁBADO">IV PRUEBA CIRCUITO HEXAGONAL - QROMIA 2024 - SÁBADO</td>
+      <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;background:#fff5f5" title="SON MUNTANER">SON MUNTANER</td>
+      <td class="act-hcp" style="background:#fff5f5">9</td>
+      <td class="act-stb" style="background:#fff5f5">24</td>
+      <td style="text-align:center;background:#fff5f5"><span style="color:#94a3b8">0</span></td>
+      <td style="text-align:center;background:#fff5f5"><span class="dif-star">★ 7.6</span></td>
+    </tr></tbody>
+  </table></div>
 </div>
 
 <script>
@@ -854,8 +1046,8 @@ function renderTablaActividad() {
       <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis${star?';background:#fff5f5':''}" title="${r.campo}">${r.campo}</td>
       <td class="act-hcp"${star?' style="background:#fff5f5"':''}>${r.hcp}</td>
       <td class="act-stb"${star?' style="background:#fff5f5"':''}>${r.stb}</td>
-      <td style="text-align:center${star?';background:#fff5f5':''}">${r.pen !== 0 ? `<span style="color:#b45309;font-weight:600">${r.pen > 0 ? '+' : ''}${r.pen.toFixed(1)}</span>` : '<span style="color:#94a3b8">0</span>'}</td>
-      <td style="text-align:center${star?';background:#fff5f5':''}">${star?`<span class="dif-star">★ ${r.dif.toFixed(1)}</span>`:`<span class="dif-norm">${r.dif.toFixed(1)}</span>`}</td>
+      <td style="text-align:center${star?';background:#fff5f5':''}">${(r.pen != null && r.pen !== 0) ? `<span style="color:#b45309;font-weight:600">${r.pen > 0 ? '+' : ''}${Number(r.pen).toFixed(1)}</span>` : '<span style="color:#94a3b8">0</span>'}</td>
+      <td style="text-align:center${star?';background:#fff5f5':''}">${r.dif != null ? (star?`<span class="dif-star">★ ${Number(r.dif).toFixed(1)}</span>`:`<span class="dif-norm">${Number(r.dif).toFixed(1)}</span>`) : '—'}</td>
     </tr>`;
   }).join('');
   container.innerHTML = styles + infoBar + `<table class="act-table">
@@ -907,7 +1099,10 @@ async function extraerItemsPDF(arrayBuffer) {
     const cont  = await page.getTextContent();
     for (const it of cont.items) {
       if (!it.str.trim()) continue;
-      items.push({ str: it.str.trim(), x: Math.round(it.transform[4]), y: Math.round(vp.height - it.transform[5]) });
+      // 'page' es clave para parsearRFEG: el PDF de resumen RFEG tiene 7 paginas con
+      // tablas DISTINTAS (rondas, ajustes, diferenciales, mejores 8...) que NO se pueden
+      // mezclar por coordenada Y sola -- ver nota en parsearRFEG.
+      items.push({ str: it.str.trim(), x: Math.round(it.transform[4]), y: Math.round(vp.height - it.transform[5]), page: p });
     }
   }
   return items;
@@ -925,86 +1120,110 @@ function agruparFilas(items, tol = 4) {
   return filas;
 }
 
-function parsearRFEG(filas) {
-  // HCP actual
+function parsearRFEG(items) {
+  // El PDF de resumen de handicap de la RFEG tiene 7 paginas, cada una una tabla
+  // DISTINTA del mismo calculo SMH (rondas / resultado bruto / nivel de juego / ajustes
+  // vacios / diferenciales+penalizacion / mejores 8 diferenciales / pasos finales).
+  // Version anterior (hasta 23/09/2026): mezclaba los items de TODAS las paginas en una
+  // sola lista y los agrupaba solo por coordenada Y, asumiendo que "la fila de la ronda
+  // N+1" siempre contenia el diferencial de la ronda N -- funcionaba por coincidencia de
+  // alineado vertical entre paginas, pero: (a) TORNEO/CAMPO se cortaban a la primera
+  // palabra si el nombre tenia mas de una (ej. "SAN SEBASTIAN" -> "SAN"), porque se
+  // tomaba un unico item por `.find()` en vez de juntar todos los de esa columna; (b) el
+  // rango x=[400,430] usado como "diferencial" en realidad cae en la columna "NIVEL
+  // JUGADO" de la pagina de ajustes, NO en la columna "DIFERENCIAL" real (x~700-720) --
+  // son iguales solo cuando el jugador no tiene ajustes/penalizaciones en esa ronda, asi
+  // que para rondas CON ajuste el numero mostrado podia ser el valor sin ajustar. Fix:
+  // identificar cada pagina por sus propios encabezados y leer cada columna de la pagina
+  // que corresponde, sin mezclar coordenadas Y entre paginas.
+  const dateReg = /^\d{2}\/\d{2}\/\d{4}$/;
+
+  const porPagina = {};
+  for (const it of items) { (porPagina[it.page] = porPagina[it.page] || []).push(it); }
+  const paginas = Object.keys(porPagina).map(Number);
+  const tieneExacto = (arr, s) => arr.some(it => it.str === s);
+  const tieneSub    = (arr, s) => arr.some(it => it.str.includes(s));
+
+  // Pagina de rondas: la que tiene las columnas VUELTA y MODALIDAD (fecha/torneo/campo/hcp/stb)
+  const pgRondas  = paginas.find(p => tieneExacto(porPagina[p], 'VUELTA') && tieneExacto(porPagina[p], 'MODALIDAD'));
+  // Pagina de diferenciales: tiene PENALIZACIÓN (o similar) Y la columna DIFERENCIAL
+  const pgDif     = paginas.find(p => tieneSub(porPagina[p], 'PENALIZACI') && tieneExacto(porPagina[p], 'DIFERENCIAL'));
+  // Pagina de "mejores 8": tiene DIFERENCIAL pero NO PENALIZACIÓN (tabla mas chica, solo 8 filas)
+  const pgMejores = paginas.find(p => tieneExacto(porPagina[p], 'DIFERENCIAL') && !tieneSub(porPagina[p], 'PENALIZACI'));
+
+  // HCP actual: se busca "NUEVO HÁNDICAP: X.X" en la última página (paso final del cálculo)
   let hcpAct = null;
-  const hcpFila = filas.find(f => /[Íi]ndice.*h[áa]ndic|WHS/i.test(f.text));
-  if (hcpFila) {
-    const m = hcpFila.text.match(/(\d+[,\.]\d+)/);
+  if (paginas.length) {
+    const ultima = porPagina[Math.max(...paginas)] || [];
+    const ordenada = [...ultima].sort((a, b) => a.y - b.y || a.x - b.x);
+    const texto = ordenada.map(it => it.str).join(' ');
+    const m = texto.match(/NUEVO\s*H.NDICAP:?\s*(\d+[,.]\d+)/i);
     if (m) hcpAct = parseFloat(m[1].replace(',', '.'));
   }
 
-  // Mejores 8 diferenciales (para star)
-  const mejIdx = filas.findIndex(f => /mejor.*dif|dif.*utiliz/i.test(f.text));
-  const mejoresDifs = [];
-  if (mejIdx >= 0) {
-    for (let i = mejIdx; i < Math.min(mejIdx + 15, filas.length) && mejoresDifs.length < 8; i++) {
-      filas[i].items.filter(it => /^-?\d+[,\.]\d+$/.test(it.str))
-                    .forEach(it => mejoresDifs.push(parseFloat(it.str.replace(',', '.'))));
+  // Paso 1: fecha/torneo/campo/hcp/stb -- desde la página de rondas únicamente
+  const rounds = [];
+  if (pgRondas != null) {
+    const filas = agruparFilas(porPagina[pgRondas]);
+    for (const fila of filas) {
+      const it = fila.items;
+      const fechaIt  = it.find(i => dateReg.test(i.str) && i.x >= 55 && i.x <= 80);
+      const rowNumIt = it.find(i => /^\d{1,2}$/.test(i.str) && i.x >= 40 && i.x <= 56);
+      if (!fechaIt || !rowNumIt) continue;
+
+      // Torneo/campo: se juntan TODOS los items dentro del rango de la columna (no solo
+      // el primero) para no cortar nombres de mas de una palabra.
+      const torneo = it.filter(i => i.x >= 95  && i.x <= 345).map(i => i.str).join(' ');
+      const campo  = it.filter(i => i.x >= 355 && i.x <= 520).map(i => i.str).join(' ');
+      const hcpItems = it.filter(i => i.x >= 720 && i.x <= 755 && /^\d+$/.test(i.str));
+      const stbItems = it.filter(i => i.x >= 755 && i.x <= 785 && /^\d+$/.test(i.str));
+
+      rounds.push({
+        fecha: fechaIt.str, torneo, campo,
+        hcp: hcpItems.length ? parseInt(hcpItems[hcpItems.length - 1].str) : 0,
+        stb: stbItems.length ? parseInt(stbItems[stbItems.length - 1].str) : 0,
+        dif: null, pen: 0, star: false
+      });
     }
   }
 
-  const dateReg = /^(\d{2}\/\d{2}\/\d{4})$/;
-  const pdfLabel = /\b(FECHA|TORNEO|NIVEL|JUGADO|RESULTADO|BRUTO|DIFERENCIAL|HANDICAP|STABLEFORD|AJUSTADO|PENALIZ|LIMITAC|PROMEDIO|ASC|SLOPE|INDIVIDUALES|MEJOR|EXTRAORDINARIO|VALOR|PAR|JUEGO|CAMPO)\b/i;
-  const isNum  = i => /^-?\d+[,\.]?\d*$/.test(i.str);
-  const isRating = i => /\d+[\/\.]\d+[\/\.]\d+/.test(i.str);
-  const isLabel  = i => pdfLabel.test(i.str) || dateReg.test(i.str);
-  const isTorneoLabel = i => /^(FECHA|TORNEO|NIVEL|JUGADO|RESULTADO|BRUTO|DIFERENCIAL|HANDICAP|STABLEFORD|AJUSTADO|PENALIZ|LIMITAC|PROMEDIO|ASC|SLOPE|INDIVIDUALES|MEJOR|EXTRAORDINARIO|VALOR|PAR|JUEGO|CAMPO|MANUAL|TOPE)$/i.test(i.str) || dateReg.test(i.str);
-
-  const rounds = [], roundFilaIdx = [];
-  for (let fi = 0; fi < filas.length; fi++) {
-    const fila = filas[fi];
-    const pd = fila.items.find(i => dateReg.test(i.str) && i.x >= 55 && i.x <= 80);
-    if (!pd) continue;
-    const rowNum = fila.items.find(i => /^\d{1,2}$/.test(i.str) && i.x >= 40 && i.x <= 56);
-    if (!rowNum || parseInt(rowNum.str) < 1 || parseInt(rowNum.str) > 20) continue;
-
-    const torneoItem = fila.items.find(i => i.x >= 80  && i.x <= 140 && !isTorneoLabel(i) && !isNum(i) && !isRating(i) && i.str.length > 1);
-    const campoItem  = fila.items.find(i => i.x >= 355 && i.x <= 425 && !isLabel(i) && !isNum(i) && !isRating(i) && i.str.length > 1);
-    const hcpItems   = fila.items.filter(i => i.x >= 720 && i.x <= 755 && /^\d+$/.test(i.str));
-    const stbItems   = fila.items.filter(i => i.x >= 755 && i.x <= 785 && /^\d+$/.test(i.str));
-    const penItems = fila.items.filter(i => i.x >= 630 && i.x <= 643 && /^-?\d+([,.]\d+)?$/.test(i.str) && !isRating(i));
-
-    rounds.push({
-      fecha:  pd.str,
-      torneo: torneoItem?.str ?? '',
-      campo:  campoItem?.str  ?? '',
-      hcp:    hcpItems.length ? parseInt(hcpItems[hcpItems.length - 1].str) : 0,
-      stb:    stbItems.length ? parseInt(stbItems[stbItems.length - 1].str) : 0,
-      pen:    penItems.length ? parseFloat(penItems[penItems.length - 1].str.replace(',', '.')) : 0,
-      dif: null, star: false
-    });
-    roundFilaIdx.push(fi);
+  // Paso 2: diferencial real (columna DIFERENCIAL, no "Nivel Jugado") por FECHA --
+  // emparejar por fecha en vez de por posicion de fila es lo que evita el problema de
+  // alineado entre paginas.
+  const difPorFecha = {};
+  const penPorFecha = {};
+  if (pgDif != null) {
+    const filas = agruparFilas(porPagina[pgDif]);
+    for (const fila of filas) {
+      const fechaIt = fila.items.find(i => dateReg.test(i.str));
+      if (!fechaIt) continue;
+      const difItems = fila.items.filter(i => i.x >= 695 && i.x <= 730 && /^-?\d+[,.]\d+$/.test(i.str));
+      if (difItems.length) difPorFecha[fechaIt.str] = parseFloat(difItems[difItems.length - 1].str.replace(',', '.'));
+      // Columna PENALIZACIÓN (entre MANUAL y DIFERENCIAL) -- solo para mostrar el
+      // ajuste en la ficha, el diferencial ya viene ajustado desde difPorFecha arriba.
+      const penItems = fila.items.filter(i => i.x >= 615 && i.x <= 690 && /^-?\d+[,.]\d+$/.test(i.str));
+      if (penItems.length) penPorFecha[fechaIt.str] = parseFloat(penItems[penItems.length - 1].str.replace(',', '.'));
+    }
   }
 
-  for (let ri = 0; ri < rounds.length; ri++) {
-    const lookFi = roundFilaIdx[ri] + 1;
-    if (lookFi < filas.length) {
-      for (const it of filas[lookFi].items) {
-        if (it.x < 400 || it.x > 430 || !/^-?\d+[,.]\d+$/.test(it.str) || isRating(it)) continue;
-        const v = parseFloat(it.str.replace(',', '.'));
-        if (v >= -10 && v <= 54) { rounds[ri].dif = v; break; }
-      }
+  // Paso 3: mejores 8 diferenciales (para el marcador ★) -- por fecha, esa página solo
+  // lista esas 8 rondas (no todas las 20), en otro orden.
+  const fechasMejores = new Set();
+  if (pgMejores != null) {
+    const filas = agruparFilas(porPagina[pgMejores]);
+    for (const fila of filas) {
+      const fechaIt = fila.items.find(i => dateReg.test(i.str));
+      if (fechaIt) fechasMejores.add(fechaIt.str);
     }
-    if (rounds[ri].dif === null) {
-      for (const it of filas[roundFilaIdx[ri]].items) {
-        if (!/^-?\d+[,.]\d+$/.test(it.str) || isRating(it)) continue;
-        const v = parseFloat(it.str.replace(',', '.'));
-        if (v >= -10 && v <= 54) { rounds[ri].dif = v; break; }
-      }
-    }
-    if (rounds[ri].dif !== null && rounds[ri].pen !== 0) {
-      rounds[ri].dif = parseFloat((rounds[ri].dif + rounds[ri].pen).toFixed(1));
-    }
+  }
+
+  for (const r of rounds) {
+    if (difPorFecha[r.fecha] !== undefined) r.dif = difPorFecha[r.fecha];
+    if (penPorFecha[r.fecha] !== undefined) r.pen = penPorFecha[r.fecha];
+    r.star = fechasMejores.has(r.fecha);
   }
 
   const unique = rounds.filter(r => r.dif !== null);
-  const pendientes = [...mejoresDifs];
-  for (const r of unique) {
-    const idx = pendientes.findIndex(d => Math.abs(d - r.dif) < 0.05);
-    if (idx >= 0) { r.star = true; pendientes.splice(idx, 1); }
-  }
-
   return { hcpAct, pdfFecha: unique[0]?.fecha ?? null, rondas: unique.slice(0, 20) };
 }
 
@@ -1048,14 +1267,10 @@ async function actualizarActividad() {
     if (!buf) { await new Promise(r => setTimeout(r, 2000)); buf = await tryProxies(); }
     if (!buf) throw new Error(`Sin datos en RFEG para ${jugador.licencia} — probá cargar el PDF manualmente.`);
     const items = await extraerItemsPDF(buf);
-    const filas = agruparFilas(items);
-    const datos = parsearRFEG(filas);
+    const datos = parsearRFEG(items);
     // DEBUG — abrir F12 → Consola para ver el desglose
     console.group('RFEG · ' + jugador.nombre);
-    console.log('Items PDF:', items.length, '| Filas agrupadas:', filas.length);
-    const filasConFecha = filas.filter(f => /\d{2}\/\d{2}\/\d{4}/.test(f.text));
-    console.log('Filas con fecha:', filasConFecha.length);
-    filasConFecha.slice(0, 5).forEach((f,i) => console.log(' fila'+i+' y='+f.y+':', f.items.map(x=>x.str+'@'+x.x).join(' | ')));
+    console.log('Items PDF:', items.length, '| Páginas:', Math.max(...items.map(i => i.page)));
     console.log('Rondas encontradas:', datos.rondas.length);
     datos.rondas.forEach(r => console.log(' ', r.fecha, r.torneo, '/', r.campo, 'hcp:'+r.hcp, 'stb:'+r.stb, 'dif:'+r.dif));
     console.groupEnd();
@@ -1109,8 +1324,7 @@ async function cargarPDFManual(event) {
     await cargarPDFJS();
     const buf = await file.arrayBuffer();
     const items = await extraerItemsPDF(buf);
-    const filas = agruparFilas(items);
-    const datos = parsearRFEG(filas);
+    const datos = parsearRFEG(items);
     if (datos.rondas.length > 0) {
       jugador.rondas   = datos.rondas;
       jugador.hcpAct   = datos.hcpAct   ?? jugador.hcpAct;
@@ -1150,156 +1364,171 @@ async function cargarPDFManual(event) {
     // DATOS — se actualizan al pulsar 💾 Guardar y reemplazar el archivo
     let _jugadores = [
                 {
-                        "nombre": "Rainer Rene   Alcon Gunther",
-                        "licencia": "BP55444678",
-                        "hcpIni": 13.3,
+                        "fechaMod": "16-09-2025",
                         "hcpAct": 13.3,
-                        "fechaMod": "16-09-2025",
-                        "premiosAño": 0
+                        "hcpIni": 13.3,
+                        "licencia": "BP55444678",
+                        "nombre": "Rainer Rene   Alcon Gunther",
+                        "premiosA�o": 0
                 },
                 {
-                        "nombre": "Miguel Angel Riera Valles",
-                        "licencia": "BP02886296",
-                        "hcpIni": 20,
-                        "hcpAct": 19.1,
-                        "fechaMod": "10-05-2026",
-                        "premiosAño": 5
-                },
-                {
-                        "nombre": "Jordi Muntaner Gelabert",
-                        "licencia": "BP02886289",
-                        "hcpIni": 19,
+                        "fechaMod": "07-06-2026",
                         "hcpAct": 19,
-                        "fechaMod": "10-05-2026",
-                        "premiosAño": 1
+                        "hcpIni": 20,
+                        "licencia": "BP02886296",
+                        "nombre": "Miguel Angel Riera Valles",
+                        "premiosA�o": 5
                 },
                 {
-                        "nombre": "Gabriel Nebot Bauza",
-                        "licencia": "BP02191619",
-                        "hcpIni": 14,
-                        "hcpAct": 14,
-                        "fechaMod": "10-05-2026",
-                        "premiosAño": 1
-                },
-                {
-                        "nombre": "Antonio Casellas Ripoll",
-                        "licencia": "BP02233210",
-                        "hcpIni": 16.5,
-                        "hcpAct": 16.5,
-                        "fechaMod": "12-04-2026",
-                        "premiosAño": 1
-                },
-                {
-                        "nombre": "Francisco Garcia De La Rosa Homar",
-                        "licencia": "BP02644317",
-                        "hcpIni": 23.4,
-                        "hcpAct": 23.4,
-                        "fechaMod": "29-11-2020",
-                        "premiosAño": 0
-                },
-                {
-                        "nombre": "Roberto Humera Amat",
-                        "licencia": "BP16962237",
-                        "hcpIni": 11.3,
-                        "hcpAct": 10.2,
-                        "fechaMod": "17-05-2026",
-                        "premiosAño": 8
-                },
-                {
-                        "nombre": "Juan Ramis Bell",
-                        "licencia": "BP55093089",
-                        "hcpIni": 27.6,
-                        "hcpAct": 27.6,
-                        "fechaMod": "16-09-2025",
-                        "premiosAño": 0
-                },
-                {
-                        "nombre": "Angel Santiago Pareja Morales",
-                        "licencia": "BP55077938",
-                        "hcpIni": 20.7,
-                        "hcpAct": 20.7,
-                        "fechaMod": "17-12-2025",
-                        "premiosAño": 0
-                },
-                {
-                        "nombre": "Jose Miguel Juan Estela",
-                        "licencia": "BP55077943",
-                        "hcpIni": 24,
-                        "hcpAct": 24.2,
-                        "fechaMod": "17-02-2026",
-                        "premiosAño": 3
-                },
-                {
-                        "nombre": "Carlos Riera Homar",
-                        "licencia": "CB00175549",
-                        "hcpIni": 18.4,
-                        "hcpAct": 18.4,
-                        "fechaMod": "28-11-2025",
-                        "premiosAño": 0
-                },
-                {
-                        "nombre": "Mariano Marques Moragues",
-                        "licencia": "BP16980752",
-                        "hcpIni": 7.3,
-                        "hcpAct": 7.6,
-                        "fechaMod": "12-04-2026",
-                        "premiosAño": 3
-                },
-                {
-                        "nombre": "Pedro Jose EgañA Garcia",
-                        "licencia": "4401964130",
-                        "hcpIni": 17.6,
-                        "hcpAct": 17.6,
-                        "fechaMod": "23-10-2025",
-                        "premiosAño": 0
-                },
-                {
-                        "nombre": "Leonor De Los Toyos Fischer",
-                        "licencia": "4405775876",
+                        "fechaMod": "06-06-2026",
+                        "hcpAct": 19.1,
                         "hcpIni": 19,
-                        "hcpAct": 18,
-                        "fechaMod": "19-05-2026",
-                        "premiosAño": 5
+                        "licencia": "BP02886289",
+                        "nombre": "Jordi Muntaner Gelabert",
+                        "premiosA�o": 1
                 },
                 {
-                        "nombre": "IñAki Saralegui Reta",
-                        "licencia": "VB08690063",
-                        "hcpIni": 26.5,
-                        "hcpAct": 26.5,
-                        "fechaMod": "05-10-2025",
-                        "premiosAño": 0
+                        "fechaMod": "10-05-2026",
+                        "hcpAct": 14,
+                        "hcpIni": 14,
+                        "licencia": "BP02191619",
+                        "nombre": "Gabriel Nebot Bauza",
+                        "premiosA�o": 1
                 },
                 {
-                        "nombre": "Catalina Rossello Monjo",
-                        "licencia": "BP01993596",
-                        "hcpIni": 15.1,
-                        "hcpAct": 17,
-                        "fechaMod": "17-05-2026",
-                        "premiosAño": 6
+                        "fechaMod": "12-04-2026",
+                        "hcpAct": 16.5,
+                        "hcpIni": 16.5,
+                        "licencia": "BP02233210",
+                        "nombre": "Antonio Casellas Ripoll",
+                        "premiosA�o": 1
                 },
                 {
-                        "nombre": "Carolina Blazquez Segura",
-                        "licencia": "VB09313600",
+                        "fechaMod": "29-11-2020",
+                        "hcpAct": 23.4,
+                        "hcpIni": 23.4,
+                        "licencia": "BP02644317",
+                        "nombre": "Francisco Garcia De La Rosa Homar",
+                        "premiosA�o": 0
+                },
+                {
+                        "fechaMod": "08-06-2026",
+                        "hcpAct": 10.4,
+                        "hcpIni": 11.3,
+                        "licencia": "BP16962237",
+                        "nombre": "Roberto Humera Amat",
+                        "premiosA�o": 8
+                },
+                {
+                        "fechaMod": "16-09-2025",
+                        "hcpAct": 27.6,
+                        "hcpIni": 27.6,
+                        "licencia": "BP55093089",
+                        "nombre": "Juan Ramis Bell",
+                        "premiosA�o": 0
+                },
+                {
+                        "fechaMod": "07-06-2026",
+                        "hcpAct": 20.7,
+                        "hcpIni": 20.7,
+                        "licencia": "BP55077938",
+                        "nombre": "Angel Santiago Pareja Morales",
+                        "premiosA�o": 0
+                },
+                {
+                        "fechaMod": "17-02-2026",
+                        "hcpAct": 24.2,
+                        "hcpIni": 24,
+                        "licencia": "BP55077943",
+                        "nombre": "Jose Miguel Juan Estela",
+                        "premiosA�o": 3
+                },
+                {
+                        "fechaMod": "28-11-2025",
+                        "hcpAct": 18.4,
                         "hcpIni": 18.4,
-                        "hcpAct": 17.5,
-                        "fechaMod": "02-05-2026",
-                        "premiosAño": 2
+                        "licencia": "CB00175549",
+                        "nombre": "Carlos Riera Homar",
+                        "premiosA�o": 0
                 },
                 {
-                        "nombre": "Juan Ignacio Orbe Murua",
-                        "licencia": "VB01069771",
-                        "hcpIni": 6.5,
-                        "hcpAct": 6.5,
+                        "fechaMod": "07-06-2026",
+                        "hcpAct": 7.6,
+                        "hcpIni": 7.3,
+                        "licencia": "BP16980752",
+                        "nombre": "Mariano Marques Moragues",
+                        "premiosAño": 3,
+                        "premiosA�o": 3
+                },
+                {
+                        "fechaMod": "23-10-2025",
+                        "hcpAct": 17.6,
+                        "hcpIni": 17.6,
+                        "licencia": "4401964130",
+                        "nombre": "Pedro Jose EgañA Garcia",
+                        "premiosA�o": 0
+                },
+                {
+                        "fechaMod": "08-06-2026",
+                        "hcpAct": 15.9,
+                        "hcpIni": 19,
+                        "licencia": "4405775876",
+                        "nombre": "Leonor De Los Toyos Fischer",
+                        "premiosA�o": 5
+                },
+                {
+                        "fechaMod": "05-10-2025",
+                        "hcpAct": 26.5,
+                        "hcpIni": 26.5,
+                        "licencia": "VB08690063",
+                        "nombre": "IñAki Saralegui Reta",
+                        "premiosA�o": 0
+                },
+                {
+                        "fechaMod": "08-06-2026",
+                        "hcpAct": 17.8,
+                        "hcpIni": 15.1,
+                        "licencia": "BP01993596",
+                        "nombre": "Catalina Rossello Monjo",
+                        "premiosA�o": 6
+                },
+                {
+                        "fechaMod": "08-06-2026",
+                        "hcpAct": 17,
+                        "hcpIni": 18.4,
+                        "licencia": "VB09313600",
+                        "nombre": "Carolina Blazquez Segura",
+                        "premiosA�o": 2
+                },
+                {
                         "fechaMod": "30-05-2026",
-                        "premiosAño": 3
+                        "hcpAct": 6.5,
+                        "hcpIni": 6.5,
+                        "licencia": "VB01069771",
+                        "nombre": "Juan Ignacio Orbe Murua",
+                        "premiosA�o": 3
                 },
                 {
-                        "nombre": "Antonio Iturriagagoitia Ripoll",
-                        "licencia": "4401458872",
+                        "fechaMod": "08-06-2026",
+                        "hcpAct": 3.9,
                         "hcpIni": 3.5,
-                        "hcpAct": 4.6,
-                        "fechaMod": "19-05-2026",
-                        "premiosAño": 3
+                        "licencia": "4401458872",
+                        "nombre": "Antonio Iturriagagoitia Ripoll",
+                        "premiosA�o": 3
+                },
+                {
+                        "fechaMod": "06-06-2026",
+                        "hcpAct": -0.2,
+                        "hcpIni": 0,
+                        "licencia": "VB09020318",
+                        "nombre": "Gonzalo Pardo Arin"
+                },
+                {
+                        "fechaMod": "17-05-2026",
+                        "hcpAct": 0.3,
+                        "hcpIni": 0,
+                        "licencia": "VB03368792",
+                        "nombre": "IñIgo BeñAran Orbe"
                 }
         ];
 
@@ -1377,67 +1606,34 @@ async function cargarPDFManual(event) {
     }
 
     async function buscarEnRFEG(licencia) {
-        const rfegUrl = `https://rfegolf.es/PaginasServicios/ServicioHandicap.aspx?HLic=${encodeURIComponent(licencia)}`;
-        const proxies = [
-            url => `https://corsproxy.io/?url=${encodeURIComponent(url)}`,
-            url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-            url => `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-            url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-            url => `https://thingproxy.freeboard.io/fetch/${url}`,
-        ];
-
-        let html = '';
-        for (const proxy of proxies) {
-            try {
-                const res = await fetchTimeout(proxy(rfegUrl), 12000);
-                if (!res.ok) continue;
-                const text = await res.text();
-                try { html = JSON.parse(text).contents || ''; } catch { html = text; }
-                if (html.length > 500) break;
-            } catch { continue; }
-            html = '';
+        // API oficial de la RFEG (buscador de la web "Consulta tu Hándicap") -- JSON
+        // directo, sin necesidad de proxy CORS: el servidor responde
+        // Access-Control-Allow-Origin reflejando cualquier origen. Reemplaza al scraping
+        // de ServicioHandicap.aspx vía proxies públicos (corsproxy.io/allorigins/
+        // thingproxy), que era el punto más frágil de esta función.
+        const url = `https://rfegolf.es/wp-json/handicap-search/v1/search?q=${encodeURIComponent(licencia)}`;
+        let json;
+        try {
+            const res = await fetchTimeout(url, 10000);
+            if (!res.ok) throw new Error('bad status');
+            json = await res.json();
+        } catch {
+            throw new Error('No se pudo conectar con la RFEG.');
         }
 
-        if (!html) throw new Error('No se pudo conectar con la RFEG.');
+        const hits = json?.data?.hits || [];
+        const licUp = licencia.toUpperCase();
+        const hit = hits.find(h => (h.document?.guid_licence || '').toUpperCase() === licUp) || hits[0];
+        const doc = hit?.document;
+        const hcpAct = doc ? parseFloat(String(doc.handicap).replace(',', '.')) : NaN;
+        if (!doc || isNaN(hcpAct)) throw new Error(`No se encontró "${licencia}" en la RFEG.`);
 
-        const doc = new DOMParser().parseFromString(html, 'text/html');
-        const tds = Array.from(doc.querySelectorAll('td'));
-        console.log(`[RFEG ${licencia}] celdas:`, tds.map(td => td.textContent.trim()).filter(t => t));
+        const nombre = doc.full_name.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+        let fechaMod = '';
+        const fm = (doc.date_hdc_updated_at || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (fm) fechaMod = `${fm[3]}/${fm[2]}/${fm[1]}`;
 
-        const validoTd = tds.find(td => /^v[áa]lid[oa]$/i.test(td.textContent.trim()));
-        if (validoTd) {
-            const fila = validoTd.closest('tr');
-            if (fila) {
-                const celdas = Array.from(fila.querySelectorAll('td')).map(td => td.textContent.trim());
-                console.log(`[RFEG ${licencia}] fila válido:`, celdas);
-                const iValido = celdas.findIndex(c => /^v[áa]lid[oa]$/i.test(c));
-                for (const offset of [3, 2, 4]) {
-                    if (iValido < offset) continue;
-                    const nombre = celdas[iValido - offset].toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-                    const hcpAct = parseFloat(celdas[iValido - 1].replace(',', '.'));
-                    const fechaMod = celdas[iValido + 1] || '';
-                    if (nombre.length > 3 && !isNaN(hcpAct)) return { nombre, hcpAct, fechaMod };
-                }
-            }
-        }
-
-        const texto = doc.body ? doc.body.innerText || doc.body.textContent : html;
-        const licNum = licencia.replace(/\D/g, '');
-        const mLic = texto.match(new RegExp(`([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ, ]{4,})\\s+${licNum}\\D*(\\d+[,.]\\d+)`));
-        if (mLic) {
-            const nombre = mLic[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-            const hcpAct = parseFloat(mLic[2].replace(',', '.'));
-            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
-        }
-
-        const m = texto.match(/([A-ZÁÉÍÓÚÑ][A-ZÁÉÍÓÚÑa-záéíóúñ ]{4,})\s+[\w-]+\s+([\d,]+)\s+V[áa]lid/i);
-        if (m) {
-            const nombre = m[1].trim().toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
-            const hcpAct = parseFloat(m[2].replace(',', '.'));
-            if (!isNaN(hcpAct)) return { nombre, hcpAct, fechaMod: '' };
-        }
-
-        throw new Error(`No se encontró "${licencia}" en la RFEG.`);
+        return { nombre, hcpAct, fechaMod };
     }
 
     async function buscarEnRFEGConReintentos(licencia, maxReintentos = 5, onIntento = null) {
@@ -1530,8 +1726,7 @@ async function cargarPDFManual(event) {
                         }
                         if (buf) {
                             const items = await extraerItemsPDF(buf);
-                            const filas = agruparFilas(items);
-                            const datos = parsearRFEG(filas);
+                            const datos = parsearRFEG(items);
                             if (datos.rondas.length > 0) {
                                 const jAct = JUGADORES_ACT.find(ja => ja.licencia.toUpperCase() === j.licencia.toUpperCase());
                                 if (jAct) {
@@ -1820,5 +2015,5 @@ async function cargarPDFManual(event) {
   pullFirebase(false);
   setInterval(function() { pullFirebase(true); }, 15000);
 })();
-</script>
+</script><div style="position: fixed; bottom: 14px; right: 14px; background: rgba(20, 83, 45, 0.92); color: rgb(134, 239, 172); font-size: 0.76rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; z-index: 9998; box-shadow: rgba(0, 0, 0, 0.3) 0px 2px 8px; transition: color 0.3s;">● en vivo</div>
 </body></html>
