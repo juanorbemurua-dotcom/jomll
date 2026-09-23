@@ -2648,7 +2648,10 @@ async function cargarPDFManual(event) {
         const conIncremento = jugadoresFiltrados.map((j, originalIdx) => ({
             ...j,
             originalIdx,
-            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / j.hcpIni * 100).toFixed(1) : 0
+            // Math.abs(j.hcpIni), no j.hcpIni: con hándicap inicial negativo (jugador
+            // scratch/plus) dividir por un numero negativo invierte el signo del
+            // resultado, mostrando una subida de hándicap como si fuera una bajada.
+            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / Math.abs(j.hcpIni) * 100).toFixed(1) : 0
         }));
 
         // Orden inverso al % incremento: de menor (más mejora) a mayor
@@ -2820,7 +2823,7 @@ async function cargarPDFManual(event) {
 
         const conIncremento = jugadores.map(j => ({
             ...j,
-            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / j.hcpIni * 100).toFixed(1) : 0
+            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / Math.abs(j.hcpIni) * 100).toFixed(1) : 0
         })).sort((a, b) => a.incremento - b.incremento);
 
         const datos = conIncremento.map((j, pos) => ({

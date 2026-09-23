@@ -1680,11 +1680,17 @@ async function cargarPDFManual(event) {
             return;
         }
 
-        // Calcular % incremento respecto a inicio de año y ordenar
+        // Calcular % incremento respecto a inicio de año y ordenar. Se divide por
+        // Math.abs(hcpIni), no por hcpIni directo: con hándicap inicial negativo (jugador
+        // scratch/plus) dividir por un numero negativo invierte el signo del resultado y
+        // muestra una subida de hándicap (empeora) como si fuera una bajada (mejora), o
+        // viceversa. El signo real de la variacion lo da siempre el numerador (hcpAct -
+        // hcpIni); Math.abs() en el denominador solo normaliza la magnitud, sin tocar ese
+        // signo.
         const conIncremento = jugadores.map((j, originalIdx) => ({
             ...j,
             originalIdx,
-            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / j.hcpIni * 100).toFixed(1) : 0
+            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / Math.abs(j.hcpIni) * 100).toFixed(1) : 0
         }));
 
         // Orden inverso al % incremento: de menor (más mejora) a mayor
@@ -1821,7 +1827,7 @@ async function cargarPDFManual(event) {
 
         const conIncremento = jugadores.map(j => ({
             ...j,
-            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / j.hcpIni * 100).toFixed(1) : 0
+            incremento: j.hcpIni !== 0 ? +((j.hcpAct - j.hcpIni) / Math.abs(j.hcpIni) * 100).toFixed(1) : 0
         })).sort((a, b) => a.incremento - b.incremento);
 
         const datos = conIncremento.map((j, pos) => ({
