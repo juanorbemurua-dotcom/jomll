@@ -387,8 +387,1269 @@
     const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     document.getElementById('fechaHoy').textContent = 'Fecha actual: ' + hoy.toLocaleDateString('es-ES', opciones);
 
-    // DATOS — inicialmente vacío; usa el script Python para poblar desde el Excel
-    let _jugadores = [];
+    // DATOS — inscritos del Gran Premio de España de Mayores de 60 Masculino (GolfBox competición 557), ordenados por hándicap
+    let _jugadores = [
+        {
+                "nombre": "Estanislao Urquijo Rubio",
+                "licencia": "CM01019843",
+                "hcpAct": -0.1,
+                "perteneciente": "Real Club De La Puerta De Hierro",
+                "fechaNacimiento": "28/08/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Juan Pascual Alonso",
+                "licencia": "1101456561",
+                "hcpAct": 0.2,
+                "perteneciente": "Real Golf Club De Pedreña",
+                "fechaNacimiento": "30/12/1960",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Andrew Bruce",
+                "licencia": "7732021128",
+                "hcpAct": 0.4,
+                "perteneciente": "Club De Golf Arevalo",
+                "fechaNacimiento": "30/09/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Alfonso Montojo Perez",
+                "licencia": "CM01007350",
+                "hcpAct": 0.5,
+                "perteneciente": "Real Club De La Puerta De Hierro",
+                "fechaNacimiento": "12/12/1960",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Angel Sartorius Carvajal",
+                "licencia": "CM01017926",
+                "hcpAct": 0.5,
+                "perteneciente": "Real Club De La Puerta De Hierro",
+                "fechaNacimiento": "24/03/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Frank Stockmans",
+                "licencia": "AM53949228",
+                "hcpAct": 0.5,
+                "perteneciente": "Atalaya Golf & Country Club Internacional, S.A.",
+                "fechaNacimiento": "28/04/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "George Trowbridge",
+                "licencia": "AM51897009",
+                "hcpAct": 0.5,
+                "perteneciente": "Real Club De Golf Guadalmina",
+                "fechaNacimiento": "26/07/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Antonio Mortera Moran",
+                "licencia": "0201026447",
+                "hcpAct": 0.8,
+                "perteneciente": "Real Club De Golf De Castiello",
+                "fechaNacimiento": "08/03/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Julian Garcia-Mayoral de Castro",
+                "licencia": "4402009690",
+                "hcpAct": 0.8,
+                "perteneciente": "Club De Golf De Gorraiz",
+                "fechaNacimiento": "07/01/1960",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Hyun Suk Cho",
+                "licencia": "LV65139828",
+                "hcpAct": 1.0,
+                "perteneciente": "Alenda Golf Club",
+                "fechaNacimiento": "20/08/1964",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Rafael Burgos Riestra",
+                "licencia": "CM61765285",
+                "hcpAct": 1.0,
+                "perteneciente": "Club De Golf La Dehesa",
+                "fechaNacimiento": "08/08/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Juan Antonio Ruiz Batana",
+                "licencia": "AM60319981",
+                "hcpAct": 1.3,
+                "perteneciente": "Golf Torrequebrada",
+                "fechaNacimiento": "02/03/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Ignacio Gonzalez Martinez",
+                "licencia": "CM02036051",
+                "hcpAct": 1.4,
+                "perteneciente": "Real Club De Campo Villa De Madrid",
+                "fechaNacimiento": "08/09/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jaime Pascual Alonso",
+                "licencia": "CM11007869",
+                "hcpAct": 1.5,
+                "perteneciente": "Real Sociedad Hípica Española Club De Campo",
+                "fechaNacimiento": "20/06/1962",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Ildefonso Coronado Rodriguez",
+                "licencia": "LV05097405",
+                "hcpAct": 1.7,
+                "perteneciente": "Club De Golf El Bosque",
+                "fechaNacimiento": "02/03/1958",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Guillermo Arola Diaz",
+                "licencia": "CB07013513",
+                "hcpAct": 1.8,
+                "perteneciente": "Club De Golf Costa Brava",
+                "fechaNacimiento": "25/06/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Ignacio Valcarce Rein",
+                "licencia": "AM15010271",
+                "hcpAct": 2.1,
+                "perteneciente": "Real Guadalhorce Club De Golf",
+                "fechaNacimiento": "23/10/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Alvaro Balsa Estebanez",
+                "licencia": "GC00433019",
+                "hcpAct": 2.3,
+                "perteneciente": "Federación Gallega De Golf",
+                "fechaNacimiento": "07/06/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Ignacio Marquez Pombo",
+                "licencia": "CM01009510",
+                "hcpAct": 2.3,
+                "perteneciente": "Real Club De La Puerta De Hierro",
+                "fechaNacimiento": "17/09/1962",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Paul Hansen",
+                "licencia": "AM61490790",
+                "hcpAct": 2.3,
+                "perteneciente": "Mijas Golf Internacional",
+                "fechaNacimiento": "16/07/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Avelino Carlos Mora Calvo",
+                "licencia": "0110197726",
+                "hcpAct": 2.4,
+                "perteneciente": "Margas Golf",
+                "fechaNacimiento": "22/04/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Alvaro Fernandez Latorre",
+                "licencia": "CM52012956",
+                "hcpAct": 2.9,
+                "perteneciente": "Real Club La Moraleja",
+                "fechaNacimiento": "16/02/1964",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Carlos Olle Bertrand",
+                "licencia": "AM85091788",
+                "hcpAct": 3.1,
+                "perteneciente": "Real Club Sevilla Golf",
+                "fechaNacimiento": "15/10/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Mario Perez-Calvo Soler",
+                "licencia": "CB01048923",
+                "hcpAct": 3.1,
+                "perteneciente": "Club De Golf Sant Cugat",
+                "fechaNacimiento": "10/05/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Rafael Santonja Hernandez",
+                "licencia": "CM52628528",
+                "hcpAct": 3.2,
+                "perteneciente": "Real Club La Moraleja",
+                "fechaNacimiento": "05/07/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Manuel Muelas Peña",
+                "licencia": "CMF3114295",
+                "hcpAct": 3.3,
+                "perteneciente": "Golf Caminos",
+                "fechaNacimiento": "22/05/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Miguel Velasco Frutos",
+                "licencia": "7707744809",
+                "hcpAct": 3.5,
+                "perteneciente": "Club De Golf Entrepinos",
+                "fechaNacimiento": "05/11/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Antonio Benitez Ormazabal",
+                "licencia": "RL04395415",
+                "hcpAct": 3.8,
+                "perteneciente": "Club De Golf El Campo De Logroño",
+                "fechaNacimiento": "18/05/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Alfonso Garcia Alonso",
+                "licencia": "CB02012610",
+                "hcpAct": 3.9,
+                "perteneciente": "Club De Golf Terramar",
+                "fechaNacimiento": "02/04/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Rafael Moreno Jimenez",
+                "licencia": "CB03048327",
+                "hcpAct": 3.9,
+                "perteneciente": "Real Club De Golf De Cerdaña",
+                "fechaNacimiento": "01/02/1964",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Luis Boado Montero",
+                "licencia": "GC01017603",
+                "hcpAct": 4.2,
+                "perteneciente": "Real Aero Club De Vigo",
+                "fechaNacimiento": "13/05/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Ignacio Bustamante Tena",
+                "licencia": "CM01013155",
+                "hcpAct": 4.3,
+                "perteneciente": "Real Club De La Puerta De Hierro",
+                "fechaNacimiento": "25/03/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jordi Serra Blanch",
+                "licencia": "CB04174396",
+                "hcpAct": 4.4,
+                "perteneciente": "Club De Golf De Llavaneras",
+                "fechaNacimiento": "08/03/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Lirio Rosado Courtot",
+                "licencia": "CB65947100",
+                "hcpAct": 4.6,
+                "perteneciente": "Camiral",
+                "fechaNacimiento": "20/10/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Antonio Iturriagagoitia Ripoll",
+                "licencia": "4401458872",
+                "hcpAct": 4.7,
+                "perteneciente": "Club De Golf Ulzama",
+                "fechaNacimiento": "11/04/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Colin Melville Sloan",
+                "licencia": "MM24695961",
+                "hcpAct": 4.8,
+                "perteneciente": "Club De Golf La Peraleja",
+                "fechaNacimiento": "29/06/1956",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Javier Bel Welsch",
+                "licencia": "CB02007218",
+                "hcpAct": 4.9,
+                "perteneciente": "Club De Golf Terramar",
+                "fechaNacimiento": "23/02/1964",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Pedro Barber Pont",
+                "licencia": "LV03015078",
+                "hcpAct": 5.0,
+                "perteneciente": "Altea Club De Golf",
+                "fechaNacimiento": "07/07/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jesus Fuente Morillo",
+                "licencia": "LV06319526",
+                "hcpAct": 5.2,
+                "perteneciente": "Club De Golf Escorpion",
+                "fechaNacimiento": "24/09/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Josep Lluis Trepat Ros",
+                "licencia": "CB35912677",
+                "hcpAct": 5.2,
+                "perteneciente": "Golf Lleida & Country Club",
+                "fechaNacimiento": "25/02/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Juan Amat Par",
+                "licencia": "CB01008827",
+                "hcpAct": 5.2,
+                "perteneciente": "Club De Golf Sant Cugat",
+                "fechaNacimiento": "19/09/1957",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Simon Carrillo Murcia",
+                "licencia": "AM00984945",
+                "hcpAct": 5.3,
+                "perteneciente": "Real Federacion Andaluza De Golf",
+                "fechaNacimiento": "08/06/1960",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Ricardo Andreu Mulet",
+                "licencia": "BP15058153",
+                "hcpAct": 5.4,
+                "perteneciente": "T Golf Palma",
+                "fechaNacimiento": "16/07/1964",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Waldo Puig Esteban",
+                "licencia": "CB23179602",
+                "hcpAct": 5.4,
+                "perteneciente": "Club De Golf De Barcelona",
+                "fechaNacimiento": "26/07/1962",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Alfonso Del Rio Lavin",
+                "licencia": "CM00251559",
+                "hcpAct": 5.5,
+                "perteneciente": "Real Federacion De Golf De Madrid",
+                "fechaNacimiento": "06/10/1964",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Mark Andrew Sefton",
+                "licencia": "CM00506661",
+                "hcpAct": 5.5,
+                "perteneciente": "Real Federacion De Golf De Madrid",
+                "fechaNacimiento": "11/01/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Santiago Cerviño Lopez",
+                "licencia": "GC01819429",
+                "hcpAct": 5.6,
+                "perteneciente": "Real Aero Club De Vigo",
+                "fechaNacimiento": "31/07/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Eduardo Vazquez Rio",
+                "licencia": "GC53194988",
+                "hcpAct": 5.7,
+                "perteneciente": "Club De Golf Lugo S.A.",
+                "fechaNacimiento": "25/03/1958",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Juan Carlos Calvo Santiuste",
+                "licencia": "8819441866",
+                "hcpAct": 5.7,
+                "perteneciente": "Club De Golf Castilla La Mancha",
+                "fechaNacimiento": "02/05/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Luis Alberto Garcia Faugeras",
+                "licencia": "RL04261399",
+                "hcpAct": 5.8,
+                "perteneciente": "Club De Golf El Campo De Logroño",
+                "fechaNacimiento": "03/10/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Julio Monedero Higuero",
+                "licencia": "CM04073279",
+                "hcpAct": 5.9,
+                "perteneciente": "Race",
+                "fechaNacimiento": "19/02/1959",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Faustino Lopez Bravo",
+                "licencia": "7772097615",
+                "hcpAct": 6.0,
+                "perteneciente": "C.D. La Faisanera Golf Segovia",
+                "fechaNacimiento": "14/07/1958",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Idriss Tabet",
+                "licencia": "AM83493418",
+                "hcpAct": 6.1,
+                "perteneciente": "Lauro Golf",
+                "fechaNacimiento": "30/03/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Juan Ignacio Orbe Murua",
+                "licencia": "VB01069771",
+                "hcpAct": 6.2,
+                "perteneciente": "Real Golf Club  De San Sebastian",
+                "fechaNacimiento": "29/07/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Fernando Ramon Esquerra Gimeno",
+                "licencia": "CB07025071",
+                "hcpAct": 6.3,
+                "perteneciente": "Club De Golf Costa Brava",
+                "fechaNacimiento": "13/02/1964",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Antonio Barrajon Barrios",
+                "licencia": "8819144400",
+                "hcpAct": 6.3,
+                "perteneciente": "Club De Golf Castilla La Mancha",
+                "fechaNacimiento": "28/03/1959",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Mario German Salamanca Riquelme",
+                "licencia": "CB08336047",
+                "hcpAct": 6.4,
+                "perteneciente": "Club De Golf Vallromanes",
+                "fechaNacimiento": "20/12/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Alvaro Lopez de Lamadrid Morante",
+                "licencia": "CB05014078",
+                "hcpAct": 6.6,
+                "perteneciente": "Real Club De Golf \"El Prat\"",
+                "fechaNacimiento": "08/04/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Rainer Suehling",
+                "licencia": "AM76161167",
+                "hcpAct": 6.7,
+                "perteneciente": "Miraflores Golf",
+                "fechaNacimiento": "18/01/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Maria Carnicero Ortiz de Solorzano",
+                "licencia": "CM02005372",
+                "hcpAct": 6.8,
+                "perteneciente": "Real Club De Campo Villa De Madrid",
+                "fechaNacimiento": "08/07/1957",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Marcos Antonio Gomez Ferreiro",
+                "licencia": "AM00193885",
+                "hcpAct": 7.0,
+                "perteneciente": "Real Federacion Andaluza De Golf",
+                "fechaNacimiento": "12/03/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Francisco Farfan Rueda",
+                "licencia": "AMD7606274",
+                "hcpAct": 7.1,
+                "perteneciente": "El Chaparral Golf Club",
+                "fechaNacimiento": "24/02/1960",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Nestor Gonzalez Brasero",
+                "licencia": "CM12214523",
+                "hcpAct": 7.1,
+                "perteneciente": "Campo De Golf B.A. De Torrejon",
+                "fechaNacimiento": "26/02/1960",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Alejandro Gonzalez Martinez",
+                "licencia": "CM02036050",
+                "hcpAct": 7.2,
+                "perteneciente": "Real Club De Campo Villa De Madrid",
+                "fechaNacimiento": "14/03/1964",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Antonio Marin Riano",
+                "licencia": "1101278554",
+                "hcpAct": 7.2,
+                "perteneciente": "Real Golf Club De Pedreña",
+                "fechaNacimiento": "26/04/1962",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "David Bayona Luna",
+                "licencia": "LV05433935",
+                "hcpAct": 7.4,
+                "perteneciente": "Club De Golf El Bosque",
+                "fechaNacimiento": "22/09/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Ernesto Romeu Armengol",
+                "licencia": "CB02011089",
+                "hcpAct": 7.4,
+                "perteneciente": "Club De Golf Terramar",
+                "fechaNacimiento": "19/05/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Paul Van Panhuys",
+                "licencia": "CM02058107",
+                "hcpAct": 7.4,
+                "perteneciente": "Real Club De Campo Villa De Madrid",
+                "fechaNacimiento": "05/11/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Juan Montero Romero",
+                "licencia": "AM01357978",
+                "hcpAct": 7.5,
+                "perteneciente": "Real Club De Campo De Malaga",
+                "fechaNacimiento": "12/09/1955",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Juan Pintor Puerta",
+                "licencia": "LV15033741",
+                "hcpAct": 7.6,
+                "perteneciente": "Benidorm Club De Golf",
+                "fechaNacimiento": "30/10/1957",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Manuel Gomez Cardona",
+                "licencia": "AM00967277",
+                "hcpAct": 7.6,
+                "perteneciente": "Real Federacion Andaluza De Golf",
+                "fechaNacimiento": "08/10/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Josep Parera Martinell",
+                "licencia": "CB03014415",
+                "hcpAct": 7.7,
+                "perteneciente": "Real Club De Golf De Cerdaña",
+                "fechaNacimiento": "10/06/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Roger Marsh",
+                "licencia": "CB55390072",
+                "hcpAct": 7.8,
+                "perteneciente": "Club De Golf Ribagorça",
+                "fechaNacimiento": "03/09/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Iñigo Gesto Castromil",
+                "licencia": "GC51014684",
+                "hcpAct": 8.1,
+                "perteneciente": "Real Club De Golf La Toja",
+                "fechaNacimiento": "22/02/1962",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Manuel Vazquez Perez-Rosales",
+                "licencia": "CB07179089",
+                "hcpAct": 8.2,
+                "perteneciente": "Club De Golf Costa Brava",
+                "fechaNacimiento": "14/10/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Pablo Bernad Cabra",
+                "licencia": "VB01006241",
+                "hcpAct": 8.2,
+                "perteneciente": "Real Golf Club  De San Sebastian",
+                "fechaNacimiento": "27/11/1960",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Ivan Maura Andreu",
+                "licencia": "CM01008080",
+                "hcpAct": 8.3,
+                "perteneciente": "Real Club De La Puerta De Hierro",
+                "fechaNacimiento": "25/08/1959",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Joan Casamitjana Aguila",
+                "licencia": "CB34083439",
+                "hcpAct": 8.3,
+                "perteneciente": "Golf Club Perelada",
+                "fechaNacimiento": "08/12/1959",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Miguel Navarro Alvarez",
+                "licencia": "AM15033178",
+                "hcpAct": 8.3,
+                "perteneciente": "Real Guadalhorce Club De Golf",
+                "fechaNacimiento": "10/01/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Manuel Luque Calvo",
+                "licencia": "RL04140709",
+                "hcpAct": 8.4,
+                "perteneciente": "Club De Golf El Campo De Logroño",
+                "fechaNacimiento": "06/12/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Carlos Bruna Capel",
+                "licencia": "CB55414904",
+                "hcpAct": 8.5,
+                "perteneciente": "Club De Golf Ribagorça",
+                "fechaNacimiento": "23/02/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Adolfo Martinez Izquierdo",
+                "licencia": "CB09461740",
+                "hcpAct": 8.6,
+                "perteneciente": "Golf Costa Daurada",
+                "fechaNacimiento": "09/02/1964",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Carlos Gomez Rebenaque",
+                "licencia": "8819129089",
+                "hcpAct": 8.8,
+                "perteneciente": "Club De Golf Castilla La Mancha",
+                "fechaNacimiento": "22/10/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Carlos Sauret Bonino",
+                "licencia": "CB02084926",
+                "hcpAct": 8.8,
+                "perteneciente": "Club De Golf Terramar",
+                "fechaNacimiento": "27/04/1962",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jorge Villavecchia Barnach",
+                "licencia": "CM01009524",
+                "hcpAct": 8.9,
+                "perteneciente": "Real Club De La Puerta De Hierro",
+                "fechaNacimiento": "31/01/1962",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Luis Bootello Ramirez",
+                "licencia": "AM15210776",
+                "hcpAct": 8.9,
+                "perteneciente": "Real Guadalhorce Club De Golf",
+                "fechaNacimiento": "12/09/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Manuel Martinez Meroño",
+                "licencia": "LV00203634",
+                "hcpAct": 9.4,
+                "perteneciente": "Federación Valenciana De Golf",
+                "fechaNacimiento": "06/12/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Ignacio Bores-Leonori Montalt",
+                "licencia": "CB05046439",
+                "hcpAct": 9.5,
+                "perteneciente": "Real Club De Golf \"El Prat\"",
+                "fechaNacimiento": "01/04/1962",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Juan Pedro Diaz Muñoz",
+                "licencia": "CB00275255",
+                "hcpAct": 9.5,
+                "perteneciente": "Federación Catalana De Golf",
+                "fechaNacimiento": "07/07/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Francisco Gomez Martin",
+                "licencia": "CM11308468",
+                "hcpAct": 9.6,
+                "perteneciente": "Real Sociedad Hípica Española Club De Campo",
+                "fechaNacimiento": "21/05/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Javier Perez-Sala Valls-Taberner",
+                "licencia": "CB03047089",
+                "hcpAct": 9.6,
+                "perteneciente": "Real Club De Golf De Cerdaña",
+                "fechaNacimiento": "03/11/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Angel Gancedo Arjona",
+                "licencia": "AM15233592",
+                "hcpAct": 9.7,
+                "perteneciente": "Real Guadalhorce Club De Golf",
+                "fechaNacimiento": "04/05/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Carmelo Bautista Gomez",
+                "licencia": "8819460621",
+                "hcpAct": 9.8,
+                "perteneciente": "Club De Golf Castilla La Mancha",
+                "fechaNacimiento": "25/07/1955",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Joaquin Giralt Canalda",
+                "licencia": "CB05116258",
+                "hcpAct": 9.8,
+                "perteneciente": "Real Club De Golf \"El Prat\"",
+                "fechaNacimiento": "09/02/1958",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Carmelo Rico Font",
+                "licencia": "LV65088156",
+                "hcpAct": 9.9,
+                "perteneciente": "Alenda Golf Club",
+                "fechaNacimiento": "18/08/1956",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Lluis Lana Costa",
+                "licencia": "CB05086985",
+                "hcpAct": 10.5,
+                "perteneciente": "Real Club De Golf \"El Prat\"",
+                "fechaNacimiento": "23/07/1960",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Luis Cobo Jimenez",
+                "licencia": "LV60267057",
+                "hcpAct": 10.9,
+                "perteneciente": "Club De Golf De Bonalba",
+                "fechaNacimiento": "26/09/1960",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Manuel Alarcon Gordon",
+                "licencia": "CM11205363",
+                "hcpAct": 10.9,
+                "perteneciente": "Real Sociedad Hípica Española Club De Campo",
+                "fechaNacimiento": "23/05/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Javier Duran Baste",
+                "licencia": "CB28083713",
+                "hcpAct": 11.1,
+                "perteneciente": "Fontanals Golf",
+                "fechaNacimiento": "26/05/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Armando Escobar Sanz",
+                "licencia": "CM41797024",
+                "hcpAct": 11.3,
+                "perteneciente": "Escuela De La Real Federación De Golf De Madrid",
+                "fechaNacimiento": "20/08/1958",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Iñaki Arrechea Eguia",
+                "licencia": "VB05326493",
+                "hcpAct": 11.3,
+                "perteneciente": "Campo De Golf Meaztegi S.A.",
+                "fechaNacimiento": "30/09/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Antonio Canton Rubio",
+                "licencia": "CM00503121",
+                "hcpAct": 11.6,
+                "perteneciente": "Real Federacion De Golf De Madrid",
+                "fechaNacimiento": "17/05/1957",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Antonio Torres Paredes",
+                "licencia": "AMC9629142",
+                "hcpAct": 11.6,
+                "perteneciente": "C.D. Cádiz Club De Golf",
+                "fechaNacimiento": "02/08/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Iñigo Yllera Ceballos",
+                "licencia": "CM01077079",
+                "hcpAct": 11.6,
+                "perteneciente": "Real Club De La Puerta De Hierro",
+                "fechaNacimiento": "22/02/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Miguel Duran Muzquiz",
+                "licencia": "AM93219533",
+                "hcpAct": 11.6,
+                "perteneciente": "Club De Golf Marbella",
+                "fechaNacimiento": "11/05/1958",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Antonio Cañellas Gallardo",
+                "licencia": "BP00367428",
+                "hcpAct": 11.7,
+                "perteneciente": "Federación Balear De Golf",
+                "fechaNacimiento": "01/11/1964",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Nicolas Lorduy Frutos",
+                "licencia": "CM04081636",
+                "hcpAct": 12.2,
+                "perteneciente": "Race",
+                "fechaNacimiento": "25/07/1955",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Felix Antonio Gonzalez Rodriguez",
+                "licencia": "7707241875",
+                "hcpAct": 12.4,
+                "perteneciente": "Club De Golf Entrepinos",
+                "fechaNacimiento": "12/06/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "José Manuel Hernández Gil",
+                "licencia": "MM06142690",
+                "hcpAct": 12.5,
+                "perteneciente": "Club De Golf Altorreal",
+                "fechaNacimiento": "12/01/1960",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Sergio Segura Laborda",
+                "licencia": "LV17444308",
+                "hcpAct": 12.5,
+                "perteneciente": "Club De Golf Masia De Las Estrellas",
+                "fechaNacimiento": "21/03/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Rafael Fontana Garcia",
+                "licencia": "CB22085068",
+                "hcpAct": 12.6,
+                "perteneciente": "Emporda Golf Club",
+                "fechaNacimiento": "28/03/1954",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jesus Delgado Fernandez de Heredia",
+                "licencia": "CB00181560",
+                "hcpAct": 12.7,
+                "perteneciente": "Federación Catalana De Golf",
+                "fechaNacimiento": "06/03/1964",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Maria Mathe Granda",
+                "licencia": "CM52888914",
+                "hcpAct": 12.9,
+                "perteneciente": "Real Club La Moraleja",
+                "fechaNacimiento": "18/03/1957",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Santiago Tobal Gonzalez",
+                "licencia": "7707501122",
+                "hcpAct": 13.4,
+                "perteneciente": "Club De Golf Entrepinos",
+                "fechaNacimiento": "06/09/1958",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Francisco Lopez Costell",
+                "licencia": "LV51323329",
+                "hcpAct": 14.0,
+                "perteneciente": "Campo De Golf El Saler",
+                "fechaNacimiento": "30/11/1959",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Fco. Guirado Hidalgo",
+                "licencia": "AM62359108",
+                "hcpAct": 14.0,
+                "perteneciente": "Club De Golf Playa Serena",
+                "fechaNacimiento": "10/03/1960",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Ignacio Olaechea Pascual",
+                "licencia": "VB09324081",
+                "hcpAct": 14.1,
+                "perteneciente": "Real Nuevo Club S.Sebastian Basozabal",
+                "fechaNacimiento": "19/06/1959",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Miguel Carrillo Vicente",
+                "licencia": "AMC7789689",
+                "hcpAct": 14.5,
+                "perteneciente": "Alborán Golf",
+                "fechaNacimiento": "21/06/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Juan Pedro Sanchez Quintana",
+                "licencia": "CM30219161",
+                "hcpAct": 14.8,
+                "perteneciente": "Club De Golf El Foro 2000",
+                "fechaNacimiento": "01/07/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Iñigo Barrutia Olasolo",
+                "licencia": "VB09425310",
+                "hcpAct": 14.9,
+                "perteneciente": "Real Nuevo Club S.Sebastian Basozabal",
+                "fechaNacimiento": "03/12/1959",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Javier Cayuela Zayas",
+                "licencia": "CM00504726",
+                "hcpAct": 14.9,
+                "perteneciente": "Real Federacion De Golf De Madrid",
+                "fechaNacimiento": "03/09/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jesus Manuel Taboada Candal",
+                "licencia": "GC53441925",
+                "hcpAct": 15.4,
+                "perteneciente": "Club De Golf Lugo S.A.",
+                "fechaNacimiento": "10/03/1966",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Manuel Cardona Quesada",
+                "licencia": "AM65093338",
+                "hcpAct": 15.4,
+                "perteneciente": "Granada Club De Golf",
+                "fechaNacimiento": "25/03/1950",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Pedro Cubero Collado",
+                "licencia": "CM00308516",
+                "hcpAct": 15.4,
+                "perteneciente": "Real Federacion De Golf De Madrid",
+                "fechaNacimiento": "29/12/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Willy De Brabanter",
+                "licencia": "CM60631311",
+                "hcpAct": 15.8,
+                "perteneciente": "Golf Los Retamares",
+                "fechaNacimiento": "15/08/1963",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Juan Antonio Andres Portela",
+                "licencia": "CM33797311",
+                "hcpAct": 16.0,
+                "perteneciente": "Palacio Del Negralejo S.A.",
+                "fechaNacimiento": "13/03/1959",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Manuel Castellvi Poveda",
+                "licencia": "CB02650008",
+                "hcpAct": 16.2,
+                "perteneciente": "Club De Golf Terramar",
+                "fechaNacimiento": "15/06/1964",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Javier Beldarrain Carrillo",
+                "licencia": "VB00149348",
+                "hcpAct": 16.9,
+                "perteneciente": "Federación Vasca De Golf",
+                "fechaNacimiento": "23/10/1957",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Hugo Lincoln Pascual",
+                "licencia": "CM00083585",
+                "hcpAct": 17.7,
+                "perteneciente": "Real Federacion De Golf De Madrid",
+                "fechaNacimiento": "20/06/1953",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Luis Garcia Blanco",
+                "licencia": "7770976566",
+                "hcpAct": 17.9,
+                "perteneciente": "Leon Golf-Prosacyr",
+                "fechaNacimiento": "31/10/1958",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Roberto Luis Maya",
+                "licencia": "AM83954018",
+                "hcpAct": 17.9,
+                "perteneciente": "Lauro Golf",
+                "fechaNacimiento": "27/12/1962",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Jose Duarte Aguilar",
+                "licencia": "AMC2058468",
+                "hcpAct": 18.3,
+                "perteneciente": "Club De Golf Cancelada",
+                "fechaNacimiento": "15/08/1950",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Alfonso Francisco Bruzon Gallego",
+                "licencia": "AMC9319255",
+                "hcpAct": 18.4,
+                "perteneciente": "C.D. Cádiz Club De Golf",
+                "fechaNacimiento": "10/10/1960",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Joaquin Romero Caballero",
+                "licencia": "CM02057000",
+                "hcpAct": 18.9,
+                "perteneciente": "Real Club De Campo Villa De Madrid",
+                "fechaNacimiento": "25/10/1957",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Aurelio Cava Encijo",
+                "licencia": "CM00210580",
+                "hcpAct": 19.3,
+                "perteneciente": "Real Federacion De Golf De Madrid",
+                "fechaNacimiento": "07/01/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Modesto Francisco Moreno Andujar",
+                "licencia": "AM23317540",
+                "hcpAct": 19.4,
+                "perteneciente": "La Envia Golf",
+                "fechaNacimiento": "23/03/1965",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Tomas Martin Barbolla",
+                "licencia": "CM00797244",
+                "hcpAct": 19.5,
+                "perteneciente": "Real Federacion De Golf De Madrid",
+                "fechaNacimiento": "29/12/1958",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Angel Ramos Sanchez",
+                "licencia": "CM02075613",
+                "hcpAct": 19.8,
+                "perteneciente": "Real Club De Campo Villa De Madrid",
+                "fechaNacimiento": "07/12/1956",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Angel Menes Vallano",
+                "licencia": "CM00036336",
+                "hcpAct": 21.7,
+                "perteneciente": "Real Federacion De Golf De Madrid",
+                "fechaNacimiento": "02/10/1961",
+                "fechaMod": "",
+                "premiosAño": null
+        },
+        {
+                "nombre": "Laureano Guillen Montoya",
+                "licencia": "AM62802848",
+                "hcpAct": 21.7,
+                "perteneciente": "Club De Golf Playa Serena",
+                "fechaNacimiento": "27/02/1959",
+                "fechaMod": "",
+                "premiosAño": null
+        }
+];
 
     function cargarDatos() { return _jugadores; }
     function guardarDatos(datos) { _jugadores = datos; }
