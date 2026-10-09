@@ -1,7 +1,7 @@
 ﻿<html lang="es"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Campeonato de España Alevín</title>
+    <title>Gran Premio de España Mayores de 60</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -305,8 +305,8 @@
 <body>
 
 <header>
-    <h1 id="titulo-principal" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">⛳ Campeonato de España Alevín</h1>
-    <p id="titulo-subtitulo" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">Lista de participantes · Alevín</p>
+    <h1 id="titulo-principal" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">⛳ Gran Premio de España de Mayores de 60 Masculino</h1>
+    <p id="titulo-subtitulo" contenteditable="true" title="Clic para editar" style="cursor:text;outline:none;">Lista de inscritos · 31 oct – 1 nov 2026</p>
 </header>
 
 <p class="fecha-hoy" id="fechaHoy">Fecha actual: </p>
@@ -338,7 +338,7 @@
 <!-- Tabla -->
 <div class="tabla-container">
     <div class="tabla-header">
-        <h2>🏆 Campeonato de España Alevín</h2>
+        <h2>🏆 Gran Premio de España Mayores de 60</h2>
         <div style="display:flex;gap:8px;">
             <button class="btn-update" id="btn-update" onclick="actualizarTodos()">↻ Actualizar RFEG</button>
             <button class="btn-export" onclick="exportarExcel()">⬇ Exportar Excel</button>
@@ -1730,7 +1730,7 @@
 
     function renderTablaActividad() { const container = document.getElementById('actContainer'); container.innerHTML = '<div style="padding:24px;text-align:center;color:#94a3b8;font-style:italic;">Actividad no disponible en esta copia.</div>'; }
 
-    function guardarJSON() { const jugadores = cargarDatos(); const datosStr = JSON.stringify(jugadores, null, 8); const blob = new Blob([datosStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'campeonato_alevin.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); setEstado('✓ JSON descargado.', 'ok'); }
+    function guardarJSON() { const jugadores = cargarDatos(); const datosStr = JSON.stringify(jugadores, null, 8); const blob = new Blob([datosStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'gp_mayores_60.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); setEstado('✓ JSON descargado.', 'ok'); }
 
     function cargarJSON(event) { const file = event.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = e => { try { const datos = JSON.parse(e.target.result); guardarDatos(datos); renderTabla(); setEstado(`✓ ${datos.length} jugadores cargados.`, 'ok'); } catch { setEstado('Error: el archivo no es válido.', 'error'); } }; reader.readAsText(file); event.target.value = ''; }
 
@@ -1741,9 +1741,9 @@
         const wb = XLSX.utils.book_new();
         const ws = XLSX.utils.json_to_sheet(datos);
         ws['!cols'] = [{wch:5},{wch:28},{wch:14},{wch:12},{wch:20},{wch:12}];
-        XLSX.utils.book_append_sheet(wb, ws, 'Alevin');
+        XLSX.utils.book_append_sheet(wb, ws, 'Mayores 60');
         const fechaStr = new Date().toISOString().split('T')[0];
-        XLSX.writeFile(wb, `Campeonato_Alevin_${fechaStr}.xlsx`);
+        XLSX.writeFile(wb, `GP_Mayores_60_${fechaStr}.xlsx`);
     }
 
     renderTabla();
