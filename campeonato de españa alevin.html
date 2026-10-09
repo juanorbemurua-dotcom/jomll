@@ -301,7 +301,8 @@
             td { padding: 8px 8px; font-size: 0.85rem; }
         }
     </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script></head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>if (window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script></head>
 <body>
 
 <header>
@@ -373,7 +374,7 @@
     <span>⛳ Actividad — Últimas 20 rondas jugadas</span>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
       <select id="selectJugador" onchange="renderTablaActividad()" style="background:#166534;color:#fde68a;border:1px solid rgba(253,230,138,0.5);border-radius:6px;padding:5px 10px;font-weight:600;font-size:0.85rem;cursor:pointer;max-width:240px;"><option value="">— Seleccionar jugador —</option></select>
-      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;" disabled="">⏳ Actualizando...</button>
+      <button id="btnActualizar" onclick="actualizarActividad()" style="background:#fde68a;color:#14532d;border:none;border-radius:6px;padding:6px 14px;font-weight:700;font-size:0.88rem;cursor:pointer;">🔄 Actualizar RFEG</button>
       <button id="btnFichasPDF" onclick="exportarFichasPDF()" style="background: rgb(180, 83, 9); color: rgb(255, 255, 255); border: 1px solid transparent; border-radius: 6px; padding: 6px 14px; font-weight: 700; font-size: 0.88rem; cursor: pointer;" title="Hay cambios — regenerar fichas PDF">📄 Fichas PDF</button>
     </div>
   </div>
@@ -1689,8 +1690,431 @@
         renderTabla();
     }
 
-    function actualizarJugador(idx) {
-        alert('Función de actualización no implementada en esta copia.');
+
+    // ── Actualización desde la RFEG (portado de arbolito2026.html, 09/10/2026) ──────────
+    // Hándicap: API JSON del buscador de la RFEG (CORS abierto, sin proxy).
+    // Ficha de actividad: PDF api.rfeg.es/files/summaryhandicap/{id}.pdf -- desde oct-2026
+    // responde con Access-Control-Allow-Origin: * , así que se pide directo; los proxies
+    // públicos (corsproxy/allorigins) quedan solo de respaldo.
+function fetchTimeout(url, ms) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  return fetch(url, { signal: ctrl.signal }).finally(() => clearTimeout(t));
+}
+function setStatus(msg, color) {
+  const el = document.getElementById('actStatus');
+  el.textContent = msg;
+  el.style.borderLeftColor = color || '#166534';
+  el.style.color = color || '#166634';
+  el.style.display = msg ? 'block' : 'none';
+}
+async function cargarPDFJS() {
+  if (window.pdfjsLib) return;
+  await new Promise((res, rej) => {
+    const s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+    s.onload = res; s.onerror = rej;
+    document.head.appendChild(s);
+  });
+  window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+async function extraerItemsPDF(arrayBuffer) {
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const items = [];
+  for (let p = 1; p <= pdf.numPages; p++) {
+    const page  = await pdf.getPage(p);
+    const vp    = page.getViewport({ scale: 1 });
+    const cont  = await page.getTextContent();
+    for (const it of cont.items) {
+      if (!it.str.trim()) continue;
+      // 'page' es clave para parsearRFEG: el PDF de resumen RFEG tiene 7 paginas con
+      // tablas DISTINTAS (rondas, ajustes, diferenciales, mejores 8...) que NO se pueden
+      // mezclar por coordenada Y sola -- ver nota en parsearRFEG.
+      items.push({ str: it.str.trim(), x: Math.round(it.transform[4]), y: Math.round(vp.height - it.transform[5]), page: p });
+    }
+  }
+  return items;
+}
+function agruparFilas(items, tol = 4) {
+  const filas = [];
+  for (const it of items) {
+    const f = filas.find(r => Math.abs(r.y - it.y) <= tol);
+    if (f) f.items.push(it);
+    else filas.push({ y: it.y, items: [it] });
+  }
+  filas.sort((a, b) => a.y - b.y);
+  filas.forEach(f => { f.items.sort((a, b) => a.x - b.x); f.text = f.items.map(i => i.str).join(' '); });
+  return filas;
+}
+function parsearRFEG(items) {
+  // El PDF de resumen de handicap de la RFEG tiene 7 paginas, cada una una tabla
+  // DISTINTA del mismo calculo SMH (rondas / resultado bruto / nivel de juego / ajustes
+  // vacios / diferenciales+penalizacion / mejores 8 diferenciales / pasos finales).
+  // Version anterior (hasta 23/09/2026): mezclaba los items de TODAS las paginas en una
+  // sola lista y los agrupaba solo por coordenada Y, asumiendo que "la fila de la ronda
+  // N+1" siempre contenia el diferencial de la ronda N -- funcionaba por coincidencia de
+  // alineado vertical entre paginas, pero: (a) TORNEO/CAMPO se cortaban a la primera
+  // palabra si el nombre tenia mas de una (ej. "SAN SEBASTIAN" -> "SAN"), porque se
+  // tomaba un unico item por `.find()` en vez de juntar todos los de esa columna; (b) el
+  // rango x=[400,430] usado como "diferencial" en realidad cae en la columna "NIVEL
+  // JUGADO" de la pagina de ajustes, NO en la columna "DIFERENCIAL" real (x~700-720) --
+  // son iguales solo cuando el jugador no tiene ajustes/penalizaciones en esa ronda, asi
+  // que para rondas CON ajuste el numero mostrado podia ser el valor sin ajustar. Fix:
+  // identificar cada pagina por sus propios encabezados y leer cada columna de la pagina
+  // que corresponde, sin mezclar coordenadas Y entre paginas.
+  const dateReg = /^\d{2}\/\d{2}\/\d{4}$/;
+
+  const porPagina = {};
+  for (const it of items) { (porPagina[it.page] = porPagina[it.page] || []).push(it); }
+  const paginas = Object.keys(porPagina).map(Number);
+  const tieneExacto = (arr, s) => arr.some(it => it.str === s);
+  const tieneSub    = (arr, s) => arr.some(it => it.str.includes(s));
+
+  // Pagina de rondas: la que tiene las columnas VUELTA y MODALIDAD (fecha/torneo/campo/hcp/stb)
+  const pgRondas  = paginas.find(p => tieneExacto(porPagina[p], 'VUELTA') && tieneExacto(porPagina[p], 'MODALIDAD'));
+  // Pagina de diferenciales: tiene PENALIZACIÓN (o similar) Y la columna DIFERENCIAL
+  const pgDif     = paginas.find(p => tieneSub(porPagina[p], 'PENALIZACI') && tieneExacto(porPagina[p], 'DIFERENCIAL'));
+  // Pagina de "mejores 8": tiene DIFERENCIAL pero NO PENALIZACIÓN (tabla mas chica, solo 8 filas)
+  const pgMejores = paginas.find(p => tieneExacto(porPagina[p], 'DIFERENCIAL') && !tieneSub(porPagina[p], 'PENALIZACI'));
+
+  // HCP actual: se busca "NUEVO HÁNDICAP: X.X" en la última página (paso final del cálculo)
+  let hcpAct = null;
+  if (paginas.length) {
+    const ultima = porPagina[Math.max(...paginas)] || [];
+    const ordenada = [...ultima].sort((a, b) => a.y - b.y || a.x - b.x);
+    const texto = ordenada.map(it => it.str).join(' ');
+    const m = texto.match(/NUEVO\s*H.NDICAP:?\s*(\d+[,.]\d+)/i);
+    if (m) hcpAct = parseFloat(m[1].replace(',', '.'));
+  }
+
+  // Paso 1: fecha/torneo/campo/hcp/stb -- desde la página de rondas únicamente
+  const rounds = [];
+  if (pgRondas != null) {
+    const filas = agruparFilas(porPagina[pgRondas]);
+    for (const fila of filas) {
+      const it = fila.items;
+      const fechaIt  = it.find(i => dateReg.test(i.str) && i.x >= 55 && i.x <= 80);
+      const rowNumIt = it.find(i => /^\d{1,2}$/.test(i.str) && i.x >= 40 && i.x <= 56);
+      if (!fechaIt || !rowNumIt) continue;
+
+      // Torneo/campo: se juntan TODOS los items dentro del rango de la columna (no solo
+      // el primero) para no cortar nombres de mas de una palabra.
+      const torneo = it.filter(i => i.x >= 95  && i.x <= 345).map(i => i.str).join(' ');
+      const campo  = it.filter(i => i.x >= 355 && i.x <= 520).map(i => i.str).join(' ');
+      const hcpItems = it.filter(i => i.x >= 720 && i.x <= 755 && /^\d+$/.test(i.str));
+      const stbItems = it.filter(i => i.x >= 755 && i.x <= 785 && /^\d+$/.test(i.str));
+
+      rounds.push({
+        fecha: fechaIt.str, torneo, campo,
+        hcp: hcpItems.length ? parseInt(hcpItems[hcpItems.length - 1].str) : 0,
+        stb: stbItems.length ? parseInt(stbItems[stbItems.length - 1].str) : 0,
+        dif: null, pen: 0, star: false
+      });
+    }
+  }
+
+  // Paso 2: diferencial real (columna DIFERENCIAL, no "Nivel Jugado") por FECHA --
+  // emparejar por fecha en vez de por posicion de fila es lo que evita el problema de
+  // alineado entre paginas.
+  const difPorFecha = {};
+  const penPorFecha = {};
+  if (pgDif != null) {
+    const filas = agruparFilas(porPagina[pgDif]);
+    for (const fila of filas) {
+      const fechaIt = fila.items.find(i => dateReg.test(i.str));
+      if (!fechaIt) continue;
+      const difItems = fila.items.filter(i => i.x >= 695 && i.x <= 730 && /^-?\d+[,.]\d+$/.test(i.str));
+      if (difItems.length) difPorFecha[fechaIt.str] = parseFloat(difItems[difItems.length - 1].str.replace(',', '.'));
+      // Columna PENALIZACIÓN (entre MANUAL y DIFERENCIAL) -- solo para mostrar el
+      // ajuste en la ficha, el diferencial ya viene ajustado desde difPorFecha arriba.
+      const penItems = fila.items.filter(i => i.x >= 615 && i.x <= 690 && /^-?\d+[,.]\d+$/.test(i.str));
+      if (penItems.length) penPorFecha[fechaIt.str] = parseFloat(penItems[penItems.length - 1].str.replace(',', '.'));
+    }
+  }
+
+  // Paso 3: mejores 8 diferenciales (para el marcador ★) -- por fecha, esa página solo
+  // lista esas 8 rondas (no todas las 20), en otro orden.
+  const fechasMejores = new Set();
+  if (pgMejores != null) {
+    const filas = agruparFilas(porPagina[pgMejores]);
+    for (const fila of filas) {
+      const fechaIt = fila.items.find(i => dateReg.test(i.str));
+      if (fechaIt) fechasMejores.add(fechaIt.str);
+    }
+  }
+
+  for (const r of rounds) {
+    if (difPorFecha[r.fecha] !== undefined) r.dif = difPorFecha[r.fecha];
+    if (penPorFecha[r.fecha] !== undefined) r.pen = penPorFecha[r.fecha];
+    r.star = fechasMejores.has(r.fecha);
+  }
+
+  const unique = rounds.filter(r => r.dif !== null);
+  return { hcpAct, pdfFecha: unique[0]?.fecha ?? null, rondas: unique.slice(0, 20) };
+}
+function marcarFichasPendientes() {
+  const btn = document.getElementById('btnFichasPDF');
+  if (btn) {
+    btn.style.background = '#b45309';
+    btn.style.color = '#fff';
+    btn.style.borderColor = 'transparent';
+    btn.title = 'Hay cambios — regenerar fichas PDF';
+    btn.textContent = '📄 Fichas PDF ●';
+  }
+}
+function exportarFichasPDF() {
+  const año = new Date().getFullYear();
+  const jugadoresConRondas = cargarDatos().filter(j => j.rondas && j.rondas.length > 0);
+  if (jugadoresConRondas.length === 0) {
+    alert('No hay fichas de actividad cargadas. Actualizá la RFEG de al menos un jugador primero.');
+    return;
+  }
+
+  const esc = s => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+  let fichasHtml = '';
+  jugadoresConRondas.forEach((j, idx) => {
+    const filas = j.rondas.map(r => {
+      const penStr = (r.pen != null && r.pen !== 0) ? `<span style="color:#b45309;font-weight:600">${r.pen > 0 ? '+' : ''}${Number(r.pen).toFixed(1)}</span>` : '<span style="color:#94a3b8">0</span>';
+      const difStr = r.star
+        ? `<span style="color:#dc2626;font-weight:700">★ ${r.dif != null ? Number(r.dif).toFixed(1) : '—'}</span>`
+        : (r.dif != null ? Number(r.dif).toFixed(1) : '—');
+      return `<tr style="${r.star ? 'background:#fff5f5' : ''}">
+        <td>${esc(r.fecha)}</td>
+        <td>${esc(r.torneo)}</td>
+        <td>${esc(r.campo)}</td>
+        <td style="text-align:center">${r.hcp ?? ''}</td>
+        <td style="text-align:center">${r.stb ?? ''}</td>
+        <td style="text-align:center">${penStr}</td>
+        <td style="text-align:center">${difStr}</td>
+      </tr>`;
+    }).join('');
+
+    fichasHtml += `
+    <div class="ficha${idx < jugadoresConRondas.length - 1 ? ' salto' : ''}">
+      <div class="ficha-header">
+        <div class="ficha-nombre">${esc(j.nombre)}</div>
+        <div class="ficha-meta">Licencia: ${esc(j.licencia)} &nbsp;|&nbsp; HCP actual: ${j.hcpAct ?? '—'} &nbsp;|&nbsp; Última actualización: ${j.pdfFecha ?? '—'}</div>
+      </div>
+      <table>
+        <thead><tr>
+          <th>Fecha</th><th>Torneo</th><th>Campo de Golf</th><th>HCP</th><th>STB</th><th>Pen.</th><th>Diferencial</th>
+        </tr></thead>
+        <tbody>${filas}</tbody>
+      </table>
+    </div>`;
+  });
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8">
+<title>Fichas de Actividad · ${document.title}</title>
+<style>
+  @page { margin: 14mm 12mm; size: A4; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 10.5px; color: #1e293b; background: #fff; }
+  .portada { text-align: center; padding: 60px 20px; page-break-after: always; }
+  .portada h1 { font-size: 28px; color: #14532d; margin-bottom: 10px; }
+  .portada p { color: #64748b; font-size: 13px; margin-top: 6px; }
+  .portada .total { margin-top: 30px; font-size: 15px; color: #166534; font-weight: 600; }
+  .ficha.salto { page-break-after: always; }
+  .ficha-header { background: #14532d; color: white; padding: 9px 14px; border-radius: 6px 6px 0 0; margin-top: 0; }
+  .ficha-nombre { font-size: 13px; font-weight: 700; letter-spacing: 0.3px; }
+  .ficha-meta { font-size: 9.5px; opacity: 0.8; margin-top: 3px; }
+  table { width: 100%; border-collapse: collapse; border: 1px solid #bbf7d0; border-top: none; }
+  th { background: #f0fdf4; color: #166534; padding: 5px 8px; font-size: 9px; text-transform: uppercase; letter-spacing: 0.3px; border-bottom: 2px solid #86efac; text-align: left; }
+  th:nth-child(n+4) { text-align: center; }
+  td { padding: 4px 8px; border-bottom: 1px solid #e2e8f0; font-size: 9.5px; vertical-align: middle; }
+  td:nth-child(n+4) { text-align: center; }
+  tr:last-child td { border-bottom: none; }
+  .ficha { margin-bottom: 18px; }
+  @media print {
+    .no-print { display: none; }
+  }
+</style>
+</head>
+<body>
+<div class="portada">
+  <h1>⛳ ${document.title}</h1>
+  <p>Fichas de Actividad — Últimas 20 rondas por jugador</p>
+  <div class="total">${jugadoresConRondas.length} jugador${jugadoresConRondas.length !== 1 ? 'es' : ''} · Generado el ${new Date().toLocaleDateString('es-ES', {day:'2-digit',month:'long',year:'numeric'})}</div>
+</div>
+${fichasHtml}
+<script>window.onload = () => window.print();<\/script>
+</body></html>`);
+  win.document.close();
+
+  // Resetear indicador del botón
+  const btn = document.getElementById('btnFichasPDF');
+  if (btn) {
+    btn.style.background = '#166534';
+    btn.style.color = '#fde68a';
+    btn.style.borderColor = 'rgba(253,230,138,0.4)';
+    btn.title = '';
+    btn.textContent = '📄 Fichas PDF';
+  }
+}
+
+    async function buscarEnRFEG(licencia) {
+        const url = `https://rfegolf.es/wp-json/handicap-search/v1/search?q=${encodeURIComponent(licencia)}`;
+        let json;
+        try {
+            const res = await fetchTimeout(url, 10000);
+            if (!res.ok) throw new Error('bad status');
+            json = await res.json();
+        } catch (e) {
+            throw new Error('No se pudo conectar con la RFEG.');
+        }
+        const hits = json?.data?.hits || [];
+        const licUp = licencia.toUpperCase();
+        const hit = hits.find(h => (h.document?.guid_licence || '').toUpperCase() === licUp);
+        const doc = hit?.document;
+        const hcpAct = doc ? parseFloat(String(doc.handicap).replace(',', '.')) : NaN;
+        if (!doc || isNaN(hcpAct)) {
+            const err = new Error(`No se encontró "${licencia}" en la RFEG.`);
+            err.noEncontrado = true;
+            throw err;
+        }
+        let fechaMod = '';
+        const fm = (doc.date_hdc_updated_at || '').match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (fm) fechaMod = `${fm[3]}/${fm[2]}/${fm[1]}`;
+        return { hcpAct, fechaMod };
+    }
+
+    async function buscarEnRFEGConReintentos(licencia, maxReintentos = 4) {
+        let ultimoError;
+        for (let intento = 1; intento <= maxReintentos; intento++) {
+            try { return await buscarEnRFEG(licencia); }
+            catch (e) {
+                ultimoError = e;
+                if (e.noEncontrado) break;
+                if (intento < maxReintentos) await new Promise(r => setTimeout(r, 1500 * intento));
+            }
+        }
+        throw ultimoError;
+    }
+
+    // Descarga y parsea la ficha (últimas 20 rondas) de un jugador. Devuelve el nº de rondas.
+    async function descargarFicha(j) {
+        await cargarPDFJS();
+        const licM = j.licencia.match(/^[A-Z]{2}\d{2}(.+)$/);
+        const id = licM ? licM[1].toLowerCase() : j.licencia.replace(/\D/g, '').slice(-6);
+        const pdfUrl = `https://api.rfeg.es/files/summaryhandicap/${id}.pdf`;
+        const urls = [pdfUrl,
+            `https://corsproxy.io/?url=${encodeURIComponent(pdfUrl)}`,
+            `https://api.allorigins.win/raw?url=${encodeURIComponent(pdfUrl)}`];
+        let buf = null;
+        for (let vuelta = 0; vuelta < 2 && !buf; vuelta++) {
+            for (const url of urls) {
+                try {
+                    const resp = await fetchTimeout(url, 12000);
+                    if (!resp.ok) continue;
+                    const b = await resp.arrayBuffer();
+                    if (b.byteLength > 1000) { buf = b; break; }
+                } catch { /* siguiente */ }
+            }
+            if (!buf && vuelta === 0) await new Promise(r => setTimeout(r, 2000));
+        }
+        if (!buf) throw new Error(`la RFEG no devolvió la ficha de ${j.licencia}`);
+        const items = await extraerItemsPDF(buf);
+        // Las licencias sin prefijo de letras se buscan por sus 6 últimas cifras, que pueden
+        // coincidir con las de otro federado: comprobar que el PDF es de este jugador.
+        const texto = items.filter(i => i.page === 1).map(i => i.str).join(' ').toUpperCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        const apellido = (j.nombre.split(' ').slice(-2)[0] || '').toUpperCase()
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        if (apellido.length > 2 && !texto.includes(apellido))
+            throw new Error(`la ficha descargada no es de ${j.nombre} (licencia ${j.licencia})`);
+        const datos = parsearRFEG(items);
+        j.rondas = datos.rondas;
+        j.pdfFecha = datos.pdfFecha || '';
+        const año = String(new Date().getFullYear());
+        j.premiosAño = datos.rondas.filter(r => r.fecha && r.fecha.slice(-4) === año).length;
+        return datos.rondas.length;
+    }
+
+    async function actualizarJugador(idx) {
+        const jugadores = cargarDatos();
+        const j = jugadores[idx];
+        if (!j) return;
+        const nombre = j.nombre.split(' ')[0];
+        setEstado(`⏳ Actualizando ${nombre}...`, 'ok');
+        try {
+            const { hcpAct, fechaMod } = await buscarEnRFEGConReintentos(j.licencia);
+            j.hcpAct = hcpAct; j.fechaMod = fechaMod;
+            let msg = `✓ ${j.nombre}: hándicap ${hcpAct.toFixed(1)}`;
+            try { const n = await descargarFicha(j); msg += ` · ${n} rondas en la ficha`; marcarFichasPendientes(); }
+            catch (e) { msg += ` · ficha no disponible (${e.message})`; }
+            guardarDatos(jugadores); renderTabla();
+            const sel = document.getElementById('selectJugador');
+            if (sel) { sel.value = String(idx); renderTablaActividad(); }
+            setEstado(msg, 'ok');
+        } catch (e) {
+            setEstado(`⚠ ${j.nombre}: ${e.message}`, 'error');
+        }
+    }
+
+    async function actualizarTodos() {
+        const btn = document.getElementById('btn-update');
+        const jugadores = cargarDatos();
+        if (!jugadores.length) { setEstado('No hay jugadores en la tabla.', 'error'); return; }
+        btn.disabled = true;
+        let hechos = 0, ok = 0;
+        // 3 consultas a la vez: con 140 jugadores, de una en una tardaba ~1 minuto, y con
+        // más concurrencia la RFEG empieza a rechazar peticiones al final de la tanda.
+        const pasada = async (lista, concurrencia) => {
+            const fallidos = [];
+            let sig = 0;
+            const trabajador = async () => {
+                while (sig < lista.length) {
+                    const j = lista[sig++];
+                    try {
+                        const { hcpAct, fechaMod } = await buscarEnRFEGConReintentos(j.licencia);
+                        j.hcpAct = hcpAct; j.fechaMod = fechaMod; ok++; hechos++;
+                    } catch (e) { (e.noEncontrado ? noEncontrados : fallidos).push(j); }
+                    btn.textContent = `↻ Actualizando ${hechos}/${jugadores.length}...`;
+                }
+            };
+            await Promise.all(Array.from({ length: concurrencia }, trabajador));
+            return fallidos;
+        };
+        const noEncontrados = [];
+        let pendientes = await pasada(jugadores, 3);
+        if (pendientes.length) {            // segunda vuelta, de uno en uno, tras una pausa
+            await new Promise(r => setTimeout(r, 3000));
+            pendientes = await pasada(pendientes, 1);
+        }
+        const errores = [...noEncontrados, ...pendientes].map(j => j.nombre);
+        guardarDatos(jugadores); renderTabla();
+        btn.disabled = false; btn.textContent = '↻ Actualizar RFEG';
+        setEstado(errores.length
+            ? `✓ ${ok} actualizados · ⚠ Sin datos: ${errores.join(', ')}`
+            : `✓ ${ok} hándicaps actualizados. La ficha de actividad se actualiza jugador a jugador (botón ↻ de la fila o el de la sección de actividad).`,
+            errores.length ? 'error' : 'ok');
+    }
+
+    async function actualizarActividad() {
+        const btn = document.getElementById('btnActualizar');
+        const sel = document.getElementById('selectJugador');
+        const idx = sel ? parseInt(sel.value) : NaN;
+        const jugadores = cargarDatos();
+        const j = jugadores[idx];
+        if (!j) { setStatus('⚠️ Selecciona un jugador primero.', '#b45309'); setTimeout(() => setStatus(''), 4000); return; }
+        btn.disabled = true; btn.textContent = '⏳ Actualizando...';
+        setStatus(`⏳ Descargando la ficha de ${j.nombre.split(' ')[0]}...`);
+        try {
+            try { const r = await buscarEnRFEGConReintentos(j.licencia); j.hcpAct = r.hcpAct; j.fechaMod = r.fechaMod; } catch { /* la ficha sirve igual */ }
+            const n = await descargarFicha(j);
+            guardarDatos(jugadores); renderTabla();
+            sel.value = String(idx); renderTablaActividad(); marcarFichasPendientes();
+            setStatus(n ? `✅ ${j.nombre.split(' ')[0]} actualizado — ${n} ronda(s).` : `⚠️ La ficha de ${j.nombre.split(' ')[0]} no tiene rondas.`, n ? undefined : '#b45309');
+        } catch (e) {
+            setStatus(`❌ ${e.message}`, '#b91c1c');
+        }
+        btn.disabled = false; btn.textContent = '🔄 Actualizar RFEG';
+        setTimeout(() => setStatus(''), 12000);
     }
 
     function renderTabla() {
@@ -1721,14 +2145,61 @@
         const jugadores = cargarDatos();
         const sel = document.getElementById('selectJugador');
         if (!sel) return;
+        const previo = sel.value;
         sel.innerHTML = '<option value="">— Seleccionar jugador —</option>';
         jugadores.forEach((j,i) => {
             const o = document.createElement('option'); o.value = i; o.textContent = j.nombre; sel.appendChild(o);
         });
+        if (previo !== '' && jugadores[parseInt(previo)]) sel.value = previo;
         renderTablaActividad();
     }
 
-    function renderTablaActividad() { const container = document.getElementById('actContainer'); container.innerHTML = '<div style="padding:24px;text-align:center;color:#94a3b8;font-style:italic;">Actividad no disponible en esta copia.</div>'; }
+    function renderTablaActividad() {
+        const sel = document.getElementById('selectJugador');
+        const idx = sel ? parseInt(sel.value) : NaN;
+        const container = document.getElementById('actContainer');
+        const styles = `<style>
+          .act-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+          .act-table th { background:#166534; color:#fde68a; padding:8px 10px; text-align:center; white-space:nowrap; position:sticky; top:0; }
+          .act-table td { padding:6px 10px; border-bottom:1px solid #e5e7eb; vertical-align:middle; background:#fff; }
+          .act-hcp, .act-stb { text-align:center; font-weight:600; color:#475569; }
+          .act-fecha { white-space:nowrap; color:#64748b; font-size:0.8rem; }
+          .dif-star { color:#b91c1c; font-weight:700; background:#fee2e2; padding:2px 6px; border-radius:3px; white-space:nowrap; }
+          .dif-norm { color:#111; font-weight:700; }
+          .act-info-bar { background:#f0fdf4; border-bottom:2px solid #bbf7d0; padding:10px 16px; display:flex; gap:24px; flex-wrap:wrap; align-items:center; font-size:0.85rem; color:#166534; font-weight:600; }
+          .act-info-bar span { font-weight:400; color:#475569; }
+        </style>`;
+        const j = cargarDatos()[idx];
+        if (isNaN(idx) || !j) {
+            container.innerHTML = styles + `<div style="padding:32px;text-align:center;color:#94a3b8;font-style:italic;font-size:0.95rem;">Selecciona un jugador para ver sus últimas 20 rondas</div>`;
+            return;
+        }
+        const infoBar = `<div class="act-info-bar">
+          <div>Jugador: <span>${escHtml(j.nombre)}</span></div>
+          <div>Licencia: <span>${escHtml(j.licencia)}</span></div>
+          <div>HCP actual: <span>${j.hcpAct != null ? Number(j.hcpAct).toFixed(1) : '—'}</span></div>
+          ${j.pdfFecha ? `<div>Última ronda: <span>${escHtml(j.pdfFecha)}</span></div>` : ''}
+        </div>`;
+        if (!j.rondas || !j.rondas.length) {
+            container.innerHTML = styles + infoBar + `<div style="padding:24px;text-align:center;color:#94a3b8;font-style:italic;">Sin ficha cargada — pulsa 🔄 Actualizar RFEG</div>`;
+            return;
+        }
+        const filas = j.rondas.map(r => {
+            const bg = r.star ? 'background:#fff5f5' : '';
+            return `<tr>
+              <td class="act-fecha" style="${bg}">${escHtml(r.fecha)}</td>
+              <td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${bg}" title="${escHtml(r.torneo)}">${escHtml(r.torneo)}</td>
+              <td style="color:#64748b;font-size:0.8rem;max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;${bg}" title="${escHtml(r.campo)}">${escHtml(r.campo)}</td>
+              <td class="act-hcp" style="${bg}">${r.hcp ?? ''}</td>
+              <td class="act-stb" style="${bg}">${r.stb ?? ''}</td>
+              <td style="text-align:center;${bg}">${(r.pen != null && r.pen !== 0) ? `<span style="color:#b45309;font-weight:600">${r.pen > 0 ? '+' : ''}${Number(r.pen).toFixed(1)}</span>` : '<span style="color:#94a3b8">0</span>'}</td>
+              <td style="text-align:center;${bg}">${r.dif != null ? (r.star ? `<span class="dif-star">★ ${Number(r.dif).toFixed(1)}</span>` : `<span class="dif-norm">${Number(r.dif).toFixed(1)}</span>`) : '—'}</td>
+            </tr>`;
+        }).join('');
+        container.innerHTML = styles + infoBar + `<table class="act-table">
+          <thead><tr><th>Fecha</th><th>Torneo</th><th>Campo de Golf</th><th>HCP</th><th>STB</th><th>Pen.</th><th>Diferencial</th></tr></thead>
+          <tbody>${filas}</tbody></table>`;
+    }
 
     function guardarJSON() { const jugadores = cargarDatos(); const datosStr = JSON.stringify(jugadores, null, 8); const blob = new Blob([datosStr], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'gp_mayores_60.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); setEstado('✓ JSON descargado.', 'ok'); }
 
