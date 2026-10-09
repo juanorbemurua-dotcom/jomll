@@ -1653,7 +1653,13 @@
 ];
 
     function cargarDatos() { return _jugadores; }
-    function guardarDatos(datos) { _jugadores = datos; }
+    // Siempre ordenados por hándicap (de menor a mayor); a igualdad, por nombre.
+    function ordenarPorHcp(datos) {
+        const h = j => (j.hcpAct == null || isNaN(j.hcpAct)) ? Infinity : Number(j.hcpAct);
+        datos.sort((a, b) => h(a) - h(b) || String(a.nombre).localeCompare(String(b.nombre), 'es'));
+        return datos;
+    }
+    function guardarDatos(datos) { _jugadores = ordenarPorHcp(datos); }
 
     function actualizarEnlaceRFEG() {
         const licencia = document.getElementById('inp-licencia').value.trim();
@@ -2049,7 +2055,7 @@ ${fichasHtml}
             catch (e) { msg += ` · ficha no disponible (${e.message})`; }
             guardarDatos(jugadores); renderTabla();
             const sel = document.getElementById('selectJugador');
-            if (sel) { sel.value = String(idx); renderTablaActividad(); }
+            if (sel) { sel.value = String(cargarDatos().indexOf(j)); renderTablaActividad(); }
             setEstado(msg, 'ok');
         } catch (e) {
             setEstado(`⚠ ${j.nombre}: ${e.message}`, 'error');
@@ -2108,7 +2114,7 @@ ${fichasHtml}
             try { const r = await buscarEnRFEGConReintentos(j.licencia); j.hcpAct = r.hcpAct; j.fechaMod = r.fechaMod; } catch { /* la ficha sirve igual */ }
             const n = await descargarFicha(j);
             guardarDatos(jugadores); renderTabla();
-            sel.value = String(idx); renderTablaActividad(); marcarFichasPendientes();
+            sel.value = String(cargarDatos().indexOf(j)); renderTablaActividad(); marcarFichasPendientes();
             setStatus(n ? `✅ ${j.nombre.split(' ')[0]} actualizado — ${n} ronda(s).` : `⚠️ La ficha de ${j.nombre.split(' ')[0]} no tiene rondas.`, n ? undefined : '#b45309');
         } catch (e) {
             setStatus(`❌ ${e.message}`, '#b91c1c');
@@ -2145,12 +2151,13 @@ ${fichasHtml}
         const jugadores = cargarDatos();
         const sel = document.getElementById('selectJugador');
         if (!sel) return;
-        const previo = sel.value;
+        // el orden cambia al actualizar hándicaps: recordar al jugador por licencia, no por posición
+        const previo = sel.value !== '' ? sel.options[sel.selectedIndex]?.dataset.lic : null;
         sel.innerHTML = '<option value="">— Seleccionar jugador —</option>';
         jugadores.forEach((j,i) => {
-            const o = document.createElement('option'); o.value = i; o.textContent = j.nombre; sel.appendChild(o);
+            const o = document.createElement('option'); o.value = i; o.dataset.lic = j.licencia; o.textContent = j.nombre; sel.appendChild(o);
         });
-        if (previo !== '' && jugadores[parseInt(previo)]) sel.value = previo;
+        if (previo) { const k = jugadores.findIndex(j => j.licencia === previo); if (k >= 0) sel.value = String(k); }
         renderTablaActividad();
     }
 
@@ -2254,7 +2261,7 @@ ${fichasHtml}
       .then(function(data) {
         if (!data || !data.jugadores || !data.jugadores.length) { setBadge('● en vivo', '#86efac'); return; }
         var actual = JSON.stringify(cargarDatos());
-        var remoto = JSON.stringify(data.jugadores);
+        var remoto = JSON.stringify(ordenarPorHcp(data.jugadores));  // Firebase puede traerlos sin ordenar
         if (actual !== remoto) {
           _guardar(data.jugadores);
           renderTabla();
