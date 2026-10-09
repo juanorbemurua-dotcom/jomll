@@ -358,7 +358,7 @@
                 <th>HCP Actual</th>
                 <th>Pertenece a</th>
                 <th>Fecha Nac.</th>
-                <th>Premios jugados año</th>
+                <th>Años</th>
                 <th>Últ. Modificación</th>
                 <th>Acción</th>
                 <th></th>
@@ -2123,6 +2123,16 @@ ${fichasHtml}
         setTimeout(() => setStatus(''), 12000);
     }
 
+    // Edad cumplida hoy a partir de "dd/mm/aaaa"
+    function edad(fecha) {
+        const m = String(fecha || '').match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+        if (!m) return null;
+        const hoy = new Date(), d = +m[1], mes = +m[2], a = +m[3];
+        let e = hoy.getFullYear() - a;
+        if (hoy.getMonth() + 1 < mes || (hoy.getMonth() + 1 === mes && hoy.getDate() < d)) e--;
+        return e;
+    }
+
     function renderTabla() {
         const jugadores = cargarDatos();
         if (!jugadores || jugadores.length === 0) {
@@ -2137,7 +2147,7 @@ ${fichasHtml}
                 <td class="hcp">${j.hcpAct != null ? Number(j.hcpAct).toFixed(1) : '—'}</td>
                 <td>${escHtml(j.perteneciente || '')}</td>
                 <td>${escHtml(j.fechaNacimiento || '')}</td>
-                <td style="text-align:center;font-weight:600;color:#0f766e">${j.premiosAño ?? '—'}</td>
+                <td style="text-align:center;font-weight:600;color:#0f766e">${edad(j.fechaNacimiento) ?? '—'}</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">${j.fechaMod || '—'}</td>
                 <td><button class="btn-row-update" onclick="actualizarJugador(${pos})">↻</button></td>
                 <td><button class="btn-del" onclick="eliminarJugador(${pos})">✕</button></td>
@@ -2215,7 +2225,7 @@ ${fichasHtml}
     function exportarExcel() {
         const jugadores = cargarDatos();
         if (jugadores.length === 0) { alert('No hay datos para exportar.'); return; }
-        const datos = jugadores.map((j,pos) => ({ 'Pos.': pos+1, 'Nombre': j.nombre, 'Nº Licencia': j.licencia, 'HCP Actual': j.hcpAct, 'Pertenece a': j.perteneciente, 'Fecha Nac.': j.fechaNacimiento }));
+        const datos = jugadores.map((j,pos) => ({ 'Pos.': pos+1, 'Nombre': j.nombre, 'Nº Licencia': j.licencia, 'HCP Actual': j.hcpAct, 'Pertenece a': j.perteneciente, 'Fecha Nac.': j.fechaNacimiento, 'Años': edad(j.fechaNacimiento) ?? '' }));
         const wb = XLSX.utils.book_new();
         const ws = XLSX.utils.json_to_sheet(datos);
         ws['!cols'] = [{wch:5},{wch:28},{wch:14},{wch:12},{wch:20},{wch:12}];
