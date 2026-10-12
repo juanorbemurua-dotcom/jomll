@@ -2225,10 +2225,32 @@ ${fichasHtml}
 
     // Inscritos añadidos el 12/10/2026 (140 -> 148): se marcan en rojo en la tabla. Por
     // licencia, no por un campo del jugador, para que la marca no dependa de Firebase.
-    const NUEVAS_INCORPORACIONES = new Set([
+    var NUEVAS_INCORPORACIONES = new Set([
         'MM23930150', 'CM01026038', '7706135150', 'MM23901538',
         'GC63416751', 'AM51169288', 'CM01010622', 'RL04407270', 'AM51968361', 'AMC3082204'
     ]);
+
+    // Corte de la categoría Mayores de 60 (Circular RFEG 50/2026): 57 plazas por hándicap
+    // exacto (los ganadores de las 5 últimas ediciones cuentan dentro; las 5 invitaciones del
+    // club van aparte). Los inscritos TAMBIÉN en la Copa de Mayores de 70 (GolfBox 756) tienen
+    // que elegir categoría; se asume que juegan la de 70 y no ocupan plaza aquí (marcados "+70").
+    // La lista de +70 se consulta a GolfBox al abrir la página (JSONP); si falla, el corte se
+    // calcula sin esa exclusión.
+    var PLAZAS_MAYORES_60 = 57;
+    var INSCRITOS_70 = new Set();
+    (function cargarInscritos70() {
+        window.__cbInscritos70 = function (d) {
+            try {
+                const lic = [];
+                Object.values(d.Classes || {}).forEach(c => Object.values(c.Entries || {}).forEach(e => lic.push(String(e.MemberID || '').toUpperCase())));
+                INSCRITOS_70 = new Set(lic);
+                if (typeof renderTabla === 'function') renderTabla();
+            } catch (e) { /* sin lista de +70: corte sin exclusión */ }
+        };
+        const s = document.createElement('script');
+        s.src = 'https://scores.golfbox.es/Handlers/PlayersHandler/GetPlayers/CompetitionId/756/language/1034/?callback=__cbInscritos70';
+        document.head.appendChild(s);
+    })();
 
     function renderTabla() {
         const jugadores = cargarDatos();
@@ -2236,10 +2258,24 @@ ${fichasHtml}
             document.getElementById('tabla-body').innerHTML = '<tr><td colspan="10" class="empty">Aún no hay jugadores. Usa el script para poblar desde el Excel.</td></tr>';
             return;
         }
+        // puesto de cada jugador en la carrera por las 57 plazas (sin los que juegan +70)
+        let plaza = 0, hcpCorte = null;
+        const plazaDe = jugadores.map(j => {
+            if (INSCRITOS_70.has((j.licencia || '').toUpperCase())) return null;
+            plaza++;
+            if (plaza === PLAZAS_MAYORES_60) hcpCorte = j.hcpAct;
+            return plaza;
+        });
         const filas = jugadores.map((j, pos) => {
-            return `<tr>
+            const p70 = plazaDe[pos] === null;
+            const espera = !p70 && plazaDe[pos] > PLAZAS_MAYORES_60;
+            const lineaCorte = plazaDe[pos] === PLAZAS_MAYORES_60 + 1
+                ? `<tr><td colspan="10" style="background:#fee2e2;color:#991b1b;font-weight:700;text-align:center;padding:6px;border-top:3px solid #dc2626;border-bottom:3px solid #dc2626">✂ CORTE MAYORES DE 60 — ${PLAZAS_MAYORES_60} plazas · último admitido con hándicap ${hcpCorte != null ? Number(hcpCorte).toFixed(1) : '—'} · desde aquí, lista de espera (proyección con los hándicaps actuales)</td></tr>`
+                : '';
+            const estiloFila = espera ? ' style="opacity:0.55"' : (p70 ? ' style="background:#f1f5f9"' : '');
+            return lineaCorte + `<tr${estiloFila}>
                 <td><span class="pos">${pos+1}</span></td>
-                <td class="nombre"${NUEVAS_INCORPORACIONES.has((j.licencia || '').toUpperCase()) ? ' style="color:#dc2626;font-weight:700"' : ''}>${escHtml(j.nombre || '')}${NUEVAS_INCORPORACIONES.has((j.licencia || '').toUpperCase()) ? ' <span style="font-size:0.66rem;font-weight:700;color:#fff;background:#dc2626;border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle">NUEVO</span>' : ''}</td>
+                <td class="nombre"${NUEVAS_INCORPORACIONES.has((j.licencia || '').toUpperCase()) ? ' style="color:#dc2626;font-weight:700"' : ''}>${escHtml(j.nombre || '')}${NUEVAS_INCORPORACIONES.has((j.licencia || '').toUpperCase()) ? ' <span style="font-size:0.66rem;font-weight:700;color:#fff;background:#dc2626;border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle">NUEVO</span>' : ''}${p70 ? ' <span title="También inscrito en la Copa de España de Mayores de 70: se asume que juega esa categoría y no ocupa plaza en la de 60" style="font-size:0.66rem;font-weight:700;color:#fff;background:#64748b;border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle">+70</span>' : ''}</td>
                 <td class="licencia">${escHtml(j.licencia || '')}</td>
                 <td class="hcp">${j.hcpAct != null ? Number(j.hcpAct).toFixed(1) : '—'}</td>
                 <td>${escHtml(j.perteneciente || '')}</td>
