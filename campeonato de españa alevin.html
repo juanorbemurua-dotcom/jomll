@@ -368,6 +368,23 @@
     </table>
 </div>
 
+<!-- Registro de altas y bajas (12/10/2026): lo mantiene vigilar_corte_campeonato.py -->
+<div id="seccion-movimientos" style="max-width:960px;margin:28px auto 0;">
+  <div style="background:#14532d;color:#fde68a;font-weight:700;font-size:1.05rem;padding:14px 20px;border-radius:10px 10px 0 0;letter-spacing:.03em;">
+    📋 Registro de altas y bajas
+  </div>
+  <div style="overflow-x:auto;border:1px solid #bbf7d0;border-top:none;border-radius:0 0 10px 10px;background:#fff;">
+    <table id="tabla-movimientos" style="width:100%;border-collapse:collapse;font-size:0.86rem;">
+      <thead><tr style="background:#f0fdf4;color:#14532d;text-align:left;">
+        <th style="padding:8px 12px;">Fecha</th><th style="padding:8px 12px;">Movimiento</th><th style="padding:8px 12px;">Jugador</th>
+        <th style="padding:8px 12px;">Licencia</th><th style="padding:8px 12px;text-align:right;">HCP</th><th style="padding:8px 12px;">Nota</th>
+      </tr></thead>
+      <tbody id="movimientos-body"></tbody>
+    </table>
+    <div style="padding:8px 12px;font-size:0.76rem;color:#64748b;">Fecha = día en que se detectó el cambio en GolfBox (revisión automática). Las bajas se quitan de la lista de inscritos.</div>
+  </div>
+</div>
+
 <!-- Actividad: Últimas 20 rondas -->
 <div id="seccion-actividad" style="max-width:960px;margin:28px auto 0;padding:0 0 40px;">
   <div style="background:#14532d;color:#fde68a;font-weight:700;font-size:1.05rem;padding:14px 20px;border-radius:10px 10px 0 0;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;">
@@ -2435,6 +2452,22 @@ ${fichasHtml}
 
   pullFirebase(false);
   setInterval(function() { pullFirebase(true); }, 15000);
+})();
+</script>
+<script>
+/*REGISTRO_INI*/var REGISTRO_MOVIMIENTOS = [{"fecha": "12/10/2026", "tipo": "alta", "nombre": "John Seaton", "licencia": "MM23930150", "hcp": 5.7}, {"fecha": "12/10/2026", "tipo": "alta", "nombre": "Alvaro Llanza Figueroa", "licencia": "CM01026038", "hcp": 1.6}, {"fecha": "12/10/2026", "tipo": "alta", "nombre": "Jose Antonio Garcia Cañizal", "licencia": "7706135150", "hcp": 8.1}, {"fecha": "12/10/2026", "tipo": "alta", "nombre": "Paul Taylor", "licencia": "MM23901538", "hcp": 6.2}, {"fecha": "12/10/2026", "tipo": "alta", "nombre": "Antonio Fernandez Rodriguez", "licencia": "GC63416751", "hcp": 8.5}, {"fecha": "12/10/2026", "tipo": "alta", "nombre": "Rutger Barrdahl", "licencia": "AM51169288", "hcp": 2.1}, {"fecha": "12/10/2026", "tipo": "alta", "nombre": "Iñigo Espinosa de los Monteros Pitarque", "licencia": "CM01010622", "hcp": 7.5}, {"fecha": "12/10/2026", "tipo": "alta", "nombre": "Victor Francisco Manso Ramos", "licencia": "RL04407270", "hcp": 7.3}, {"fecha": "12/10/2026", "tipo": "alta", "nombre": "Anders Ekstrom", "licencia": "AM51968361", "hcp": 5.2}, {"fecha": "12/10/2026", "tipo": "alta", "nombre": "Javier Rodrigo Antona", "licencia": "AMC3082204", "hcp": 0.8}, {"fecha": "12/10/2026", "tipo": "alta", "nombre": "Manuel Ruiz Garcia", "licencia": "CM60214059", "hcp": 3.3}, {"fecha": "13/10/2026", "tipo": "alta", "nombre": "Jonathan Stordy", "licencia": "CM52212748", "hcp": 1}, {"fecha": "13/10/2026", "tipo": "alta", "nombre": "Luis Semper Tomas", "licencia": "LV06469627", "hcp": 2.4}, {"fecha": "13/10/2026", "tipo": "alta", "nombre": "Juan Carlos Lucena Alcocer", "licencia": "CM05219854", "hcp": 8.8}, {"fecha": "13/10/2026", "tipo": "baja", "nombre": "Colin Melville Sloan", "licencia": "MM24695961", "hcp": 4.8, "nota": "pasa a la categoría +70"}, {"fecha": "14/10/2026", "tipo": "baja", "nombre": "Pablo Bernad Cabra", "licencia": "VB01006241", "hcp": 7.9}];/*REGISTRO_FIN*/
+(function renderMovimientos(){
+    var tb = document.getElementById('movimientos-body'); if (!tb) return;
+    var f = function(s){ var p = String(s||'').split('/'); return p.length===3 ? p[2]+p[1]+p[0] : ''; };
+    var filas = REGISTRO_MOVIMIENTOS.slice().sort(function(a,b){ return f(b.fecha).localeCompare(f(a.fecha)) || String(a.tipo).localeCompare(String(b.tipo)); });
+    var altas = REGISTRO_MOVIMIENTOS.filter(function(m){return m.tipo==='alta';}).length, bajas = REGISTRO_MOVIMIENTOS.length - altas;
+    tb.innerHTML = filas.map(function(m){
+        var alta = m.tipo === 'alta';
+        var tag = '<span style="font-size:0.72rem;font-weight:700;color:#fff;background:' + (alta ? '#16a34a' : '#dc2626') + ';border-radius:4px;padding:2px 7px">' + (alta ? 'ALTA' : 'BAJA') + '</span>';
+        return '<tr style="border-top:1px solid #e2e8f0"><td style="padding:6px 12px;white-space:nowrap">' + m.fecha + '</td><td style="padding:6px 12px">' + tag +
+               '</td><td style="padding:6px 12px;font-weight:600">' + m.nombre + '</td><td style="padding:6px 12px;color:#64748b">' + (m.licencia||'') +
+               '</td><td style="padding:6px 12px;text-align:right">' + (m.hcp!=null ? Number(m.hcp).toFixed(1) : '—') + '</td><td style="padding:6px 12px;color:#64748b">' + (m.nota||'') + '</td></tr>';
+    }).join('') + '<tr style="background:#f0fdf4;font-weight:700"><td colspan="6" style="padding:7px 12px">Total: ' + altas + ' altas · ' + bajas + ' bajas</td></tr>';
 })();
 </script>
 </body></html>
