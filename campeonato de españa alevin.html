@@ -2273,6 +2273,26 @@ ${fichasHtml}
     // calcula sin esa exclusión.
     var PLAZAS_MAYORES_60 = 57;
     var INSCRITOS_70 = new Set();
+        var ADMITIDOS_MAYORES_60 = new Set();
+        var ESTADO_MAYORES_60_DISPONIBLE = false;
+        (function cargarEstadoMayores60() {
+                window.__cbEstadoMayores60 = function (d) {
+                        try {
+                                const admitidos = [];
+                                Object.values(d.Classes || {}).forEach(c => Object.values(c.Entries || {}).forEach(e => {
+                                        if (String(e.EntryStatus) === '1' && Number(e.ReserveListNo || 0) === 0) {
+                                                admitidos.push(String(e.MemberID || '').toUpperCase());
+                                        }
+                                }));
+                                ADMITIDOS_MAYORES_60 = new Set(admitidos);
+                                ESTADO_MAYORES_60_DISPONIBLE = true;
+                                if (typeof renderTabla === 'function') renderTabla();
+                        } catch (e) { /* mantiene la proyección local por hándicap */ }
+                };
+                const s = document.createElement('script');
+                s.src = 'https://scores.golfbox.es/Handlers/PlayersHandler/GetPlayers/CompetitionId/557/language/1034/?callback=__cbEstadoMayores60';
+                document.head.appendChild(s);
+        })();
     (function cargarInscritos70() {
         window.__cbInscritos70 = function (d) {
             try {
@@ -2301,12 +2321,30 @@ ${fichasHtml}
             if (plaza === PLAZAS_MAYORES_60) hcpCorte = j.hcpAct;
             return plaza;
         });
-        const filas = jugadores.map((j, pos) => {
-            const p70 = plazaDe[pos] === null;
-            const espera = !p70 && plazaDe[pos] > PLAZAS_MAYORES_60;
-            const lineaCorte = plazaDe[pos] === PLAZAS_MAYORES_60 + 1
-                ? `<tr><td colspan="10" style="background:#fee2e2;color:#991b1b;font-weight:700;text-align:center;padding:6px;border-top:3px solid #dc2626;border-bottom:3px solid #dc2626">✂ CORTE MAYORES DE 60 — ${PLAZAS_MAYORES_60} plazas · último admitido con hándicap ${hcpCorte != null ? Number(hcpCorte).toFixed(1) : '—'} · desde aquí, lista de espera (proyección con los hándicaps actuales)</td></tr>`
-                : '';
+                const ordenRender = jugadores.map((j, indice) => ({ j, indice }));
+                if (ESTADO_MAYORES_60_DISPONIBLE) {
+                        ordenRender.sort((a, b) => {
+                                const admitidoA = ADMITIDOS_MAYORES_60.has((a.j.licencia || '').toUpperCase());
+                                const admitidoB = ADMITIDOS_MAYORES_60.has((b.j.licencia || '').toUpperCase());
+                                return Number(admitidoB) - Number(admitidoA)
+                                        || Number(a.j.hcpAct ?? Infinity) - Number(b.j.hcpAct ?? Infinity)
+                                        || String(a.j.nombre || '').localeCompare(String(b.j.nombre || ''), 'es');
+                        });
+                }
+                const filas = ordenRender.map(({ j, indice }, pos) => {
+                        const p70 = plazaDe[indice] === null;
+                        const admitido = ESTADO_MAYORES_60_DISPONIBLE
+                                ? ADMITIDOS_MAYORES_60.has((j.licencia || '').toUpperCase())
+                                : !p70 && plazaDe[indice] <= PLAZAS_MAYORES_60;
+                        const espera = ESTADO_MAYORES_60_DISPONIBLE ? !admitido : !admitido && !p70;
+                        const empiezaGrupoEspera = espera && (pos === 0 || (ESTADO_MAYORES_60_DISPONIBLE
+                                ? ADMITIDOS_MAYORES_60.has((ordenRender[pos - 1].j.licencia || '').toUpperCase())
+                                : plazaDe[ordenRender[pos - 1].indice] <= PLAZAS_MAYORES_60));
+                        const lineaCorte = ESTADO_MAYORES_60_DISPONIBLE
+                                ? `${pos === 0 ? '<tr><td colspan="10" style="background:#dcfce7;color:#166534;font-weight:700;text-align:center;padding:6px">JUGADORES ADMITIDOS</td></tr>' : ''}${empiezaGrupoEspera ? '<tr><td colspan="10" style="background:#fee2e2;color:#991b1b;font-weight:700;text-align:center;padding:6px;border-top:3px solid #dc2626;border-bottom:3px solid #dc2626">NO ADMITIDOS · LISTA DE ESPERA OFICIAL</td></tr>' : ''}`
+                                : plazaDe[indice] === PLAZAS_MAYORES_60 + 1
+                                        ? `<tr><td colspan="10" style="background:#fee2e2;color:#991b1b;font-weight:700;text-align:center;padding:6px;border-top:3px solid #dc2626;border-bottom:3px solid #dc2626">✂ CORTE MAYORES DE 60 — ${PLAZAS_MAYORES_60} plazas · último admitido con hándicap ${hcpCorte != null ? Number(hcpCorte).toFixed(1) : '—'} · desde aquí, lista de espera (proyección con los hándicaps actuales)</td></tr>`
+                                        : '';
             const estiloFila = espera ? ' style="opacity:0.55"' : (p70 ? ' style="background:#f1f5f9"' : '');
             return lineaCorte + `<tr${estiloFila}>
                 <td><span class="pos">${pos+1}</span></td>
@@ -2317,8 +2355,8 @@ ${fichasHtml}
                 <td>${escHtml(j.fechaNacimiento || '')}</td>
                 <td style="text-align:center;font-weight:600;color:#0f766e">${edad(j.fechaNacimiento) ?? '—'}</td>
                 <td style="font-size:0.82rem;color:#64748b;font-weight:400">${j.fechaMod || '—'}</td>
-                <td><button class="btn-row-update" onclick="actualizarJugador(${pos})">↻</button></td>
-                <td><button class="btn-del" onclick="eliminarJugador(${pos})">✕</button></td>
+                <td><button class="btn-row-update" onclick="actualizarJugador(${indice})">↻</button></td>
+                <td><button class="btn-del" onclick="eliminarJugador(${indice})">✕</button></td>
             </tr>`;
         }).join('');
         document.getElementById('tabla-body').innerHTML = filas;
